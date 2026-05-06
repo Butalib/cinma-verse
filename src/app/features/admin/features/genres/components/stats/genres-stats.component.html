@@ -1,0 +1,26 @@
+<section class="genres-stats" aria-label="Genres overview">
+  <article class="genres-stats__card">
+    <span class="genres-stats__label">Total Genres</span>
+    <strong class="genres-stats__value">{{ totalGenres() }}</strong>
+  </article>
+
+  <article class="genres-stats__card">
+    <span class="genres-stats__label">Most Popular</span>
+    @if (mostPopular(); as popular) {
+      <strong class="genres-stats__value">{{ popular.name }}</strong>
+      <span class="genres-stats__hint">{{ popular.moviesCount }} movies</span>
+    } @else {
+      <strong class="genres-stats__value">—</strong>
+    }
+  </article>
+
+  <article class="genres-stats__card">
+    <span class="genres-stats__label">Recently Added</span>
+    @if (recentlyAdded(); as recent) {
+      <strong class="genres-stats__value">{{ recent.name }}</strong>
+      <span class="genres-stats__hint">{{ recent.id }}</span>
+    } @else {
+      <strong class="genres-stats__value">—</strong>
+    }
+  </article>
+</section>

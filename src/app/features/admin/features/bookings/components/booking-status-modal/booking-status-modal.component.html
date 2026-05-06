@@ -1,0 +1,77 @@
+<app-modal-container size="sm" (close)="onClose()">
+  @if (viewModel(); as vm) {
+    <app-modal-header>
+      <div class="booking-status__header">
+        <div>
+          <h2 class="modal-title">Update Booking Status</h2>
+          <p class="modal-subtitle">{{ vm.id }} · {{ vm.customerName }}</p>
+        </div>
+        <button type="button" class="modal-close" aria-label="Close modal" (click)="onClose()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </app-modal-header>
+
+    <app-modal-body>
+      <div class="booking-status__body">
+        <div class="booking-manifest">
+          <div class="booking-manifest__row">
+            <span class="booking-manifest__label">Booking</span>
+            <span class="booking-manifest__value booking-manifest__mono">{{ vm.id }}</span>
+          </div>
+          <div class="booking-manifest__row">
+            <span class="booking-manifest__label">Movie</span>
+            <span class="booking-manifest__value">{{ vm.movieTitle }}</span>
+          </div>
+          <div class="booking-manifest__row">
+            <span class="booking-manifest__label">Showtime</span>
+            <span class="booking-manifest__value">{{ vm.dateTime }}</span>
+          </div>
+          <div class="booking-manifest__row">
+            <span class="booking-manifest__label">Seats</span>
+            <span class="booking-manifest__value">{{ vm.seats }}</span>
+          </div>
+        </div>
+
+        <fieldset class="status-selector">
+          <legend>Booking Status</legend>
+          @for (option of statusOptions; track option.value) {
+            <label class="status-option">
+              <input
+                class="status-option__input"
+                type="radio"
+                name="booking-status"
+                [value]="option.value"
+                [checked]="selectedStatus() === option.value"
+                [disabled]="isSaving()"
+                (change)="onSelectStatus(option.value)" />
+              <span class="status-option__text">
+                <span class="status-option__label">{{ option.label }}</span>
+                <span class="status-option__description">{{ option.description }}</span>
+              </span>
+            </label>
+          }
+        </fieldset>
+
+        <div class="status-note" role="note">
+          <span class="material-symbols-outlined" aria-hidden="true">info</span>
+          <div>
+            <p class="status-note__title">Info</p>
+            <p class="status-note__text">
+              Updating the status refreshes analytics and customer notifications.
+            </p>
+          </div>
+        </div>
+      </div>
+    </app-modal-body>
+
+    <app-modal-footer>
+      <button type="button" class="btn btn-ghost btn-md" [disabled]="isSaving()" (click)="onClose()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-primary btn-md" [disabled]="isSubmitDisabled()" (click)="onSubmit()">
+        {{ submitLabel() }}
+      </button>
+    </app-modal-footer>
+  }
+</app-modal-container>

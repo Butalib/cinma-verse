@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.bookings-page-layout {
+  width: 100%;
+  padding: 20px 24px 0;
+}
+
+.bookings-create-modal-card {
+  width: min(1180px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+}
+
+@media (max-width: 1024px) {
+  .bookings-page-layout {
+    padding-inline: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .bookings-page-layout {
+    padding: 16px 16px 0;
+  }
+}

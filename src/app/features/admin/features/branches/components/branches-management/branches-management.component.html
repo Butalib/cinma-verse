@@ -1,0 +1,199 @@
+<section class="branches-page">
+
+    <!-- ── KPI Cards ── -->
+    <div class="kpi-grid">
+        <article class="kpi-card">
+            <div class="kpi-card__top">
+                <div class="kpi-card__icon-box" aria-hidden="true">
+                    <span class="material-symbols-outlined kpi-card__icon">apartment</span>
+                </div>
+            </div>
+            <p class="kpi-card__value">{{ totalBranches() }}</p>
+            <div class="kpi-card__bottom">
+                <p class="kpi-card__title">TOTAL BRANCHES</p>
+            </div>
+        </article>
+
+        <article class="kpi-card">
+            <div class="kpi-card__top">
+                <div class="kpi-card__icon-box" aria-hidden="true">
+                    <span class="material-symbols-outlined kpi-card__icon">meeting_room</span>
+                </div>
+            </div>
+            <p class="kpi-card__value">{{ totalHalls() }}</p>
+            <div class="kpi-card__bottom">
+                <p class="kpi-card__title">TOTAL HALLS</p>
+            </div>
+        </article>
+
+        <article class="kpi-card">
+            <div class="kpi-card__top">
+                <div class="kpi-card__icon-box" aria-hidden="true">
+                    <span class="material-symbols-outlined kpi-card__icon">theaters</span>
+                </div>
+            </div>
+            <p class="kpi-card__value">{{ totalShowtimes() }}</p>
+            <div class="kpi-card__bottom">
+                <p class="kpi-card__title">TOTAL SHOWTIMES</p>
+            </div>
+        </article>
+
+        <article class="kpi-card">
+            <div class="kpi-card__top">
+                <div class="kpi-card__icon-box" aria-hidden="true">
+                    <span class="material-symbols-outlined kpi-card__icon">groups</span>
+                </div>
+            </div>
+            <p class="kpi-card__value">{{ totalCapacity() }}</p>
+            <div class="kpi-card__bottom">
+                <p class="kpi-card__title">TOTAL CAPACITY</p>
+            </div>
+        </article>
+    </div>
+
+    <!-- ── Toolbar ── -->
+    <div class="branches-search-toolbar">
+        <div class="branches-search-toolbar__search">
+            <label class="branches-search-toolbar__search-field" for="branches-search-input">
+                <span class="branches-search-toolbar__search-icon material-symbols-outlined" aria-hidden="true">
+                    search
+                </span>
+                <input id="branches-search-input" class="branches-search-toolbar__search-input" type="search"
+                    placeholder="Search Branch Name or Location..." aria-label="Search Branch Name or Location"
+                    (input)="onSearchInput($event)" />
+            </label>
+        </div>
+
+        <div class="branches-search-toolbar__actions" aria-label="Branch actions">
+            <div class="branches-search-toolbar__filter-group">
+                <select class="branches-search-toolbar__select" (change)="onLocationFilter($event)"
+                    aria-label="Filter by location">
+                    <option value="">All Locations</option>
+                    <option value="Downtown">Downtown</option>
+                    <option value="Mall">Mall</option>
+                    <option value="Plaza">Plaza</option>
+                    <option value="Tower">Tower</option>
+                    <option value="Marina">Marina</option>
+                </select>
+            </div>
+
+            <button class="branches-search-toolbar__button branches-search-toolbar__button--primary" type="button"
+                (click)="openAddBranch()">
+                <span class="material-symbols-outlined branches-search-toolbar__button-icon"
+                    aria-hidden="true">add</span>
+                <span>Create New Branch</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ── Branches Table ── -->
+    @if (pagedBranches().length === 0) {
+    <div class="branches-table-empty">No branches found.</div>
+    } @else {
+    <div class="table-wrapper">
+        <table class="branches-table">
+            <thead>
+                <tr>
+                    <th>Branch ID</th>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Total Halls</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th class="branches-table__actions-head">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (branch of pagedBranches(); track branch.id) {
+                <tr>
+                    <td class="branches-table__mono">{{ branch.id }}</td>
+                    <td class="branches-table__name">{{ branch.name }}</td>
+                    <td>{{ branch.location }}</td>
+                    <td class="branches-table__center">{{ branch.totalHalls }}</td>
+                    <td class="branches-table__center">{{ branch.capacity | number }}</td>
+                    <td>
+                        <span class="status-dot" [class.status-dot--active]="branch.status === 'ACTIVE'"
+                            [class.status-dot--maintenance]="branch.status === 'MAINTENANCE'">
+                            {{ branch.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="branches-table__actions branches-table__actions--desktop">
+                            <button type="button" class="icon-btn" title="View Branch Details"
+                                (click)="openViewModal(branch)">
+                                <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                            </button>
+                            <button type="button" class="icon-btn" title="Edit Branch" (click)="openEditModal(branch)">
+                                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                            </button>
+                            <button type="button" class="icon-btn icon-btn--danger" title="Delete Branch"
+                                (click)="openDeleteConfirm(branch)">
+                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                            </button>
+                        </div>
+
+                        <details class="branches-table__actions-menu" name="branch-actions">
+                            <summary class="icon-btn branches-table__menu-trigger" aria-label="Open actions menu">
+                                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+                            </summary>
+                            <div class="branches-table__menu-list" role="menu" aria-label="Branch actions">
+                                <button type="button" class="branches-table__menu-item" role="menuitem"
+                                    (click)="openViewModal(branch)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                                    <span>View</span>
+                                </button>
+                                <button type="button" class="branches-table__menu-item" role="menuitem"
+                                    (click)="openEditModal(branch)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                                    <span>Edit</span>
+                                </button>
+                                <button type="button"
+                                    class="branches-table__menu-item branches-table__menu-item--danger" role="menuitem"
+                                    (click)="openDeleteConfirm(branch)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+
+    <!-- ── Table Footer ── -->
+    @if (filteredBranches().length > 0) {
+    <div class="table-footer">
+        <app-pagination [totalItems]="filteredBranches().length" [pageSize]="pageSize()" [currentPage]="currentPage()"
+            (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)" />
+    </div>
+    }
+
+    <!-- ── Modals ── -->
+    @if (isAddBranchOpen()) {
+    <app-add-branch-modal (closeModal)="closeAddBranch()" />
+    }
+
+    @if (isEditBranchOpen() && selectedBranch(); as branch) {
+    <app-edit-branch-modal [branch]="branch" (closeModal)="closeEditBranch()" />
+    }
+
+    @if (isViewBranchOpen() && selectedBranch(); as branch) {
+    <app-view-branch-modal [branch]="branch" (closeModal)="closeViewBranch()" (editBranch)="openEditFromView()"
+        (addHall)="openAddHall()" (viewHall)="openViewHall($event)" (editHall)="openEditHall($event)" />
+    }
+
+    @if (isAddHallOpen()) {
+    <app-add-hall-modal (closeModal)="closeAddHall()" />
+    }
+
+    @if (isEditHallOpen() && selectedHall(); as hall) {
+    <app-edit-hall-modal [hall]="hall" (closeModal)="closeEditHall()" />
+    }
+
+    @if (isViewHallOpen() && selectedHall(); as hall) {
+    <app-view-hall-modal [hall]="hall" (closeModal)="closeViewHall()" (editHall)="openEditHall($event)" />
+    }
+</section>

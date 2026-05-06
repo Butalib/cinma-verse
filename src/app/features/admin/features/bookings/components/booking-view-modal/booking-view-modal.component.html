@@ -1,0 +1,91 @@
+<app-modal-container size="md" (close)="onClose()">
+  @if (viewModel(); as vm) {
+    <app-modal-header>
+      <div class="booking-view__header">
+        <div>
+          <h2 class="modal-title">Booking Details</h2>
+          <p class="modal-subtitle">{{ vm.id }} · {{ vm.customerName }}</p>
+        </div>
+        <button type="button" class="modal-close" aria-label="Close modal" (click)="onClose()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </app-modal-header>
+
+    <app-modal-body>
+      <div class="booking-view__content">
+        <div class="booking-hero-card">
+          <div class="booking-hero-media">
+            <div class="booking-hero-poster" aria-hidden="true">
+              <span class="material-symbols-outlined">movie</span>
+            </div>
+            <div class="booking-hero-info">
+              <span class="booking-hero-label">Movie</span>
+              <h3 class="booking-hero-title">{{ vm.movieTitle }}</h3>
+              <span class="booking-hero-subtitle">{{ vm.dateTime }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-view__grid">
+          <section class="booking-section">
+            <h3 class="booking-section__title">Customer Info</h3>
+            <div class="booking-section__body">
+              <div class="booking-info">
+                <span class="booking-info__label">Name</span>
+                <span class="booking-info__value">{{ vm.customerName }}</span>
+              </div>
+              <div class="booking-info">
+                <span class="booking-info__label">Email</span>
+                <span class="booking-info__value">{{ vm.customerEmail }}</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="booking-section">
+            <h3 class="booking-section__title">Booking Details</h3>
+            <div class="booking-section__body">
+              <div class="booking-info">
+                <span class="booking-info__label">Booking ID</span>
+                <span class="booking-info__value booking-info__mono">{{ vm.id }}</span>
+              </div>
+              <div class="booking-info">
+                <span class="booking-info__label">Date / Time</span>
+                <span class="booking-info__value">{{ vm.dateTime }}</span>
+              </div>
+              <div class="booking-info">
+                <span class="booking-info__label">Seats</span>
+                <span class="booking-info__value">{{ vm.seats }}</span>
+              </div>
+              <div class="booking-info">
+                <span class="booking-info__label">Created At</span>
+                <span class="booking-info__value">{{ vm.createdAt }}</span>
+              </div>
+              <div class="booking-info">
+                <span class="booking-info__label">Status</span>
+                <span [class]="vm.statusClass">{{ vm.statusLabel }}</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="booking-section">
+            <h3 class="booking-section__title">Pricing</h3>
+            <div class="booking-section__body">
+              <div class="booking-info booking-info--inline">
+                <span class="booking-info__label">Total Amount</span>
+                <span class="booking-info__value booking-price">{{ vm.amount }}</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </app-modal-body>
+
+    <app-modal-footer>
+      <button type="button" class="btn btn-ghost btn-md" (click)="onClose()">Close</button>
+      <button type="button" class="btn btn-primary btn-md" (click)="onUpdateStatus()">
+        Update Status
+      </button>
+    </app-modal-footer>
+  }
+</app-modal-container>

@@ -1,0 +1,12 @@
+<div class="dashboard-layout">
+  <section class="kpi-grid" aria-label="Key performance indicators">
+    @for (item of kpis(); track item.title) {
+    <app-kpi-card [data]="item" />
+    }
+  </section>
+
+  <section class="charts-grid" aria-label="Dashboard charts">
+    <app-monthly-revenue-chart />
+    <app-weekly-bookings-chart />
+  </section>
+</div>

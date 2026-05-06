@@ -1,0 +1,72 @@
+<div class="tab-container">
+  <div class="tab-search-bar">
+    <span class="search-icon" aria-hidden="true">search</span>
+    <input
+      type="text"
+      [placeholder]="searchPlaceholder"
+      [value]="searchTerm()"
+      (input)="searchTerm.set($any($event.target).value)"
+      aria-label="Search payments"
+    />
+  </div>
+
+  <div class="tab-table-wrapper">
+    <table class="tab-table">
+      <thead>
+        <tr>
+          <th>Payment ID</th>
+          <th>Booking ID</th>
+          <th>Amount</th>
+          <th>Transaction date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of pagedItems(); track item.id) {
+        <tr>
+          <td class="td-id">{{ item.paymentId }}</td>
+          <td class="td-id">{{ item.bookingRef }}</td>
+          <td class="amount-cell">{{ formatMoney(item.amount) }}</td>
+          <td class="td-muted">{{ item.transactionDate }}</td>
+          <td>
+            @switch (item.status) {
+            @case ('completed') {
+            <span class="status-label">{{ item.status }}</span>
+            }
+            @case ('pending') {
+            <span class="status-label status-label--pending">{{ item.status }}</span>
+            }
+            @case ('failed') {
+            <span class="status-label status-label--danger">{{ item.status }}</span>
+            }
+            @case ('cancelled') {
+            <span class="status-label status-label--pending">{{ item.status }}</span>
+            }
+            }
+          </td>
+          <td>
+            <button type="button" class="action-btn" aria-label="View payment">
+              <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td [attr.colspan]="columnCount" class="empty-row">No results found</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-footer">
+    <app-pagination [totalItems]="filteredItems().length" [pageSize]="pageSize" [currentPage]="currentPage()"
+        (pageChange)="onPageChange($event)" />
+
+    <div class="footer-actions">
+        <button type="button" class="btn btn-ghost btn-sm" (click)="closeRequested.emit()">Close</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="exportCsvRequested.emit()">Export CSV</button>
+    </div>
+</div>
+</div>

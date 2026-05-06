@@ -1,0 +1,131 @@
+<div class="modal-backdrop" (click)="closeModal.emit()">
+  <div class="modal-card modal-lg view-movie-modal-card" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header view-movie-header">
+      <div class="view-movie-title-row">
+        <div>
+          <h2 class="modal-title">{{ movie().title }}</h2>
+          <p class="modal-subtitle">{{ movie().id }} &nbsp;·&nbsp; {{ movie().releaseDate }}</p>
+        </div>
+        <div class="view-header-actions">
+          <button class="modal-close" type="button" aria-label="Close" (click)="closeModal.emit()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="view-movie-body">
+
+      <!-- Poster & info column -->
+      <div class="view-poster-col">
+        <div class="view-poster-frame">
+          @if (movie().posterUrl) {
+          <img [src]="movie().posterUrl" [alt]="movie().title" class="view-poster-img" />
+          } @else {
+          <div class="view-poster-placeholder">
+            <span class="material-symbols-outlined view-poster-icon">movie</span>
+          </div>
+          }
+        </div>
+
+        <!-- Info cards -->
+        <div class="view-info-cards">
+          <div class="view-info-card">
+            <span class="view-info-label">Duration</span>
+            <span class="view-info-value">{{ formatDuration(movie().duration) }}</span>
+          </div>
+          <div class="view-info-card">
+            <span class="view-info-label">Age Rating</span>
+            <span class="view-info-value">{{ movie().ageRating }}</span>
+          </div>
+          <div class="view-info-card">
+            <span class="view-info-label">Language</span>
+            <span class="view-info-value">{{ movie().language }}</span>
+          </div>
+          <div class="view-info-card">
+            <span class="view-info-label">Rating</span>
+            <span class="view-info-value view-rating">
+              @if (movie().internalRating > 0) {
+              <span class="material-symbols-outlined view-star">star</span>
+              {{ movie().internalRating.toFixed(1) }}
+              } @else {
+              N/A
+              }
+            </span>
+          </div>
+        </div>
+
+        <!-- Status badge -->
+        <div class="view-status-row">
+          <span class="badge" [class]="'badge ' + getStatusClass(movie().status)">
+            {{ getStatusLabel(movie().status) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Details column -->
+      <div class="view-details-col">
+
+        <!-- Genres -->
+        <div class="view-section">
+          <p class="section-label">Genres</p>
+          <div class="view-genre-pills">
+            @for (g of movie().genres; track g) {
+            <span class="genre-pill">{{ g }}</span>
+            }
+            @if (movie().genres.length === 0) {
+            <span class="view-empty-hint">No genres listed</span>
+            }
+          </div>
+        </div>
+
+        <!-- Synopsis -->
+        <div class="view-section">
+          <p class="section-label">Synopsis</p>
+          <p class="view-synopsis">
+            {{ movie().description || 'No synopsis available.' }}
+          </p>
+        </div>
+
+        <!-- Cast -->
+        <div class="view-section">
+          <p class="section-label">Cast</p>
+          @if (movie().cast.length > 0) {
+          <div class="view-cast-list">
+            @for (member of movie().cast; track member) {
+            <span class="cast-chip">{{ member }}</span>
+            }
+          </div>
+          } @else {
+          <span class="view-empty-hint">No cast information available.</span>
+          }
+        </div>
+
+        <!-- Trailer -->
+        @if (movie().trailerUrl) {
+        <div class="view-section">
+          <p class="section-label">Trailer</p>
+          <a [href]="movie().trailerUrl" target="_blank" rel="noopener noreferrer" class="trailer-link">
+            <span class="material-symbols-outlined">play_circle</span>
+            Watch Trailer
+          </a>
+        </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost btn-md" (click)="closeModal.emit()">Close</button>
+      <button type="button" class="btn btn-primary btn-md" (click)="editRequested.emit()">
+        <span class="material-symbols-outlined">edit</span>
+        Edit Movie
+      </button>
+    </div>
+
+  </div>
+</div>

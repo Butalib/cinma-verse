@@ -1,0 +1,43 @@
+@if (viewModel(); as vm) {
+  <div class="bookings-table__cell bookings-table__col-id" role="cell">
+    <div class="bookings-table__cell-content bookings-table__mono">{{ vm.id }}</div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-customer" role="cell">
+    <div class="bookings-table__cell-content bookings-table__cell-content--stacked">
+      <span class="bookings-table__name">{{ vm.customerName }}</span>
+      <span class="bookings-table__muted">{{ vm.customerEmail }}</span>
+    </div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-movie" role="cell">
+    <div class="bookings-table__cell-content bookings-table__name">{{ vm.movieTitle }}</div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-date" role="cell">
+    <div class="bookings-table__cell-content bookings-table__cell-content--stacked">
+      <span>{{ vm.dateTime }}</span>
+    </div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-seats" role="cell">
+    <div class="bookings-table__cell-content">{{ vm.seats }}</div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-amount" role="cell">
+    <div class="bookings-table__cell-content bookings-table__price">{{ vm.amount }}</div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-status" role="cell">
+    <div class="bookings-table__cell-content">
+      <span class="badge" [class]="vm.statusClass">{{ vm.statusLabel }}</span>
+    </div>
+  </div>
+  <div class="bookings-table__cell bookings-table__col-actions" role="cell">
+    <div class="bookings-table__cell-content bookings-table__cell-content--actions">
+      <button type="button" class="icon-btn" aria-label="View booking" (click)="viewClicked.emit(vm.booking)">
+        <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+      </button>
+      <button type="button" class="icon-btn" aria-label="Update booking status" (click)="updateStatusClicked.emit(vm.booking)">
+        <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+      </button>
+      <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete booking" (click)="deleteClicked.emit(vm.booking)">
+        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+      </button>
+    </div>
+  </div>
+}

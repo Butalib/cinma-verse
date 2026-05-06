@@ -1,0 +1,54 @@
+@if (isOpen) {
+
+<section class="filter-panel" aria-label="Users filters">
+    <form [formGroup]="filterForm" (ngSubmit)="onApply()" class="filter-form">
+        <div class="filter-groups">
+            <div class="filter-group">
+                <p class="group-label">STATUS &amp; EMAIL</p>
+                <div class="group-row two-columns">
+                    <select id="isActive" formControlName="isActive" class="form-control" aria-label="Status">
+                        <option value="All Status">All Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Suspended">Suspended</option>
+                    </select>
+
+                    <select id="emailConfirmed" formControlName="emailConfirmed" class="form-control"
+                        aria-label="Email confirmation">
+                        <option value="All Email">All Email</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Not Confirmed">Not Confirmed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <p class="group-label">GENDER &amp; CITY</p>
+                <div class="group-row two-columns">
+                    <select id="gender" formControlName="gender" class="form-control" aria-label="Gender">
+                        <option value="All">All</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+
+                    <input type="text" id="city" formControlName="city" class="form-control" placeholder="City..."
+                        aria-label="City" />
+                </div>
+            </div>
+
+            <div class="filter-group filter-group--dates">
+                <p class="group-label">CREATED DATE RANGE</p>
+                <div class="group-row four-columns filter-group--dates__row">
+                    <input type="date" formControlName="createdFrom" class="form-control" aria-label="Created From" />
+                    <input type="date" formControlName="createdTo" class="form-control" aria-label="Created To" />
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-actions">
+            <button type="button" class="btn-reset" (click)="onReset()">Reset</button>
+            <button type="submit" class="btn-apply">Apply Filters</button>
+        </div>
+    </form>
+</section>
+}

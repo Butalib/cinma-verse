@@ -1,0 +1,219 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Changes: fonts → Inter | colors → design-system vars
+ *          borders → tonal shifts | shadows → tinted ambient
+ * Rollback: search [OLD-SYSTEM] comments to restore previous values
+ */
+
+:host {
+  display: block;
+}
+
+.sidebar-container {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  width: 220px;
+  height: 100vh;
+  min-height: 100vh;
+  /* [OLD-SYSTEM] was: background-color: var(--surface-dim, #0e141a) */
+  background-color: var(--surface-container-low);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.brand-header {
+  padding: 24px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .brand-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .logo-text {
+    color: var(--primary);
+    /* [OLD-SYSTEM] was: font-size: 1.5rem */
+    font-size: var(--text-subtitle);
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-subtext {
+    color: var(--on-surface-muted);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.close-button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 36px;
+  block-size: 36px;
+  flex-shrink: 0;
+  border: 0;
+  /* [OLD-SYSTEM] was: border-radius: 12px */
+  border-radius: var(--radius-md);
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+}
+
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-inline: 10px;
+  overflow-y: auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--on-surface-variant);
+  /* [OLD-SYSTEM] was: border-radius: 8px; padding-block 12px padding-inline 12px */
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  transition:
+    background-color var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+  border-inline-start: 4px solid transparent;
+
+  &:hover {
+    background-color: var(--surface-container);
+    color: var(--on-surface);
+  }
+
+  &.active-nav-item {
+    color: var(--primary);
+    border-inline-start-color: var(--primary-container);
+    /* [OLD-SYSTEM] was: rgba(34, 211, 238, 0.08) gradient */
+    background: linear-gradient(to inline-end, var(--primary-dim) 0%, transparent 100%);
+    box-shadow: inset 3px 0 0 var(--primary-container);
+
+    .icon {
+      font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+    }
+  }
+
+  .icon {
+    font-size: 1.25rem;
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+
+  .label {
+    font-size: var(--text-body);
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar-container {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    width: min(220px, calc(100vw - 48px));
+    height: 100dvh;
+    /* [OLD-SYSTEM] was: border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 18px 0 40px rgba(0, 0, 0, 0.35) */
+    border: none;
+    box-shadow: var(--shadow-float);
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+    transform: translateX(-105%);
+    transition: transform var(--transition-slow);
+  }
+
+  .sidebar-container--open {
+    transform: translateX(0);
+  }
+
+  .brand-header {
+    padding: 20px 18px 12px;
+    align-items: flex-start;
+
+    .logo-text {
+      font-size: var(--text-title-sm);
+    }
+
+    .logo-subtext {
+      text-transform: none;
+      letter-spacing: 0;
+    }
+  }
+
+  .close-button {
+    display: inline-flex;
+  }
+
+  .nav-menu {
+    padding-inline: 14px;
+  }
+
+  .nav-link {
+    justify-content: flex-start;
+    padding-inline: 14px;
+    gap: 12px;
+
+    .label {
+      display: inline;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar-container {
+    width: min(220px, calc(100vw - 40px));
+  }
+
+  .brand-header {
+    padding: 18px 16px 10px;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 12px 12px;
+    overflow-y: auto;
+  }
+
+  .nav-link {
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-inline-start: 4px solid transparent;
+    /* [OLD-SYSTEM] was: border-radius: 12px */
+    border-radius: var(--radius-md);
+    white-space: normal;
+
+    &.active-nav-item {
+      border-inline-start-color: var(--primary-container);
+      background: linear-gradient(to inline-end, var(--primary-dim) 0%, transparent 100%);
+    }
+
+    .label {
+      display: inline;
+      font-size: var(--text-body);
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<section class="showtimes-management-layout">
+    <app-showtime-kpi></app-showtime-kpi>
+
+    <app-showtimes-search-toolbar (searchChange)="onSearchChange($event)" (filterClicked)="toggleFilter()"
+        (addClicked)="openCreateModal()"></app-showtimes-search-toolbar>
+
+    <app-showtimes-filter-panel [isOpen]="isFilterOpen()" (applyFilters)="onApplyFilters($event)"
+        (resetFilters)="onResetFilters()"></app-showtimes-filter-panel>
+
+    <app-showtimes-table [showtimes]="pagedShowtimes()" (viewShowtime)="onViewShowtime($event)"
+        (editShowtime)="onEditShowtime($event)" (deleteShowtime)="onDeleteShowtime($event)"></app-showtimes-table>
+
+    <app-pagination [totalItems]="filteredShowtimes().length" [pageSize]="pageSize()" [currentPage]="currentPage()"
+        (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)"></app-pagination>
+
+    @if (isViewModalOpen() && selectedViewShowtimeId(); as showtimeId) {
+    <div class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Showtime details"
+        (click)="closeViewModal()">
+        <div class="modal-card modal-lg showtimes-view-modal-card" (click)="$event.stopPropagation()">
+            <button type="button" class="modal-close showtimes-view-modal__close" aria-label="Close showtime details"
+                (click)="closeViewModal()">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+
+            <app-showtime-details-page [showtimeId]="showtimeId" [overlayMode]="true"
+                (closeRequested)="closeViewModal()" (showtimeUpdated)="onViewShowtimeUpdated($event)" />
+        </div>
+    </div>
+    }
+
+    <app-create-showtime-modal [style.display]="isCreateModalOpen() ? 'block' : 'none'"
+        (closeModal)="closeCreateModal()" (createShowtime)="onCreateShowtime($event)"></app-create-showtime-modal>
+
+    @if (isEditModalOpen()) {
+    <app-edit-showtime-modal [showtime]="selectedShowtimeDetails()" [isSaving]="isEditSaving()"
+        (closeModal)="closeEditModal()" (saveChanges)="onSaveShowtimeChanges($event)"></app-edit-showtime-modal>
+    }
+</section>

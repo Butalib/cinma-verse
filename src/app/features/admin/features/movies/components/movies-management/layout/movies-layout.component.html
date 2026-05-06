@@ -1,0 +1,36 @@
+<section class="movies-management-layout">
+
+    <app-movies-kpi [totalMovies]="totalMoviesKpi()" [nowShowingMovies]="nowShowingMoviesKpi()"
+        [comingSoonMovies]="comingSoonMoviesKpi()" [averageRating]="avgRatingKpi()"></app-movies-kpi>
+
+    <app-movies-search-toolbar (searchChange)="searchTerm.set($event)" (genreFilterChange)="genreFilter.set($event)"
+        (ageFilterChange)="ageFilter.set($event)" (statusFilterChange)="statusFilter.set($event)"
+        (languageFilterChange)="langFilter.set($event)" (dateFromChange)="dateFrom.set($event)"
+        (dateToChange)="dateTo.set($event)" (sortFieldChange)="sortField.set($event)"
+        (sortDirChange)="sortDir.set($event)" (addMovieClicked)="openAddMovie()"></app-movies-search-toolbar>
+
+    <app-movies-table [movies]="pagedMovies()" [formatDurationFn]="formatDuration.bind(this)"
+        [getStatusClassFn]="getStatusClass.bind(this)" [getStatusLabelFn]="getStatusLabel.bind(this)"
+        (viewMovie)="viewMovie($event)" (editMovie)="editMovie($event)"
+        (deleteMovie)="deleteMovie($event)"></app-movies-table>
+
+    @if (filteredMovies().length > 0) {
+    <app-pagination [totalItems]="filteredMovies().length" [pageSize]="pageSize()" [currentPage]="currentPage()"
+        (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)"></app-pagination>
+    }
+
+    @if (isAddMovieOpen()) {
+    <app-add-movie-modal (closeModal)="closeAddMovie()" (addMovie)="onMovieAdded($event)"></app-add-movie-modal>
+    }
+
+    @if (isViewMovieOpen() && selectedMovie()) {
+    <app-view-movie-modal [movie]="selectedMovie()!" (closeModal)="closeViewMovie()"
+        (editRequested)="isViewMovieOpen.set(false); editMovie(selectedMovie()!)"></app-view-movie-modal>
+    }
+
+    @if (isEditMovieOpen() && selectedMovie()) {
+    <app-edit-movie-modal [movie]="selectedMovie()!" (closeModal)="closeEditMovie()"
+        (saveChanges)="onMovieUpdated($event)"></app-edit-movie-modal>
+    }
+
+</section>

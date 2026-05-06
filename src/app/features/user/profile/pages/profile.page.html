@@ -1,0 +1,8 @@
+<h2>Profile</h2>
+<app-section-card title="My Account">
+  @if (me$ | async; as me) {
+    <p>{{ me.email }} ({{ me.role }})</p>
+  } @else {
+    <p>No user loaded.</p>
+  }
+</app-section-card>

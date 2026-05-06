@@ -1,0 +1,95 @@
+:host {
+  display: block;
+}
+
+.pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+
+.pagination-info {
+  font-size: var(--text-body);
+  color: var(--on-surface);
+}
+
+.pagination-info__count {
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-btn {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ghost-border);
+  background: var(--surface-container);
+  color: var(--on-surface);
+  font-size: var(--text-body);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--transition), background-color var(--transition), color var(--transition);
+}
+
+.pagination-btn:hover:not(:disabled) {
+  border-color: var(--status-active-br);
+  background: var(--surface-container-high);
+  color: var(--primary);
+}
+
+.pagination-btn--active,
+.pagination-btn--active:hover {
+  border-color: transparent;
+  color: var(--on-primary);
+  background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pagination-size {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-body);
+  color: var(--on-surface);
+}
+
+.pagination-size label {
+  white-space: nowrap;
+}
+
+.pagination-size .form-control {
+  min-width: 70px;
+  height: 36px;
+  padding: 6px 10px;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface);
+  background: var(--surface);
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.pagination-size .form-control:hover {
+  border-color: var(--accent-border-strong);
+}
+
+.pagination-size .form-control:focus {
+  outline: none;
+  border-color: var(--accent-border-strong);
+  box-shadow: var(--accent-glow-soft);
+}

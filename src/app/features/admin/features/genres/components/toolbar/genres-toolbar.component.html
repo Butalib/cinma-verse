@@ -1,0 +1,30 @@
+<div class="genres-toolbar">
+  <div class="genres-toolbar__search">
+    <label class="genres-toolbar__search-field" for="genres-toolbar-search-input">
+      <span class="genres-toolbar__search-icon material-symbols-outlined" aria-hidden="true">search</span>
+      <input
+        id="genres-toolbar-search-input"
+        class="genres-toolbar__search-input"
+        type="search"
+        placeholder="Search by genre name or ID..."
+        aria-label="Search genres"
+        (input)="onSearchInput($event)" />
+    </label>
+  </div>
+
+  <div class="genres-toolbar__actions" aria-label="Genres actions">
+    <select
+      id="genres-toolbar-sort-select"
+      class="form-control genres-toolbar__sort-select"
+      aria-label="Sort genres"
+      (change)="onSortChange($event)">
+      <option value="name_asc">Name (A → Z)</option>
+      <option value="name_desc">Name (Z → A)</option>
+    </select>
+
+    <button type="button" class="genres-toolbar__button genres-toolbar__button--primary" (click)="addClicked.emit()">
+      <span class="material-symbols-outlined genres-toolbar__button-icon" aria-hidden="true">add</span>
+      <span>Add Genre</span>
+    </button>
+  </div>
+</div>

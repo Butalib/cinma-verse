@@ -1,0 +1,26 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ */
+
+:host {
+  display: block;
+}
+
+.users-management-layout {
+	width: 100%;
+	padding: 20px 24px 0;
+}
+
+@media (max-width: 1024px) {
+	.users-management-layout {
+		padding-inline: 20px;
+	}
+}
+
+@media (max-width: 768px) {
+	.users-management-layout {
+		padding: 16px 16px 0;
+        
+	}
+}

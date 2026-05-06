@@ -1,0 +1,75 @@
+<div class="showtime-details-layout">
+
+  <!-- Loading state -->
+  @if (facade.loading()) {
+    <div class="details-loading">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Loading showtime details...</p>
+    </div>
+  }
+
+  <!-- Error state -->
+  @if (facade.error(); as errorMsg) {
+    <div class="details-error">
+      <span class="material-symbols-outlined error-icon">error</span>
+      <p class="error-text">{{ errorMsg }}</p>
+      <button type="button" class="btn btn-ghost btn-md" (click)="onBack()">
+        <span class="material-symbols-outlined">{{ overlayMode() ? 'close' : 'arrow_back' }}</span>
+        {{ overlayMode() ? 'Close Details' : 'Back to Showtimes' }}
+      </button>
+    </div>
+  }
+
+  <!-- Content -->
+  @if (facade.showtime(); as showtime) {
+    <!-- Header -->
+    <div class="details-header">
+      @if (!overlayMode()) {
+        <button
+          type="button"
+          class="header-back-btn"
+          aria-label="Back to showtimes"
+          (click)="onBack()">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+      }
+      <div class="header-text">
+        <h1 class="header-title">Showtime Details</h1>
+        <p class="header-subtitle">{{ showtime.id }} &middot; {{ showtime.movieTitle }}</p>
+      </div>
+    </div>
+
+    <!-- Two-column layout -->
+    <div class="details-grid">
+      <!-- Left: Summary panel -->
+      <aside class="details-sidebar">
+        <app-showtime-summary
+          [showtime]="showtime"
+          [formattedDate]="facade.formattedDate()"
+          [formattedTime]="facade.formattedTime()"
+        />
+      </aside>
+
+      <!-- Right: Detail sections -->
+      <main class="details-main">
+        <app-showtime-stats [stats]="facade.stats()" />
+        <app-showtime-schedule [showtime]="showtime" />
+        <app-showtime-location [showtime]="showtime" />
+        <app-showtime-actions
+          (editClicked)="onEdit()"
+          (backClicked)="onBack()"
+        />
+      </main>
+    </div>
+  }
+
+</div>
+
+@if (isEditModalOpen()) {
+  <app-edit-showtime-modal
+    [showtime]="editDetails()"
+    [isSaving]="isEditSaving()"
+    (closeModal)="closeEditModal()"
+    (saveChanges)="onSaveChanges($event)"
+  />
+}

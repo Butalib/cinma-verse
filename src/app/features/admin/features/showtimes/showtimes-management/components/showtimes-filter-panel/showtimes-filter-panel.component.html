@@ -1,0 +1,52 @@
+@if (isOpen) {
+
+<section class="filter-panel" aria-label="Showtimes filters">
+    <form [formGroup]="filterForm" (ngSubmit)="onApply()" class="filter-form">
+        <div class="filter-groups">
+            <div class="filter-group">
+                <p class="group-label">STATUS &amp; BRANCH</p>
+                <div class="group-row two-columns">
+                    <select id="status" formControlName="status" class="form-control" aria-label="Status">
+                        <option value="All Status">All Status</option>
+                        <option value="SCHEDULED">Scheduled</option>
+                        <option value="NOW_SHOWING">Now Showing</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+
+                    <input type="text" id="branchName" formControlName="branchName" class="form-control"
+                        placeholder="Branch..." aria-label="Branch name" />
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <p class="group-label">MOVIE &amp; PRICE</p>
+                <div class="group-row two-columns">
+                    <input type="text" id="movieTitle" formControlName="movieTitle" class="form-control"
+                        placeholder="Movie title..." aria-label="Movie title" />
+
+                    <div class="price-range">
+                        <input type="number" formControlName="priceMin" class="form-control" placeholder="Min $"
+                            aria-label="Minimum price" min="0" step="0.01" />
+                        <input type="number" formControlName="priceMax" class="form-control" placeholder="Max $"
+                            aria-label="Maximum price" min="0" step="0.01" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-group filter-group--dates">
+                <p class="group-label">DATE RANGE</p>
+                <div class="group-row four-columns filter-group--dates__row">
+                    <input type="date" formControlName="dateFrom" class="form-control" aria-label="Date From" />
+                    <input type="date" formControlName="dateTo" class="form-control" aria-label="Date To" />
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-actions">
+            <button type="button" class="btn-reset" (click)="onReset()">Reset</button>
+            <button type="submit" class="btn-apply">Apply Filters</button>
+        </div>
+    </form>
+</section>
+}

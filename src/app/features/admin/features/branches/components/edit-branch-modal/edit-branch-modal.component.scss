@@ -1,0 +1,131 @@
+/*
+ * Edit Branch Modal — same layout as add-branch
+ */
+
+// ─── 2-COLUMN BODY ──────────────────────────────────────────
+.branch-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 0 24px 6px;
+  min-height: 280px;
+}
+
+.branch-form-col {
+  padding: 20px 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: center;
+}
+
+.branch-map-col {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 260px;
+  margin: 10px 0;
+}
+
+// ─── SECTION LABEL ───────────────────────────────────────────
+.edit-section-label {
+  font-size: 10px;
+  color: var(--primary-container);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+// ─── MAP VISUAL ──────────────────────────────────────────────
+.map-visual {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  position: relative;
+  background: linear-gradient(135deg, #0a1628 0%, #0e1f35 50%, #081422 100%);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 200, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 200, 255, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 38%;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: rgba(0, 200, 255, 0.15);
+    box-shadow: 0 44px 0 rgba(0, 200, 255, 0.08);
+  }
+}
+
+.map-road-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 45%;
+  width: 8px;
+  background: rgba(0, 200, 255, 0.15);
+}
+
+.map-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--primary-container);
+  font-size: 30px;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.7));
+  z-index: 2;
+}
+
+.map-pulse--static {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 200, 255, 0.35);
+  animation: none;
+  opacity: 0.3;
+}
+
+.map-label {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 200, 255, 0.35);
+}
+
+.modal-footer {
+  margin: 14px 24px 24px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--ghost-border);
+
+  .btn {
+    min-width: 150px;
+    justify-content: center;
+    margin-inline-start: 6px;
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px !important;
+    line-height: 1;
+  }
+}

@@ -1,0 +1,67 @@
+<div class="tickets-filter-bar">
+    <div class="tickets-filter-bar__fields">
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-status">STATUS</label>
+            <select id="tf-status" class="tickets-filter-bar__select"
+                [value]="status()" (change)="status.set($any($event.target).value)">
+                <option value="">All Status</option>
+                <option value="ACTIVE">Active</option>
+                <option value="USED">Used</option>
+                <option value="CANCELLED">Cancelled</option>
+            </select>
+        </div>
+
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-booking-id">BOOKING ID</label>
+            <input id="tf-booking-id" class="tickets-filter-bar__input" type="text"
+                placeholder="BK-772..." [value]="bookingId()"
+                (input)="bookingId.set($any($event.target).value)" />
+        </div>
+
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-showtime-id">SHOWTIME ID</label>
+            <input id="tf-showtime-id" class="tickets-filter-bar__input" type="text"
+                placeholder="SH-102..." [value]="showtimeId()"
+                (input)="showtimeId.set($any($event.target).value)" />
+        </div>
+
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-user-id">USER ID</label>
+            <input id="tf-user-id" class="tickets-filter-bar__input" type="text"
+                placeholder="U-441..." [value]="userId()"
+                (input)="userId.set($any($event.target).value)" />
+        </div>
+
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-ticket-no">TICKET NO.</label>
+            <input id="tf-ticket-no" class="tickets-filter-bar__input" type="text"
+                placeholder="CV-TK-..." [value]="ticketNo()"
+                (input)="ticketNo.set($any($event.target).value)" />
+        </div>
+
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-start-date">START DATE</label>
+            <input id="tf-start-date" class="tickets-filter-bar__input tickets-filter-bar__input--date"
+                type="date" [value]="startDate()"
+                (input)="startDate.set($any($event.target).value)" />
+        </div>
+
+        <div class="tickets-filter-bar__field">
+            <label class="tickets-filter-bar__label" for="tf-end-date">END DATE</label>
+            <input id="tf-end-date" class="tickets-filter-bar__input tickets-filter-bar__input--date"
+                type="date" [value]="endDate()"
+                (input)="endDate.set($any($event.target).value)" />
+        </div>
+    </div>
+
+    <div class="tickets-filter-bar__actions">
+        <button type="button" class="tickets-filter-bar__btn tickets-filter-bar__btn--ghost"
+            (click)="onReset()">
+            Reset
+        </button>
+        <button type="button" class="tickets-filter-bar__btn tickets-filter-bar__btn--primary"
+            (click)="onApply()">
+            Apply Filters
+        </button>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="genres-actions" aria-label="Genre actions">
+  <button type="button" class="icon-btn" aria-label="View genre" (click)="viewClicked.emit(genreId())">
+    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+  </button>
+
+  <button type="button" class="icon-btn" aria-label="Edit genre" (click)="editClicked.emit(genreId())">
+    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+  </button>
+
+  <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete genre" (click)="deleteClicked.emit(genreId())">
+    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+  </button>
+</div>

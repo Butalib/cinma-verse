@@ -1,0 +1,94 @@
+<section class="showtimes-table-section" aria-label="Showtimes table">
+    @if (showtimes().length === 0) {
+    <div class="showtimes-table-empty">No showtimes found.</div>
+    } @else {
+    <div class="showtimes-table-shell">
+        <table class="showtimes-table">
+            <thead>
+                <tr>
+                    <th>Showtime ID</th>
+                    <th>Movie</th>
+                    <th>Branch</th>
+                    <th>Hall</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Price</th>
+                    <th>Seats</th>
+                    <th>Status</th>
+                    <th class="showtimes-table__actions-head">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (showtime of showtimes(); track showtime.id) {
+                <tr>
+                    <td class="showtimes-table__mono">{{ showtime.id }}</td>
+                    <td class="showtimes-table__name">{{ showtime.movieTitle }}</td>
+                    <td>{{ showtime.branchName }}</td>
+                    <td>{{ showtime.hallName }}</td>
+                    <td class="showtimes-table__date">{{ showtime.date }}</td>
+                    <td class="showtimes-table__date">{{ showtime.startTime }} – {{ showtime.endTime }}</td>
+                    <td class="showtimes-table__price">{{ formatPrice(showtime.price) }}</td>
+                    <td>
+                        <span class="seats-info">{{ getOccupancy(showtime) }}</span>
+                    </td>
+                    <td>
+                        <span class="badge"
+                            [class.badge--status-scheduled]="showtime.status === 'SCHEDULED'"
+                            [class.badge--status-now-showing]="showtime.status === 'NOW_SHOWING'"
+                            [class.badge--status-completed]="showtime.status === 'COMPLETED'"
+                            [class.badge--status-cancelled]="showtime.status === 'CANCELLED'">
+                            {{ showtime.status === 'NOW_SHOWING' ? 'NOW SHOWING' : showtime.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="showtimes-table__actions showtimes-table__actions--desktop">
+                            <button type="button" class="icon-btn" aria-label="View showtime"
+                                (click)="onView(showtime.id)">
+                                <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                            </button>
+                            <button type="button" class="icon-btn" aria-label="Edit showtime"
+                                (click)="onEdit(showtime)">
+                                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                            </button>
+                            <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete showtime"
+                                (click)="onDelete(showtime.id)">
+                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                            </button>
+                        </div>
+
+                        <details class="showtimes-table__actions-menu" name="showtime-actions"
+                            (toggle)="onActionsMenuToggle($event)">
+                            <summary class="icon-btn showtimes-table__menu-trigger" aria-label="Open actions menu">
+                                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+                            </summary>
+
+                            <div class="showtimes-table__menu-list" role="menu" aria-label="Showtime actions">
+                                <button type="button" class="showtimes-table__menu-item" role="menuitem"
+                                    (click)="onMenuView($event, showtime.id)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                                    <span>View</span>
+                                </button>
+
+                                <button type="button" class="showtimes-table__menu-item" role="menuitem"
+                                    (click)="onMenuEdit($event, showtime)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                                    <span>Edit</span>
+                                </button>
+
+                                <button type="button"
+                                    class="showtimes-table__menu-item showtimes-table__menu-item--danger"
+                                    role="menuitem" (click)="onMenuDelete($event, showtime.id)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</section>

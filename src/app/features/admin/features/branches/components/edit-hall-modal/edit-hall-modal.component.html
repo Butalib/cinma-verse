@@ -1,0 +1,65 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+    <div class="modal-sm-md modal-card" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="modal-header">
+            <span class="edit-section-label">EDIT OPERATIONS</span>
+            <h2 class="modal-title">Edit Hall Information</h2>
+        </div>
+
+        <!-- Body -->
+        <div class="hall-modal-body">
+            <!-- Form Section -->
+            <div class="hall-form-section">
+                <div class="form-group">
+                    <label>HALL NUMBER</label>
+                    <input class="form-control" type="number" [value]="hall().number" />
+                </div>
+
+                <div class="form-group">
+                    <label>HALL TYPE</label>
+                    <select class="form-control" [value]="hall().type">
+                        <option value="IMAX 4K">IMAX 4K</option>
+                        <option value="DOLBY">DOLBY</option>
+                        <option value="STANDARD">STANDARD</option>
+                        <option value="PREMIUM">PREMIUM</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>CINEMA BRANCH</label>
+                    <select class="form-control" [value]="hall().branchId">
+                        <option value="BRN-001">CinemaVerse Downtown</option>
+                        <option value="BRN-002">CinemaVerse Westfield</option>
+                        <option value="BRN-003">CinemaVerse Nile Plaza</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>HALL STATUS</label>
+                    <select class="form-control" [value]="hall().status">
+                        <option value="ACTIVE">Active</option>
+                        <option value="MAINTENANCE">Maintenance</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Map Preview Section (static) -->
+            <div class="hall-map-section">
+                <div class="map-visual">
+                    <div class="map-road-v"></div>
+                    <span class="material-symbols-outlined map-pin" aria-hidden="true">location_on</span>
+                    <span class="map-label">Hall Location</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button class="btn btn-ghost btn-md" type="button" (click)="onCancel()">Cancel</button>
+            <button class="btn btn-primary btn-md" type="button" (click)="onSave()">
+                <span class="material-symbols-outlined" style="font-size: 16px;">save</span>
+                Save Changes
+            </button>
+        </div>
+    </div>
+</div>

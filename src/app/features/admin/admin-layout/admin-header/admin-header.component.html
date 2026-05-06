@@ -1,0 +1,18 @@
+<header class="admin-header">
+  <button class="menu-button" type="button" aria-label="Open sidebar" (click)="menuClicked.emit()">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+
+  <h1 class="page-title">{{ pageTitle() }}</h1>
+
+  <div class="header-actions">
+    <button class="icon-button" type="button" aria-label="Notifications">
+      <span class="material-symbols-outlined">notifications</span>
+    </button>
+
+    <button class="profile-chip" type="button" aria-label="Admin profile">
+      <span class="avatar">A</span>
+      <span class="name">Admin User</span>
+    </button>
+  </div>
+</header>

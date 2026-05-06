@@ -1,0 +1,33 @@
+<section class="bookings-stats-grid" aria-label="Bookings overview">
+  <article class="bookings-stats-card">
+    <div class="bookings-stats-card__top">
+      <p class="bookings-stats-card__title">Total Bookings</p>
+      <span class="bookings-stats-card__icon-box material-symbols-outlined" aria-hidden="true">confirmation_number</span>
+    </div>
+    <strong class="bookings-stats-card__value">{{ stats().totalBookings }}</strong>
+  </article>
+
+  <article class="bookings-stats-card">
+    <div class="bookings-stats-card__top">
+      <p class="bookings-stats-card__title">Confirmed</p>
+      <span class="bookings-stats-card__icon-box material-symbols-outlined" aria-hidden="true">check_circle</span>
+    </div>
+    <strong class="bookings-stats-card__value">{{ stats().confirmedBookings }}</strong>
+  </article>
+
+  <article class="bookings-stats-card">
+    <div class="bookings-stats-card__top">
+      <p class="bookings-stats-card__title">Pending</p>
+      <span class="bookings-stats-card__icon-box material-symbols-outlined" aria-hidden="true">pending</span>
+    </div>
+    <strong class="bookings-stats-card__value">{{ stats().pendingBookings }}</strong>
+  </article>
+
+  <article class="bookings-stats-card">
+    <div class="bookings-stats-card__top">
+      <p class="bookings-stats-card__title">Revenue</p>
+      <span class="bookings-stats-card__icon-box material-symbols-outlined" aria-hidden="true">payments</span>
+    </div>
+    <strong class="bookings-stats-card__value">${{ stats().totalRevenue.toFixed(2) }}</strong>
+  </article>
+</section>

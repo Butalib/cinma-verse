@@ -1,0 +1,12 @@
+<div class="admin-shell" [class.admin-shell--sidebar-open]="sidebarOpen()">
+  <button class="admin-backdrop" [class.admin-backdrop--visible]="sidebarOpen()" type="button"
+    aria-label="Close sidebar" (click)="closeSidebar()"></button>
+
+  <app-sidebar [open]="sidebarOpen()" (closeRequested)="closeSidebar()" />
+  <main class="admin-main">
+    <app-admin-header class="admin-main-header" [pageTitle]="pageTitle()" (menuClicked)="openSidebar()" />
+    <section class="admin-content">
+      <router-outlet />
+    </section>
+  </main>
+</div>

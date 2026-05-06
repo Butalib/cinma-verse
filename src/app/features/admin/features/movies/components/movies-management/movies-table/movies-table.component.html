@@ -1,0 +1,93 @@
+<div class="movies-table-shell">
+    @if (movies().length === 0) {
+    <div class="movies-table-empty">No movies found.</div>
+    } @else {
+    <table class="movies-table" aria-label="Movies list">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Genres</th>
+                <th>Release</th>
+                <th>Duration</th>
+                <th>Age</th>
+                <th>Language</th>
+                <th>Rating</th>
+                <th>Status</th>
+                <th class="movies-table__actions-head">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (movie of movies(); track movie.id) {
+            <tr>
+                <td class="movies-table__mono">{{ movie.id }}</td>
+                <td class="movies-table__title">{{ movie.title }}</td>
+                <td>
+                    <div class="movies-table__badges">
+                        @for (genre of movie.genres; track genre) {
+                        <span class="badge badge--genre">{{ genre }}</span>
+                        }
+                    </div>
+                </td>
+                <td>{{ movie.releaseDate }}</td>
+                <td>{{ getDuration(movie.duration) }}</td>
+                <td>
+                    <span class="badge badge--age">{{ movie.ageRating }}</span>
+                </td>
+                <td>{{ movie.language }}</td>
+                <td>
+                    <span class="movies-table__rating">
+                        <span class="movies-table__rating-value">{{ movie.internalRating.toFixed(1) }}</span>
+                        <span class="material-symbols-outlined movies-table__rating-star">star</span>
+                    </span>
+                </td>
+                <td>
+                    <span class="badge" [class.badge--active]="movie.status === 'ACTIVE'"
+                        [class.badge--coming-soon]="movie.status === 'COMING_SOON'"
+                        [class.badge--inactive]="movie.status === 'INACTIVE'">
+                        {{ getStatusLabel(movie.status) }}
+                    </span>
+                </td>
+                <td>
+                    <div class="movies-table__actions movies-table__actions--desktop">
+                        <button type="button" class="icon-btn" aria-label="View movie" (click)="onView(movie)">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </button>
+                        <button type="button" class="icon-btn" aria-label="Edit movie" (click)="onEdit(movie)">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
+                        <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete movie"
+                            (click)="onDelete(movie.id)">
+                            <span class="material-symbols-outlined">delete</span>
+                        </button>
+                    </div>
+
+                    <details class="movies-table__actions-menu" name="movie-actions">
+                        <summary class="icon-btn movies-table__menu-trigger" aria-label="Open actions menu">
+                            <span class="material-symbols-outlined">more_vert</span>
+                        </summary>
+                        <div class="movies-table__menu-list" role="menu" aria-label="Movie actions">
+                            <button type="button" class="movies-table__menu-item" role="menuitem"
+                                (click)="onView(movie)">
+                                <span class="material-symbols-outlined">visibility</span>
+                                <span>View</span>
+                            </button>
+                            <button type="button" class="movies-table__menu-item" role="menuitem"
+                                (click)="onEdit(movie)">
+                                <span class="material-symbols-outlined">edit</span>
+                                <span>Edit</span>
+                            </button>
+                            <button type="button" class="movies-table__menu-item movies-table__menu-item--danger"
+                                role="menuitem" (click)="onDelete(movie.id)">
+                                <span class="material-symbols-outlined">delete</span>
+                                <span>Delete</span>
+                            </button>
+                        </div>
+                    </details>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    }
+</div>

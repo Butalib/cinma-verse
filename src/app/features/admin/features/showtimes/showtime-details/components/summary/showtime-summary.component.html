@@ -1,0 +1,53 @@
+<div class="summary-card">
+  <div class="summary-icon-frame">
+    <span class="material-symbols-outlined summary-icon">movie</span>
+  </div>
+
+  <h2 class="summary-movie-title">{{ showtime().movieTitle }}</h2>
+
+  <span class="badge" [class]="'badge ' + getStatusClass(showtime().status)">
+    {{ getStatusLabel(showtime().status) }}
+  </span>
+
+  <div class="summary-info-list">
+    <div class="summary-info-row">
+      <span class="material-symbols-outlined summary-info-icon">confirmation_number</span>
+      <div class="summary-info-text">
+        <span class="summary-info-label">Showtime ID</span>
+        <span class="summary-info-value">{{ showtime().id }}</span>
+      </div>
+    </div>
+
+    <div class="summary-info-row">
+      <span class="material-symbols-outlined summary-info-icon">store</span>
+      <div class="summary-info-text">
+        <span class="summary-info-label">Branch</span>
+        <span class="summary-info-value">{{ showtime().branchName }}</span>
+      </div>
+    </div>
+
+    <div class="summary-info-row">
+      <span class="material-symbols-outlined summary-info-icon">meeting_room</span>
+      <div class="summary-info-text">
+        <span class="summary-info-label">Hall</span>
+        <span class="summary-info-value">{{ showtime().hallName }}</span>
+      </div>
+    </div>
+
+    <div class="summary-info-row">
+      <span class="material-symbols-outlined summary-info-icon">calendar_today</span>
+      <div class="summary-info-text">
+        <span class="summary-info-label">Date</span>
+        <span class="summary-info-value">{{ formattedDate() }}</span>
+      </div>
+    </div>
+
+    <div class="summary-info-row">
+      <span class="material-symbols-outlined summary-info-icon">schedule</span>
+      <div class="summary-info-text">
+        <span class="summary-info-label">Time</span>
+        <span class="summary-info-value">{{ formattedTime() }}</span>
+      </div>
+    </div>
+  </div>
+</div>

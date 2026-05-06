@@ -1,0 +1,132 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Rollback: search [OLD-SYSTEM] comments
+ */
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  /* [OLD-SYSTEM] was: background-color: var(--surface-dim, #0e141a); border-bottom: 1px solid rgba(255, 255, 255, 0.06) */
+  background-color: var(--surface-dim);
+  border-bottom: none;
+}
+
+.menu-button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 40px;
+  block-size: 40px;
+  flex-shrink: 0;
+  border: 0;
+  /* [OLD-SYSTEM] was: border-radius: 12px */
+  border-radius: var(--radius-md);
+  background-color: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.page-title {
+  margin: 0;
+  /* [OLD-SYSTEM] was: color: #f4fbff; font-size: 1.12rem */
+  color: var(--on-surface);
+  font-size: var(--text-page);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-button,
+.profile-chip {
+  border: 0;
+  cursor: pointer;
+}
+
+.icon-button {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* [OLD-SYSTEM] was: border-radius: 10px */
+  border-radius: var(--radius-md);
+  background-color: var(--surface-container);
+  /* [OLD-SYSTEM] was: color: var(--neutral-text, #bbc9cd) */
+  color: var(--on-surface-muted);
+
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 6px;
+  border-radius: var(--radius-md);
+  /* [OLD-SYSTEM] was: background-color: var(--surface-container-low); color: #f4fbff; no border */
+  background-color: var(--surface-container);
+  color: var(--on-surface);
+  border: 1px solid var(--ghost-border);
+}
+
+.avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  /* [OLD-SYSTEM] was: color: #e8fcff; background-color: rgba(34, 211, 238, 0.2) */
+  color: var(--primary);
+  background-color: var(--primary-dim);
+}
+
+.name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+  .admin-header {
+    padding: 10px 14px;
+  }
+
+  .menu-button {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .page-title {
+    font-size: var(--text-title);
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+
+  .profile-chip {
+    padding-inline: 8px;
+
+    .name {
+      display: none;
+    }
+  }
+}

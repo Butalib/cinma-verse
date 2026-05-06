@@ -1,0 +1,90 @@
+<div class="create-user-modal-backdrop" (click)="onBackdropClick()">
+    <section class="create-user-modal" role="dialog" aria-modal="true" aria-labelledby="create-user-title"
+        aria-describedby="create-user-description" (click)="$event.stopPropagation()">
+        <header class="modal-header">
+            <div>
+                <h2 id="create-user-title">Add New User</h2>
+                <p id="create-user-description">Create a new user account by entering the details below.</p>
+            </div>
+
+            <button type="button" class="close-btn" aria-label="Close modal" (click)="onCancel()">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+        </header>
+
+        <form class="modal-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+            <div class="form-grid">
+                <label class="field">
+                    <span>First Name</span>
+                    <input type="text" formControlName="firstName" placeholder="Enter first name" />
+                    @if (isInvalid('firstName')) {
+                    <small class="error">First name is required.</small>
+                    }
+                </label>
+
+                <label class="field">
+                    <span>Last Name</span>
+                    <input type="text" formControlName="lastName" placeholder="Enter last name" />
+                    @if (isInvalid('lastName')) {
+                    <small class="error">Last name is required.</small>
+                    }
+                </label>
+
+                <label class="field">
+                    <span>Email Address</span>
+                    <input type="email" formControlName="email" placeholder="name@example.com" />
+                    @if (isInvalid('email')) {
+                    <small class="error">Please enter a valid email.</small>
+                    }
+                </label>
+
+                <label class="field">
+                    <span>Phone Number</span>
+                    <input type="tel" formControlName="phoneNumber" placeholder="+20 100 000 0000" />
+                </label>
+
+                <label class="field">
+                    <span>Title</span>
+                    <input type="text" formControlName="title" placeholder="e.g. Operations Manager" />
+                </label>
+
+                <label class="field">
+                    <span>Date of Birth</span>
+                    <input type="date" formControlName="dateOfBirth" />
+                </label>
+
+                <label class="field">
+                    <span>Password</span>
+                    <input type="password" formControlName="password" placeholder="Create password" />
+                    @if (isInvalid('password')) {
+                    <small class="error">Password is required.</small>
+                    }
+                </label>
+
+                <label class="field">
+                    <span>City</span>
+                    <input type="text" formControlName="city" placeholder="Enter city" />
+                </label>
+
+                <label class="field">
+                    <span>Gender</span>
+                    <select formControlName="gender">
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </label>
+
+                <label class="field field--full">
+                    <span>Address</span>
+                    <textarea formControlName="address" rows="3" placeholder="Enter full address"></textarea>
+                </label>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" class="btn btn--secondary" (click)="onCancel()">Cancel</button>
+                <button type="submit" class="btn btn--primary">Create User</button>
+            </footer>
+        </form>
+    </section>
+</div>

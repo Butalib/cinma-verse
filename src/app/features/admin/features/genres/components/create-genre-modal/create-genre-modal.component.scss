@@ -1,0 +1,15 @@
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.form-control--error {
+  border-color: var(--status-danger) !important;
+}
+
+@media (max-width: 480px) {
+  .modal-card {
+    width: 100%;
+  }
+}

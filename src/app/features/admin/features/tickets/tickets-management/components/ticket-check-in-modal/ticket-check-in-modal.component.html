@@ -1,0 +1,245 @@
+<div
+  class="checkin-modal-overlay"
+  (click)="onBackdropClick($event)"
+  (keydown)="onKeyDown($event)"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Quick Check-In"
+  tabindex="-1"
+>
+  <div class="checkin-modal" #modalRoot>
+    <!-- ── HEADER ────────────────────────────────────────────────── -->
+    <div class="checkin-modal__header">
+      <div>
+        <h2 class="checkin-modal__title">{{ getModalTitle() }}</h2>
+        <p class="checkin-modal__subtitle">{{ getModalSubtitle() }}</p>
+      </div>
+      <button
+        type="button"
+        class="checkin-modal__close-btn"
+        aria-label="Close modal"
+        [disabled]="!canClose()"
+        (click)="onCloseClick()"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- ── STATE: IDLE / VALIDATING (INPUT) ────────────────────────── -->
+    @if (isInputState()) {
+    <div class="checkin-modal__content">
+      <div class="checkin-modal__input-section">
+        <label class="checkin-modal__input-label" for="checkin-qr-input">QR TOKEN</label>
+        <div class="checkin-modal__input-wrapper">
+          <input
+            id="checkin-qr-input"
+            type="text"
+            class="checkin-modal__input"
+            placeholder="Scan or paste ticket QR token"
+            [value]="qrToken()"
+            [disabled]="isLoading()"
+            (input)="onTokenInput($any($event.target).value)"
+            (keydown)="onTokenInputKeyPress($event)"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button
+            type="button"
+            class="checkin-modal__scan-btn"
+            [disabled]="isLoading()"
+            (click)="validateAndPreview()"
+            aria-label="Scan or validate QR code"
+          >
+            <span class="material-symbols-outlined" [class.checkin-modal__spinner]="isLoading()">
+              {{ isLoading() ? 'refresh' : 'qr_code_scanner' }}
+            </span>
+          </button>
+        </div>
+
+        <!-- ── ERROR MESSAGE ────────────────────────────────────────── -->
+        @if (errorMessage()) {
+        <div class="checkin-modal__error" role="alert">
+          <span class="material-symbols-outlined checkin-modal__error-icon">error</span>
+          <p class="checkin-modal__error-text">{{ errorMessage() }}</p>
+        </div>
+        }
+
+        <!-- ── HINT TEXT ────────────────────────────────────────────── -->
+        @if (!errorMessage() && !ticket()) {
+        <p class="checkin-modal__hint">
+          <span class="material-symbols-outlined">info</span>
+          Try scanning the QR code on a ticket, e.g.
+          <code>CV-TK-88291</code>
+        </p>
+        }
+      </div>
+    </div>
+    }
+
+    <!-- ── STATE: PREVIEW ───────────────────────────────────────────── -->
+    @if (isPreviewState() && ticket(); as ticketData) {
+    <div class="checkin-modal__content">
+      <div class="checkin-modal__ticket-preview">
+        <div class="checkin-modal__preview-header">
+          <span class="checkin-modal__preview-label">TICKET DETAILS</span>
+          <span class="checkin-modal__status-badge" [class.checkin-modal__status-badge--active]="ticketData.status === 'ACTIVE'">
+            ✓ READY FOR CHECK-IN
+          </span>
+        </div>
+
+        <div class="checkin-modal__ticket-card">
+          <img
+            class="checkin-modal__ticket-poster"
+            src="https://via.placeholder.com/80x110/0d1117/8aebff?text=🎬"
+            [alt]="ticketData.movie"
+            width="80"
+            height="110"
+          />
+
+          <div class="checkin-modal__ticket-info">
+            <h3 class="checkin-modal__movie-title">{{ ticketData.movie }}</h3>
+            <p class="checkin-modal__ticket-number">{{ ticketData.ticketNumber }}</p>
+
+            <div class="checkin-modal__ticket-details">
+              <div class="checkin-modal__detail-row">
+                <span class="checkin-modal__detail-label">SHOWTIME</span>
+                <span class="checkin-modal__detail-value">{{ ticketData.showtime }}</span>
+              </div>
+              <div class="checkin-modal__detail-row">
+                <span class="checkin-modal__detail-label">LOCATION</span>
+                <span class="checkin-modal__detail-value">{{ ticketData.location }}</span>
+              </div>
+              <div class="checkin-modal__detail-row">
+                <span class="checkin-modal__detail-label">SEAT</span>
+                <span class="checkin-modal__detail-value checkin-modal__detail-value--accent">{{ ticketData.seat }}</span>
+              </div>
+              <div class="checkin-modal__detail-row">
+                <span class="checkin-modal__detail-label">PRICE</span>
+                <span class="checkin-modal__detail-value">{{ ticketData.price }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- ── STATE: RESULT (SUCCESS / FAILED) ──────────────────────────── -->
+    @if (isResultState() && ticket(); as ticketData) {
+    <div class="checkin-modal__content">
+      <div class="checkin-modal__result">
+        @if (resultConfig(); as result) {
+        <div
+          class="checkin-modal__result-banner"
+          [class.checkin-modal__result-banner--success]="result.variant === 'success'"
+          [class.checkin-modal__result-banner--failed]="result.variant === 'error'"
+        >
+          <span class="material-symbols-outlined checkin-modal__result-icon">{{ result.icon }}</span>
+          <div class="checkin-modal__result-text">
+            <p class="checkin-modal__result-title">{{ result.title }}</p>
+            <p class="checkin-modal__result-message">{{ result.message }}</p>
+          </div>
+        </div>
+        }
+
+        <!-- Ticket Context -->
+        <div class="checkin-modal__context">
+          <span class="checkin-modal__context-label">TICKET</span>
+          <div class="checkin-modal__ticket-card checkin-modal__ticket-card--compact">
+            <img
+              class="checkin-modal__ticket-poster"
+              src="https://via.placeholder.com/80x110/0d1117/8aebff?text=🎬"
+              [alt]="ticketData.movie"
+              width="80"
+              height="110"
+            />
+            <div class="checkin-modal__ticket-info">
+              <h3 class="checkin-modal__movie-title">{{ ticketData.movie }}</h3>
+              <p class="checkin-modal__ticket-number">{{ ticketData.ticketNumber }}</p>
+              @if (resultConfig(); as result) {
+              <p
+                class="checkin-modal__detail-value"
+                [class.checkin-modal__detail-value--success]="result.variant === 'success'"
+                [class.checkin-modal__detail-value--error]="result.variant === 'error'"
+              >
+                {{ result.statusLabel }}
+              </p>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- ── FOOTER ───────────────────────────────────────────────────── -->
+    <div class="checkin-modal__footer">
+      @if (isInputState()) {
+      <button
+        type="button"
+        class="checkin-modal__btn checkin-modal__btn--ghost"
+        [disabled]="!canClose()"
+        (click)="onCloseClick()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="checkin-modal__btn checkin-modal__btn--primary"
+        [disabled]="!isTokenValid() || isLoading()"
+        (click)="validateAndPreview()"
+      >
+        @if (isLoading()) {
+        <span class="material-symbols-outlined checkin-modal__spinner">refresh</span>
+        Validating...
+        } @else {
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        Scan QR
+        }
+      </button>
+      }
+
+      @if (isPreviewState()) {
+      <button
+        type="button"
+        class="checkin-modal__btn checkin-modal__btn--ghost"
+        (click)="onCloseClick()"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="checkin-modal__btn checkin-modal__btn--primary"
+        [disabled]="isLoading()"
+        (click)="confirmCheckIn()"
+      >
+        @if (isLoading()) {
+        <span class="material-symbols-outlined checkin-modal__spinner">refresh</span>
+        Confirming...
+        } @else {
+        <span class="material-symbols-outlined">how_to_reg</span>
+        Confirm Check-In
+        }
+      </button>
+      }
+
+      @if (isResultState()) {
+      <button
+        type="button"
+        class="checkin-modal__btn checkin-modal__btn--primary"
+        (click)="reset()"
+      >
+        <span class="material-symbols-outlined">refresh</span>
+        Check Another
+      </button>
+      <button
+        type="button"
+        class="checkin-modal__btn checkin-modal__btn--ghost"
+        (click)="onCloseClick()"
+      >
+        Close
+      </button>
+      }
+    </div>
+  </div>
+</div>

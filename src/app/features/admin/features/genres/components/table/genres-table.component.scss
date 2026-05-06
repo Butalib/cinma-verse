@@ -1,0 +1,83 @@
+:host {
+  display: block;
+}
+
+.genres-table-section {
+  margin-top: 10px;
+}
+
+.genres-table-shell {
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.genres-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: auto;
+  border-collapse: collapse;
+  color: var(--on-surface);
+}
+
+.genres-table th,
+.genres-table td {
+  padding: 12px 16px;
+  border-bottom: none;
+  white-space: normal;
+  word-break: break-word;
+  text-align: left;
+  font-size: var(--text-body-sm);
+  transition: background var(--transition);
+}
+
+.genres-table thead th {
+  color: var(--on-surface-variant);
+  font-size: var(--text-label);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: var(--surface-container);
+}
+
+.genres-table tbody tr:hover {
+  background: var(--surface-container);
+}
+
+.genres-table__mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.genres-table__name {
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.genres-table__actions-head {
+  text-align: center;
+}
+
+.genres-table-empty {
+  border: 1px dashed var(--ghost-border);
+  border-radius: var(--radius-lg);
+  color: var(--on-surface-muted);
+  padding: 18px;
+  text-align: center;
+  background: var(--surface-container-low);
+}
+
+@media (max-width: 1024px) {
+  .genres-table {
+    min-width: 640px;
+  }
+
+  .genres-table th,
+  .genres-table td {
+    white-space: nowrap;
+    word-break: normal;
+  }
+}

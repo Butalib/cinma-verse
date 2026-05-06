@@ -1,0 +1,46 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+    <div class="modal-md modal-card" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="modal-header">
+            <h2 class="modal-title">Add New Branch</h2>
+            <p class="modal-subtitle">Register a new cinema location into the global fleet.</p>
+        </div>
+
+        <!-- Body: 2-column -->
+        <div class="branch-modal-body">
+            <!-- LEFT: Form -->
+            <div class="branch-form-col">
+                <div class="form-group">
+                    <label>BRANCH NAME</label>
+                    <input class="form-control" placeholder="e.g., CinemaVerse Downtown" />
+                </div>
+
+                <!-- Location BELOW name -->
+                <div class="form-group">
+                    <label>BRANCH LOCATION</label>
+                    <input class="form-control" placeholder="e.g., Downtown Metro Center" />
+                </div>
+            </div>
+
+            <!-- RIGHT: Map visual -->
+            <div class="branch-map-col">
+                <div class="map-visual">
+                    <div class="map-road-v"></div>
+                    <span class="material-symbols-outlined map-pin" aria-hidden="true">location_on</span>
+                    <div class="map-pulse"></div>
+                    <div class="map-pulse map-pulse-2"></div>
+                    <div class="map-label">BRANCH LOCATION PREVIEW</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button class="btn btn-ghost btn-md" type="button" (click)="onCancel()">Cancel</button>
+            <button class="btn btn-primary btn-md" type="button" (click)="onSubmit()">
+                <span class="material-symbols-outlined" style="font-size: 16px;">add_location</span>
+                Register Branch
+            </button>
+        </div>
+    </div>
+</div>

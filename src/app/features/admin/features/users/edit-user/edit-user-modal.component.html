@@ -1,0 +1,86 @@
+﻿<div class="edit-user-modal-backdrop" (click)="onBackdropClick()">
+    <section class="edit-user-modal" role="dialog" aria-modal="true" aria-labelledby="edit-user-title" (click)="$event.stopPropagation()">
+        
+        <header class="modal-header">
+            <div class="modal-header__copy">
+                <h2 id="edit-user-title">Edit User Permissions</h2>
+                <p>Review user information and manage account settings.</p>
+            </div>
+            <button type="button" class="modal-close-btn" (click)="onCancel()" [disabled]="isSaving()" aria-label="Close modal">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+        </header>
+
+        <div class="modal-body">
+            <section class="modal-card">
+                <h3>User Information</h3>
+                <div class="read-only-grid">
+                    <div>
+                        <span class="label">Full Name</span>
+                        <p>{{ user()?.fullName || '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="label">Email Address</span>
+                        <p>{{ user()?.email || '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="label">Phone Number</span>
+                        <p>{{ user()?.phoneNumber || '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="label">Date of Birth</span>
+                        <p>{{ user()?.dateOfBirth || '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="label">Gender</span>
+                        <p>{{ user()?.gender || '-' }}</p>
+                    </div>
+                    <div>
+                        <span class="label">City</span>
+                        <p>{{ user()?.city || '-' }}</p>
+                    </div>
+                    <div class="read-only-grid__full">
+                        <span class="label">Address</span>
+                        <p>{{ user()?.address || '-' }}</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="modal-card">
+                <h3>Account Management</h3>
+                <form [formGroup]="form" class="account-form">
+                    <label class="field-row">
+                        <span class="label">Access Role</span>
+                        <select formControlName="role">
+                            <option value="user">user</option>
+                            <option value="admin">admin</option>
+                            <option value="editor">Content Editor</option>
+                        </select>
+                    </label>
+
+                    <label class="field-row switch-row">
+                        <span class="label">Is Active</span>
+                        <input type="checkbox" formControlName="isActive" />
+                    </label>
+
+                    <label class="field-row switch-row">
+                        <span class="label">Email Confirmed</span>
+                        <input type="checkbox" formControlName="emailConfirmed" />
+                    </label>
+                </form>
+            </section>
+        </div>
+
+        <footer class="modal-footer">
+            <button type="button" class="btn btn--ghost" (click)="onCancel()" [disabled]="isSaving()">Cancel</button>
+            <button type="button" class="btn btn--primary" (click)="onSave()" [disabled]="isSaving()">
+                @if (isSaving()) {
+                    Saving...
+                } @else {
+                    Save Changes
+                }
+            </button>
+        </footer>
+
+    </section>
+</div>

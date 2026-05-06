@@ -1,0 +1,20 @@
+<section class="location-section" aria-label="Location information">
+  <h3 class="section-label">Location</h3>
+  <div class="location-grid">
+    <div class="location-card">
+      <span class="material-symbols-outlined location-card-icon">store</span>
+      <div class="location-card-content">
+        <span class="location-card-label">Branch</span>
+        <span class="location-card-value">{{ showtime().branchName }}</span>
+      </div>
+    </div>
+
+    <div class="location-card">
+      <span class="material-symbols-outlined location-card-icon">meeting_room</span>
+      <div class="location-card-content">
+        <span class="location-card-label">Hall</span>
+        <span class="location-card-value">{{ showtime().hallName }}</span>
+      </div>
+    </div>
+  </div>
+</section>

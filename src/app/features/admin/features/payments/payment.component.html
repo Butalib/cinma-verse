@@ -1,0 +1,168 @@
+<section class="payments-page">
+  <section class="payments-stats-grid" aria-label="Payments overview">
+    <article class="payments-stats-card">
+      <div class="payments-stats-card__top">
+        <p class="payments-stats-card__title">Total Payments</p>
+        <span class="payments-stats-card__icon-box material-symbols-outlined" aria-hidden="true">receipt_long</span>
+      </div>
+      <strong class="payments-stats-card__value">{{ stats().total }}</strong>
+    </article>
+
+    <article class="payments-stats-card">
+      <div class="payments-stats-card__top">
+        <p class="payments-stats-card__title">Completed</p>
+        <span class="payments-stats-card__icon-box material-symbols-outlined" aria-hidden="true">check_circle</span>
+      </div>
+      <strong class="payments-stats-card__value">{{ stats().completed }}</strong>
+    </article>
+
+    <article class="payments-stats-card">
+      <div class="payments-stats-card__top">
+        <p class="payments-stats-card__title">Pending</p>
+        <span class="payments-stats-card__icon-box material-symbols-outlined" aria-hidden="true">pending</span>
+      </div>
+      <strong class="payments-stats-card__value">{{ stats().pending }}</strong>
+    </article>
+
+    <article class="payments-stats-card">
+      <div class="payments-stats-card__top">
+        <p class="payments-stats-card__title">Revenue</p>
+        <span class="payments-stats-card__icon-box material-symbols-outlined" aria-hidden="true">payments</span>
+      </div>
+      <strong class="payments-stats-card__value">{{ stats().revenue }}</strong>
+    </article>
+  </section>
+
+  <div class="payments-toolbar">
+    <label class="payments-toolbar__search" for="payments-search-input">
+      <span class="material-symbols-outlined payments-toolbar__search-icon" aria-hidden="true">search</span>
+      <input
+        id="payments-search-input"
+        type="search"
+        [value]="searchTerm()"
+        placeholder="Search by payment ID, booking ID, or status..."
+        aria-label="Search payments"
+        (input)="onSearchInput($event)" />
+    </label>
+  </div>
+
+  <section class="payments-table-section" aria-label="Payments table">
+    <div class="payments-table-shell">
+      <div class="payments-table" role="table" aria-label="Payments table">
+        <div class="payments-table__row payments-table__header" role="row">
+          <div class="payments-table__cell payments-table__col-payment-id" role="columnheader">Payment ID</div>
+          <div class="payments-table__cell payments-table__col-booking-id" role="columnheader">Booking ID</div>
+          <div class="payments-table__cell payments-table__col-date" role="columnheader">Transaction Date</div>
+          <div class="payments-table__cell payments-table__col-amount" role="columnheader">Amount</div>
+          <div class="payments-table__cell payments-table__col-currency" role="columnheader">Currency</div>
+          <div class="payments-table__cell payments-table__col-status" role="columnheader">Status</div>
+          <div class="payments-table__cell payments-table__col-actions" role="columnheader">Actions</div>
+        </div>
+
+        <div class="payments-table__body" role="rowgroup">
+          @for (payment of pagedPayments(); track trackByPaymentId($index, payment)) {
+            <div class="payments-table__row" role="row">
+              <div class="payments-table__cell payments-table__col-payment-id" role="cell">
+                <span class="payments-table__id">{{ payment.paymentId }}</span>
+              </div>
+              <div class="payments-table__cell payments-table__col-booking-id" role="cell">
+                <span class="payments-table__booking">{{ payment.bookingId }}</span>
+              </div>
+              <div class="payments-table__cell payments-table__col-date" role="cell">
+                <span class="payments-table__date">{{ payment.transactionDate }}</span>
+              </div>
+              <div class="payments-table__cell payments-table__col-amount" role="cell">
+                <span class="payments-table__amount">{{ payment.amountLabel }}</span>
+              </div>
+              <div class="payments-table__cell payments-table__col-currency" role="cell">
+                <span class="payments-table__currency">{{ payment.currency }}</span>
+              </div>
+              <div class="payments-table__cell payments-table__col-status" role="cell">
+                <span class="payment-status-badge" [ngClass]="payment.statusClass">{{ payment.statusLabel }}</span>
+              </div>
+              <div class="payments-table__cell payments-table__col-actions" role="cell">
+                <button type="button" class="icon-btn" aria-label="View payment details" (click)="openDetails(payment)">
+                  <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                </button>
+              </div>
+            </div>
+          } @empty {
+            <div class="payments-table__empty">No payments found.</div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-pagination
+    [totalItems]="filteredPayments().length"
+    [pageSize]="pageSize()"
+    [currentPage]="currentPage()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)" />
+
+  @if (selectedPayment(); as payment) {
+    <div class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Payment details" (click)="closeDetails()">
+      <div class="modal-card modal-md payment-details-modal" (click)="$event.stopPropagation()">
+        <div class="payment-details-modal__header">
+          <div>
+            <h2 class="payment-details-modal__title">Payment Details</h2>
+            <p class="payment-details-modal__subtitle">{{ payment.paymentId }}</p>
+          </div>
+          <button type="button" class="payment-details-modal__close" aria-label="Close payment details" (click)="closeDetails()">
+            <span class="material-symbols-outlined" aria-hidden="true">close</span>
+          </button>
+        </div>
+
+        <div class="payment-details-modal__body">
+          <section class="payment-details-section">
+            <h3>Identity</h3>
+            <div class="payment-details-grid">
+              <div class="payment-details-item">
+                <span class="payment-details-label">Payment ID</span>
+                <strong class="payment-details-value">{{ payment.paymentId }}</strong>
+              </div>
+              <div class="payment-details-item">
+                <span class="payment-details-label">Booking ID</span>
+                <strong class="payment-details-value">{{ payment.bookingId }}</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="payment-details-section payment-details-section--financial">
+            <h3>Financial</h3>
+            <div class="payment-details-financial">
+              <div class="payment-details-amount-block">
+                <span class="payment-details-label">Amount</span>
+                <strong class="payment-details-amount">{{ payment.amountLabel }}</strong>
+              </div>
+              <div class="payment-details-item">
+                <span class="payment-details-label">Currency</span>
+                <strong class="payment-details-value">{{ payment.currency }}</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="payment-details-section">
+            <h3>Metadata</h3>
+            <div class="payment-details-item">
+              <span class="payment-details-label">Transaction Date</span>
+              <strong class="payment-details-value">{{ payment.transactionDate }}</strong>
+            </div>
+          </section>
+
+          <section class="payment-details-section">
+            <h3>Status</h3>
+            <span class="payment-status-badge payment-details-status" [ngClass]="payment.statusClass">
+              {{ payment.statusLabel }}
+            </span>
+          </section>
+        </div>
+
+        <div class="payment-details-modal__footer">
+          <button type="button" class="btn btn-ghost btn-sm" (click)="closeDetails()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+</section>

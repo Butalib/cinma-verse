@@ -1,0 +1,28 @@
+<section class="users-management-layout">
+    <app-user-kpi></app-user-kpi>
+
+    <app-users-search-toolbar (searchChange)="onSearchChange($event)" (filterClicked)="toggleFilter()"
+        (addClicked)="openCreateUserModal()"></app-users-search-toolbar>
+
+    <app-users-filter-panel [isOpen]="isFilterOpen()" (applyFilters)="onApplyFilters($event)"
+        (resetFilters)="onResetFilters()"></app-users-filter-panel>
+
+    <app-users-table [users]="pagedUsers()" (viewUser)="onViewUser($event)" (editUser)="onEditUser($event)"
+        (deleteUser)="onDeleteUser($event)"></app-users-table>
+
+    <app-pagination [totalItems]="filteredUsers().length" [pageSize]="pageSize()" [currentPage]="currentPage()"
+        (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)"></app-pagination>
+
+    <app-create-user-modal [style.display]="isCreateUserModalOpen() ? 'block' : 'none'"
+        (closeModal)="closeCreateUserModal()" (createUser)="onCreateUser($event)"></app-create-user-modal>
+
+    @if (isEditUserModalOpen()) {
+    <app-edit-user-modal [user]="selectedUserDetails()" [isSaving]="isEditSaving()" (closeModal)="closeEditUserModal()"
+        (saveChanges)="onSaveUserChanges($event)"></app-edit-user-modal>
+    }
+
+    @if (isUserIntelligenceModalOpen() && intelligenceSelectedUser(); as intelUser) {
+    <app-user-intelligence-modal [selectedUser]="intelUser" [overviewOverride]="intelligenceOverview()"
+        (backdropDismiss)="closeUserIntelligenceModal()" />
+    }
+</section>

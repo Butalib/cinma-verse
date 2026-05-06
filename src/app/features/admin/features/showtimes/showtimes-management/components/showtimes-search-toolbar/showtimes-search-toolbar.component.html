@@ -1,0 +1,34 @@
+<div class="showtimes-search-toolbar">
+    <div class="showtimes-search-toolbar__search">
+        <label class="showtimes-search-toolbar__search-field" for="showtimes-search-toolbar-input">
+            <span class="showtimes-search-toolbar__search-icon material-symbols-outlined" aria-hidden="true">
+                search
+            </span>
+
+            <input id="showtimes-search-toolbar-input" class="showtimes-search-toolbar__search-input" type="search"
+                placeholder="Search by movie, branch, or showtime ID..."
+                aria-label="Search by movie, branch, or showtime ID" (input)="onSearchInput($event)" />
+        </label>
+    </div>
+
+    <div class="showtimes-search-toolbar__actions" aria-label="Showtime actions">
+        <button class="showtimes-search-toolbar__button showtimes-search-toolbar__button--secondary" type="button"
+            (click)="filterClicked.emit()">
+            <span class="material-symbols-outlined showtimes-search-toolbar__button-icon" aria-hidden="true">tune</span>
+            <span>Filter</span>
+        </button>
+
+        <button class="showtimes-search-toolbar__button showtimes-search-toolbar__button--secondary" type="button"
+            (click)="exportClicked.emit()">
+            <span class="material-symbols-outlined showtimes-search-toolbar__button-icon"
+                aria-hidden="true">download</span>
+            <span>Export</span>
+        </button>
+
+        <button class="showtimes-search-toolbar__button showtimes-search-toolbar__button--primary" type="button"
+            (click)="addClicked.emit()">
+            <span class="material-symbols-outlined showtimes-search-toolbar__button-icon" aria-hidden="true">add</span>
+            <span>Add Showtime</span>
+        </button>
+    </div>
+</div>

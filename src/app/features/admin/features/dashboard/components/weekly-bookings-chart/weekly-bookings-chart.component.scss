@@ -1,0 +1,45 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Rollback: search [OLD-SYSTEM] comments
+ */
+
+.chart-card {
+  /* [OLD-SYSTEM] was: border: 1px solid var(--accent-border); box-shadow rgba(0,0,0,0.35) */
+  background-color: var(--surface-container-low);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  border: none;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+  }
+
+  .chart-title {
+    /* [OLD-SYSTEM] was: font-size: 16px; color: #e6edf3 */
+    font-size: var(--text-title);
+    font-weight: 700;
+    color: var(--on-surface);
+    letter-spacing: -0.01em;
+    margin: 0 0 16px 0;
+  }
+
+  .chart-container {
+    height: 220px;
+    width: 100%;
+    position: relative;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-card {
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+}

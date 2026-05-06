@@ -1,0 +1,38 @@
+<div class="bookings-search-toolbar">
+  <div class="bookings-search-toolbar__search">
+    <label class="bookings-search-toolbar__search-field" for="bookings-search-toolbar-input">
+      <span class="bookings-search-toolbar__search-icon material-symbols-outlined" aria-hidden="true">
+        search
+      </span>
+
+      <input
+        id="bookings-search-toolbar-input"
+        class="bookings-search-toolbar__search-input"
+        type="search"
+        placeholder="Search by booking ID, customer, or movie..."
+        aria-label="Search by booking ID, customer, or movie"
+        [value]="searchValue()"
+        (input)="onSearchInput($event)" />
+    </label>
+  </div>
+
+  <div class="bookings-search-toolbar__actions" aria-label="Booking actions">
+    <button class="bookings-search-toolbar__button bookings-search-toolbar__button--secondary" type="button"
+      (click)="filterClicked.emit()">
+      <span class="material-symbols-outlined bookings-search-toolbar__button-icon" aria-hidden="true">tune</span>
+      <span>Filter</span>
+    </button>
+
+    <button class="bookings-search-toolbar__button bookings-search-toolbar__button--secondary" type="button"
+      (click)="exportClicked.emit()">
+      <span class="material-symbols-outlined bookings-search-toolbar__button-icon" aria-hidden="true">download</span>
+      <span>Export</span>
+    </button>
+
+    <button class="bookings-search-toolbar__button bookings-search-toolbar__button--primary" type="button"
+      (click)="addClicked.emit()">
+      <span class="material-symbols-outlined bookings-search-toolbar__button-icon" aria-hidden="true">add</span>
+      <span>Add Booking</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,91 @@
+<section class="users-table-section" aria-label="Users table">
+    @if (users().length === 0) {
+    <div class="users-table-empty">No users found.</div>
+    } @else {
+    <div class="users-table-shell">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>City</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Email Confirmed</th>
+                    <th class="users-table__actions-head">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (user of users(); track user.id) {
+                <tr>
+                    <td class="users-table__mono">{{ user.id }}</td>
+                    <td class="users-table__name">{{ user.name }}</td>
+                    <td>{{ user.contact }}</td>
+                    <td>{{ user.city }}</td>
+                    <td>
+                        <span class="badge badge--role" [class.badge--role-admin]="user.role === 'Admin'">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" [class.badge--status-active]="user.status === 'ACTIVE'"
+                            [class.badge--status-suspended]="user.status === 'SUSPENDED'">
+                            {{ user.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" [class.badge--email-confirmed]="user.emailConfirmed === 'CONFIRMED'"
+                            [class.badge--email-not-confirmed]="user.emailConfirmed === 'NOT CONFIRMED'">
+                            {{ user.emailConfirmed }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="users-table__actions users-table__actions--desktop">
+                            <button type="button" class="icon-btn" aria-label="View user" (click)="onView(user.id)">
+                                <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                            </button>
+                            <button type="button" class="icon-btn" aria-label="Edit user" (click)="onEdit(user)">
+                                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                            </button>
+                            <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete user"
+                                (click)="onDelete(user.id)">
+                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                            </button>
+                        </div>
+
+                        <details class="users-table__actions-menu" name="user-actions"
+                            (toggle)="onActionsMenuToggle($event)">
+                            <summary class="icon-btn users-table__menu-trigger" aria-label="Open actions menu">
+                                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+                            </summary>
+
+                            <div class="users-table__menu-list" role="menu" aria-label="User actions">
+                                <button type="button" class="users-table__menu-item" role="menuitem"
+                                    (click)="onMenuView($event, user.id)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                                    <span>View</span>
+                                </button>
+
+                                <button type="button" class="users-table__menu-item" role="menuitem"
+                                    (click)="onMenuEdit($event, user)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                                    <span>Edit</span>
+                                </button>
+
+                                <button type="button" class="users-table__menu-item users-table__menu-item--danger"
+                                    role="menuitem" (click)="onMenuDelete($event, user.id)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</section>

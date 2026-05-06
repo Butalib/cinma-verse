@@ -1,0 +1,133 @@
+.filter-panel {
+  margin-top: 12px;
+  padding: 24px 28px;
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+  border: none;
+  box-shadow: var(--shadow-card);
+}
+
+.filter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-groups {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 260px;
+  flex: 1 1 360px;
+}
+
+.group-label {
+  margin: 0;
+  color: var(--on-surface-variant);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.group-row {
+  display: flex;
+  gap: 10px;
+}
+
+.two-columns .form-control {
+  flex: 1 1 0;
+}
+
+.amount-range {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 0;
+}
+
+.amount-range .form-control {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.form-control {
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ghost-border);
+  background: var(--surface-container);
+  color: var(--on-surface);
+  padding: 0 12px;
+  font-size: var(--text-body);
+  outline: 0;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  color-scheme: dark;
+}
+
+.form-control::placeholder {
+  color: var(--on-surface-muted);
+}
+
+.form-control:focus {
+  border-color: var(--primary-container);
+  box-shadow: var(--accent-glow-soft);
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.panel-actions button {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-reset {
+  border: 1px solid var(--ghost-border);
+  background: transparent;
+  color: var(--on-surface);
+}
+
+.btn-reset:hover {
+  background: var(--primary-glow);
+}
+
+@media (max-width: 768px) {
+  .filter-panel {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .filter-groups {
+    gap: 14px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .filter-group {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .group-row {
+    flex-wrap: wrap;
+  }
+
+  .group-row .form-control,
+  .amount-range {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+}

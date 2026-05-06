@@ -1,0 +1,293 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Rollback: search [OLD-SYSTEM] comments
+ */
+
+:host {
+  /* [OLD-SYSTEM] was: local hex palette incl. --success #22c55e, --accent #00d4ff */
+  --bg-modal: var(--surface);
+  --bg-card: var(--surface-container);
+  --bg-sidebar: var(--surface-container-low);
+  --border: var(--ghost-border);
+  --text-primary: var(--on-surface);
+  --text-muted: var(--on-surface-muted);
+  --accent: var(--primary);
+  --success: var(--status-active);
+  --danger: var(--status-danger);
+  --warning: var(--status-suspended);
+
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: block;
+  /* [OLD-SYSTEM] was: system-ui font stack */
+  font-family: 'Inter', sans-serif;
+  color: var(--text-primary);
+}
+
+.user-intelligence-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 24px);
+  /* [OLD-SYSTEM] was: layered grid + #050608; blur(10px) */
+  background: rgba(9, 12, 16, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.user-intelligence-modal__card.modal-wrapper {
+  width: 95vw;
+  max-width: 900px;
+  max-height: 90vh;
+  transition: max-width 0.3s ease;
+  /* [OLD-SYSTEM] was: border-radius: 16px; solid --bg-modal; box-shadow with rgba(0,0,0,0.85) */
+  border-radius: var(--radius-xl);
+  background: rgba(22, 28, 34, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-modal);
+  outline: 1px solid var(--ghost-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+:host.modal-wide .user-intelligence-modal__card.modal-wrapper {
+  max-width: 1160px;
+}
+
+:host.modal-wide .profile-panel {
+  flex: 0 0 200px;
+  width: 200px;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+:host.modal-wide .profile-panel .contact-rows,
+:host.modal-wide .profile-panel .joined-row {
+  display: none;
+}
+
+:host.modal-wide .intelligence-panel {
+  flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.intelligence-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+.tab-content-area {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-intelligence-modal__layout {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+
+.user-intelligence-modal__sidebar {
+  flex: 0 0 280px;
+  width: 280px;
+  max-width: 100%;
+  background: var(--bg-sidebar);
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+}
+
+.user-intelligence-modal__main.intelligence-panel {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  /* [OLD-SYSTEM] was: background: #000000 */
+  background: var(--surface-dim);
+  overflow: hidden;
+  height: 100%;
+}
+
+.user-intelligence-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+app-user-overview {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+app-user-bookings,
+app-user-tickets,
+app-user-payments {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.user-intelligence-modal__tab-placeholder {
+  margin: 0;
+  padding: 24px 20px;
+  border-radius: var(--radius-md);
+  /* [OLD-SYSTEM] was: dashed rgba(0,212,255,0.25) */
+  border: 1px dashed var(--ghost-border);
+  color: var(--text-muted);
+  font-size: var(--text-body);
+  text-align: center;
+}
+
+.user-intelligence-modal__tab-placeholder code {
+  font-size: var(--text-body-sm);
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .user-intelligence-modal__layout {
+    flex-direction: column;
+  }
+
+  .user-intelligence-modal__sidebar {
+    flex: 0 0 auto;
+    width: 100%;
+    max-height: min(48vh, 380px);
+    /* [OLD-SYSTEM] was: border-bottom: 1px solid var(--border) */
+    border-bottom: none;
+    box-shadow: 0 8px 24px rgba(14, 20, 26, 0.35);
+    overflow-y: auto;
+  }
+
+  .user-intelligence-modal__main {
+    flex: 1 1 auto;
+    min-height: min(52vh, 420px);
+  }
+
+  .user-intelligence-modal__card.modal-wrapper {
+    max-height: min(94vh, 920px);
+  }
+}
+
+@media (max-width: 768px) {
+  .user-intelligence-modal__backdrop {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .user-intelligence-modal__card.modal-wrapper,
+  :host.modal-wide .user-intelligence-modal__card.modal-wrapper {
+    max-width: 100%;
+    width: 100%;
+    max-height: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    border-radius: 0;
+  }
+
+  .user-intelligence-modal__layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column !important;
+    overflow: hidden;
+  }
+
+  .user-intelligence-modal__sidebar.profile-panel {
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: none !important;
+    flex: 0 0 auto !important;
+    text-align: center;
+    padding: 20px 16px;
+    border-bottom: 1px solid var(--ghost-border);
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .contact-rows,
+    .joined-row {
+      display: flex !important;
+    }
+  }
+
+  .intelligence-panel {
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+/* Phone: full-viewport modal, edge-to-edge; scroll inside main body */
+@media (max-width: 600px) {
+  .user-intelligence-modal__backdrop {
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .user-intelligence-modal__card.modal-wrapper {
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    flex: 1 1 auto;
+  }
+
+  :host.modal-wide .user-intelligence-modal__card.modal-wrapper {
+    max-width: none;
+  }
+
+  .user-intelligence-modal__layout {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .user-intelligence-modal__sidebar {
+    max-height: min(40vh, 320px);
+    flex-shrink: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .user-intelligence-modal__main {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .user-intelligence-modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

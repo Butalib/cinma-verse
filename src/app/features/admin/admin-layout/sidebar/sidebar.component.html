@@ -1,0 +1,21 @@
+<aside class="sidebar-container" [class.sidebar-container--open]="open()">
+  <div class="brand-header">
+    <div class="brand-copy">
+      <h1 class="logo-text">CinemaVerse</h1>
+      <span class="logo-subtext">Admin Panel</span>
+    </div>
+
+    <button class="close-button" type="button" aria-label="Close sidebar" (click)="closeRequested.emit()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <nav class="nav-menu">
+    @for (item of navItems(); track item.id) {
+    <a [routerLink]="item.route" routerLinkActive="active-nav-item" class="nav-link">
+      <span class="icon material-symbols-outlined">{{ item.icon }}</span>
+      <span class="label">{{ item.label }}</span>
+    </a>
+    }
+  </nav>
+</aside>

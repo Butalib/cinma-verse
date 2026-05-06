@@ -1,0 +1,180 @@
+<section class="tickets-management-layout">
+  <!-- ── Page Header ──────────────────────────────── -->
+  <div class="tickets-management-header">
+    <!--
+        <div class="tickets-management-header__info">
+            <h1 class="tickets-management-header__title">Tickets Management</h1>
+            <p class="tickets-management-header__subtitle">
+                <span class="material-symbols-outlined tickets-management-header__api-icon"
+                    aria-hidden="true">sync</span>
+                GET /api/admin/tickets
+            </p>
+        </div>-->
+
+    <!--<div class="tickets-management-header__actions">
+            <button type="button" class="tickets-management-btn tickets-management-btn--secondary"
+                (click)="onExportCsv()">
+                <span class="material-symbols-outlined tickets-management-btn__icon"
+                    aria-hidden="true">download</span>
+                <span>Export CSV</span>
+            </button>
+            <button type="button" class="tickets-management-btn tickets-management-btn--primary"
+                (click)="onQuickCheckIn()">
+                <span class="material-symbols-outlined tickets-management-btn__icon"
+                    aria-hidden="true">qr_code_scanner</span>
+                <span>Quick Check-In</span>
+            </button>
+        </div>-->
+  </div>
+
+  <!-- ── KPI Cards ─────────────────────────────────── -->
+  <section class="tickets-kpi-grid" aria-label="Ticket Statistics">
+    <article class="tickets-kpi-card">
+      <div class="tickets-kpi-card__top">
+        <div class="tickets-kpi-card__icon-box" aria-hidden="true">
+          <span class="material-symbols-outlined tickets-kpi-card__icon">local_activity</span>
+        </div>
+      </div>
+      <p class="tickets-kpi-card__value">{{ kpiTotalTickets() }}</p>
+      <div class="tickets-kpi-card__bottom">
+        <p class="tickets-kpi-card__title">TOTAL TICKETS</p>
+      </div>
+    </article>
+
+    <article class="tickets-kpi-card tickets-kpi-card--active">
+      <div class="tickets-kpi-card__top">
+        <div class="tickets-kpi-card__icon-box" aria-hidden="true">
+          <span class="material-symbols-outlined tickets-kpi-card__icon">bolt</span>
+        </div>
+      </div>
+      <p class="tickets-kpi-card__value">{{ kpiActiveTickets() }}</p>
+      <div class="tickets-kpi-card__bottom">
+        <p class="tickets-kpi-card__title">ACTIVE TICKETS</p>
+      </div>
+    </article>
+
+    <article class="tickets-kpi-card tickets-kpi-card--used">
+      <div class="tickets-kpi-card__top">
+        <div class="tickets-kpi-card__icon-box" aria-hidden="true">
+          <span class="material-symbols-outlined tickets-kpi-card__icon">check_circle</span>
+        </div>
+      </div>
+      <p class="tickets-kpi-card__value">{{ kpiUsedTickets() }}</p>
+      <div class="tickets-kpi-card__bottom">
+        <p class="tickets-kpi-card__title">USED TICKETS</p>
+      </div>
+    </article>
+
+    <article class="tickets-kpi-card tickets-kpi-card--revenue">
+      <div class="tickets-kpi-card__top">
+        <div class="tickets-kpi-card__icon-box" aria-hidden="true">
+          <span class="material-symbols-outlined tickets-kpi-card__icon">payments</span>
+        </div>
+      </div>
+      <p class="tickets-kpi-card__value">{{ kpiTotalRevenue() }}</p>
+      <div class="tickets-kpi-card__bottom">
+        <p class="tickets-kpi-card__title">TOTAL REVENUE</p>
+      </div>
+    </article>
+  </section>
+
+  <!-- ── Search Toolbar ────────────────────────────── -->
+  <div class="tickets-toolbar">
+    <label class="tickets-toolbar__search" for="tickets-search-input">
+      <span class="material-symbols-outlined tickets-toolbar__search-icon" aria-hidden="true"
+        >search</span
+      >
+      <input
+        id="tickets-search-input"
+        class="tickets-toolbar__search-input"
+        type="search"
+        placeholder="Search by ticket, movie, customer, branch..."
+        aria-label="Search tickets"
+        [value]="searchQuery()"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+    </label>
+
+    <div class="tickets-toolbar__actions">
+      <button
+        type="button"
+        class="tickets-toolbar__btn tickets-toolbar__btn--filter"
+        [class.tickets-toolbar__btn--filter-active]="isFilterOpen()"
+        (click)="toggleFilter()"
+        [attr.aria-expanded]="isFilterOpen()"
+        aria-controls="tickets-filter-panel"
+      >
+        <span class="material-symbols-outlined tickets-toolbar__btn-icon" aria-hidden="true"
+          >tune</span
+        >
+        <span>Filter</span>
+        @if (isFilterOpen()) {
+        <span class="tickets-toolbar__filter-dot" aria-hidden="true"></span>
+        }
+      </button>
+      <button
+        type="button"
+        class="tickets-management-btn tickets-management-btn--secondary"
+        (click)="onExportCsv()"
+      >
+        <span class="material-symbols-outlined tickets-management-btn__icon" aria-hidden="true"
+          >download</span
+        >
+        <span>Export CSV</span>
+      </button>
+      <button
+        type="button"
+        class="tickets-management-btn tickets-management-btn--primary"
+        (click)="onQuickCheckIn()"
+      >
+        <span class="material-symbols-outlined tickets-management-btn__icon" aria-hidden="true"
+          >qr_code_scanner</span
+        >
+        <span>Quick Check-In</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Collapsible Filter Panel ──────────────────── -->
+  @if (isFilterOpen()) {
+  <div id="tickets-filter-panel" class="tickets-filter-panel-wrapper">
+    <app-tickets-filter-bar
+      (applyFilters)="onApplyFilters($event)"
+      (resetFilters)="onResetFilters()"
+    ></app-tickets-filter-bar>
+  </div>
+  }
+
+  <!-- ── Table ─────────────────────────────────────── -->
+  <app-tickets-table
+    [tickets]="pagedTickets()"
+    (viewTicket)="onViewTicket($event)"
+    (deleteTicket)="onDeleteTicket($event)"
+  ></app-tickets-table>
+
+  <!-- ── Pagination ─────────────────────────────────── -->
+  <app-pagination
+    [totalItems]="filteredTickets().length"
+    [pageSize]="pageSize()"
+    [currentPage]="currentPage()"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  ></app-pagination>
+</section>
+
+<!-- Ticket View Modal -->
+@if (selectedTicket(); as ticketData) {
+<app-ticket-view-modal
+  [ticket]="ticketData"
+  (closeModal)="closeViewModal()"
+  (viewBooking)="closeViewModal()"
+></app-ticket-view-modal>
+}
+
+<!-- Check-In Modal -->
+@if (isCheckInModalOpen()) {
+<app-ticket-check-in-modal
+  (closeModal)="onCheckInModalClose()"
+  (checkInConfirmed)="onCheckInConfirmed($event)"
+></app-ticket-check-in-modal>
+}

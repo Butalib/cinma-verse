@@ -1,0 +1,33 @@
+<article class="kpi-card">
+  <div class="kpi-card__top">
+    <div class="kpi-card__icon-box" aria-hidden="true">
+      <span class="material-symbols-outlined kpi-card__icon">{{ data().icon }}</span>
+    </div>
+    <!-- <div
+      class="kpi-card__trend"
+      [class.kpi-card__trend--up]="data().trendType === 'up'"
+      [class.kpi-card__trend--down]="data().trendType === 'down'"
+      [class.kpi-card__trend--neutral]="data().trendType === 'neutral'"
+    >
+      @switch (data().trendType) {
+        @case ('up') {
+          <span class="material-symbols-outlined kpi-card__trend-arrow">trending_up</span>
+        }
+        @case ('down') {
+          <span class="material-symbols-outlined kpi-card__trend-arrow">trending_down</span>
+        }
+        @case ('neutral') {
+          <span class="material-symbols-outlined kpi-card__trend-arrow">trending_flat</span>
+        }
+      }
+      <span class="kpi-card__trend-value">{{ data().trendValue }}</span>
+    </div> -->
+  </div>
+
+  
+  <p class="kpi-card__value">{{ data().value }}</p>
+  <div class="kpi-card__bottom">
+    <p class="kpi-card__title">{{ data().title }}</p>
+    <!-- <p class="kpi-card__source">{{ data().apiSource }}</p> -->
+  </div>
+</article>

@@ -1,0 +1,76 @@
+<div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-card modal-md" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2 class="modal-title">Edit Showtime</h2>
+                <p class="modal-subtitle">
+                    @if (showtime(); as s) {
+                    {{ s.movieTitle }} — {{ s.branchName }}
+                    }
+                </p>
+            </div>
+            <button type="button" class="modal-close" aria-label="Close modal" (click)="onClose()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-date">Date</label>
+                        <input id="edit-date" type="date" class="form-control" formControlName="date"
+                            [class.form-control--error]="isInvalid('date')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-status">Status</label>
+                        <select id="edit-status" class="form-control" formControlName="status">
+                            <option value="SCHEDULED">Scheduled</option>
+                            <option value="NOW_SHOWING">Now Showing</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-startTime">Start Time</label>
+                        <input id="edit-startTime" type="time" class="form-control" formControlName="startTime"
+                            [class.form-control--error]="isInvalid('startTime')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-endTime">End Time</label>
+                        <input id="edit-endTime" type="time" class="form-control" formControlName="endTime"
+                            [class.form-control--error]="isInvalid('endTime')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-price">Ticket Price ($)</label>
+                        <input id="edit-price" type="number" class="form-control" formControlName="price"
+                            min="0" step="0.01" [class.form-control--error]="isInvalid('price')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-totalSeats">Total Seats</label>
+                        <input id="edit-totalSeats" type="number" class="form-control" formControlName="totalSeats"
+                            min="1" [class.form-control--error]="isInvalid('totalSeats')" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" (click)="onClose()" [disabled]="isSaving()">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+                    @if (isSaving()) {
+                    Saving...
+                    } @else {
+                    Save Changes
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

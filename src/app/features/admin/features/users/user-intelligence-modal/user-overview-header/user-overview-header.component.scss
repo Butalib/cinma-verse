@@ -1,0 +1,138 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ */
+
+:host {
+  /* [OLD-SYSTEM] was: hex palette incl. green --success */
+  --bg-modal: var(--surface);
+  --bg-card: var(--surface-container);
+  --bg-sidebar: var(--surface-container-low);
+  --border: var(--ghost-border);
+  --text-primary: var(--on-surface);
+  --text-muted: var(--on-surface-muted);
+  --accent: var(--primary);
+  --success: var(--status-active);
+  --danger: var(--status-danger);
+  --warning: var(--status-suspended);
+
+  display: block;
+}
+
+.user-overview-header {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.user-overview-header__card {
+  position: relative;
+  text-align: left;
+  cursor: pointer;
+  /* [OLD-SYSTEM] was: border-radius: 10px; border: 1px solid var(--border) */
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: none;
+  color: inherit;
+  font: inherit;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.user-overview-header__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(145deg, rgba(0, 212, 255, 0.12), transparent 55%);
+  transition: opacity 0.15s ease;
+}
+
+.user-overview-header__card:hover,
+.user-overview-header__card:focus-visible {
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.user-overview-header__card:hover::before,
+.user-overview-header__card:focus-visible::before {
+  opacity: 1;
+}
+
+.user-overview-header__card--active {
+  border-color: var(--accent);
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.user-overview-header__card--active::before {
+  opacity: 1;
+}
+
+.user-overview-header__card-arrow {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 12px;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.user-overview-header__card:hover .user-overview-header__card-arrow,
+.user-overview-header__card:focus-visible .user-overview-header__card-arrow,
+.user-overview-header__card--active .user-overview-header__card-arrow {
+  opacity: 0.85;
+}
+
+.user-overview-header__label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  padding-right: 18px;
+}
+
+.user-overview-header__value {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.user-overview-header__value--status {
+  color: var(--success);
+}
+
+.user-overview-header__value--suspended {
+  color: var(--danger);
+}
+
+.user-overview-header__value--pending {
+  color: var(--warning);
+}
+
+.user-overview-header__value--role,
+.user-overview-header__value--accent {
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .user-overview-header {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .user-overview-header {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,73 @@
+<div class="modal-backdrop" (click)="closeModal.emit()">
+    <div class="modal-card modal-md" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2 class="modal-title">Add New Showtime</h2>
+                <p class="modal-subtitle">Schedule a new movie showtime</p>
+            </div>
+            <button type="button" class="modal-close" aria-label="Close modal" (click)="closeModal.emit()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group form-group--full">
+                        <label for="create-movieTitle">Movie Title</label>
+                        <input id="create-movieTitle" type="text" class="form-control" formControlName="movieTitle"
+                            placeholder="Enter movie title" [class.form-control--error]="isInvalid('movieTitle')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-branchName">Branch</label>
+                        <input id="create-branchName" type="text" class="form-control" formControlName="branchName"
+                            placeholder="Enter branch name" [class.form-control--error]="isInvalid('branchName')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-hallName">Hall</label>
+                        <input id="create-hallName" type="text" class="form-control" formControlName="hallName"
+                            placeholder="Enter hall name" [class.form-control--error]="isInvalid('hallName')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-date">Date</label>
+                        <input id="create-date" type="date" class="form-control" formControlName="date"
+                            [class.form-control--error]="isInvalid('date')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-startTime">Start Time</label>
+                        <input id="create-startTime" type="time" class="form-control" formControlName="startTime"
+                            [class.form-control--error]="isInvalid('startTime')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-endTime">End Time</label>
+                        <input id="create-endTime" type="time" class="form-control" formControlName="endTime"
+                            [class.form-control--error]="isInvalid('endTime')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-price">Ticket Price ($)</label>
+                        <input id="create-price" type="number" class="form-control" formControlName="price"
+                            placeholder="0.00" min="0" step="0.01"
+                            [class.form-control--error]="isInvalid('price')" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="create-totalSeats">Total Seats</label>
+                        <input id="create-totalSeats" type="number" class="form-control" formControlName="totalSeats"
+                            placeholder="0" min="1" [class.form-control--error]="isInvalid('totalSeats')" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" (click)="closeModal.emit()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Showtime</button>
+            </div>
+        </form>
+    </div>
+</div>

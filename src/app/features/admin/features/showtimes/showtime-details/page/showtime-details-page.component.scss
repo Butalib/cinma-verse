@@ -1,0 +1,234 @@
+:host {
+  display: block;
+}
+
+:host(.showtime-details-page--overlay) {
+  height: 100%;
+}
+
+.showtime-details-layout {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px 24px 32px;
+  max-width: 1200px;
+}
+
+:host(.showtime-details-page--overlay) .showtime-details-layout {
+  max-width: none;
+  height: 100%;
+  padding: 24px 28px 28px;
+  overflow-y: auto;
+}
+
+/* ── HEADER ─────────────────────────────────────────── */
+.details-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ghost-border);
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--surface-container-high);
+    color: var(--on-surface);
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.header-text {
+  min-width: 0;
+}
+
+.header-title {
+  margin: 0;
+  font-size: var(--text-subtitle);
+  font-weight: 700;
+  color: var(--on-surface);
+  letter-spacing: -0.01em;
+}
+
+.header-subtitle {
+  margin: 4px 0 0;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+/* ── GRID ───────────────────────────────────────────── */
+.details-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.details-sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+:host(.showtime-details-page--overlay) .details-sidebar {
+  top: 0;
+}
+
+.details-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── LOADING STATE ──────────────────────────────────── */
+.details-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 24px;
+}
+
+.loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--ghost-border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--on-surface-muted);
+}
+
+/* ── ERROR STATE ────────────────────────────────────── */
+.details-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 24px;
+}
+
+.error-icon {
+  font-size: 40px;
+  color: var(--status-danger);
+}
+
+.error-text {
+  margin: 0;
+  font-size: var(--text-body);
+  color: var(--on-surface-variant);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+
+  &.btn-md {
+    padding: 10px 24px;
+    font-size: 13px;
+  }
+
+  &.btn-ghost {
+    background: var(--surface-container);
+    color: var(--on-surface-variant);
+    border-color: var(--ghost-border);
+
+    &:hover {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+}
+
+/* ── RESPONSIVE: TABLET ─────────────────────────────── */
+@media (max-width: 900px) {
+  .details-grid {
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .showtime-details-layout {
+    padding: 16px 16px 24px;
+  }
+
+  :host(.showtime-details-page--overlay) .showtime-details-layout {
+    padding: 20px 20px 24px;
+  }
+
+  .details-header {
+    margin-bottom: 20px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .details-sidebar {
+    position: static;
+  }
+}
+
+/* ── RESPONSIVE: PHONE ──────────────────────────────── */
+@media (max-width: 480px) {
+  .showtime-details-layout {
+    padding: 12px 12px 20px;
+  }
+
+  :host(.showtime-details-page--overlay) .showtime-details-layout {
+    padding: 16px 16px 20px;
+  }
+
+  .details-header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .header-title {
+    font-size: var(--text-title-sm);
+  }
+
+  .details-grid {
+    gap: 16px;
+  }
+}

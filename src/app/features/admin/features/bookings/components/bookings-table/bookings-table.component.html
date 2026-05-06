@@ -1,0 +1,34 @@
+<section class="bookings-table-section" aria-label="Bookings table">
+  @if (bookings().length === 0 && loading()) {
+    <div class="bookings-table-empty">Loading bookings...</div>
+  } @else if (bookings().length === 0) {
+    <div class="bookings-table-empty">No bookings found.</div>
+  } @else {
+    <div class="bookings-table-shell">
+      <div class="bookings-table" role="table" aria-label="Bookings table">
+        <div class="bookings-table__header bookings-table__row" role="row">
+          <div class="bookings-table__cell bookings-table__col-id" role="columnheader">Booking ID</div>
+          <div class="bookings-table__cell bookings-table__col-customer" role="columnheader">Customer</div>
+          <div class="bookings-table__cell bookings-table__col-movie" role="columnheader">Movie</div>
+          <div class="bookings-table__cell bookings-table__col-date" role="columnheader">Date/Time</div>
+          <div class="bookings-table__cell bookings-table__col-seats" role="columnheader">Seats</div>
+          <div class="bookings-table__cell bookings-table__col-amount" role="columnheader">Amount</div>
+          <div class="bookings-table__cell bookings-table__col-status" role="columnheader">Status</div>
+          <div class="bookings-table__cell bookings-table__col-actions bookings-table__actions-head" role="columnheader">
+            Actions
+          </div>
+        </div>
+
+        <div class="bookings-table__body" role="rowgroup">
+          @for (booking of bookings(); track trackByBookingId($index, booking)) {
+            <app-booking-row
+              [booking]="booking"
+              (viewClicked)="viewBooking.emit($event)"
+              (updateStatusClicked)="updateStatus.emit($event)"
+              (deleteClicked)="deleteBooking.emit($event)" />
+          }
+        </div>
+      </div>
+    </div>
+  }
+</section>

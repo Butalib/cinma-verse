@@ -1,0 +1,51 @@
+<section class="bookings-page-layout">
+  <app-bookings-stats [stats]="facade.stats()" />
+
+  <app-bookings-header
+    (searchChange)="onSearchChange($event)"
+    (filterClicked)="toggleFilters()"
+    (exportClicked)="onExport()"
+    (addClicked)="openCreateBookingModal()" />
+
+  @if (isFilterOpen()) {
+    <app-bookings-filters
+      [filters]="facade.filters()"
+      (filtersChange)="onFiltersChange($event)"
+      (clearFilters)="onClearFilters()" />
+  }
+
+  @if (facade.bookings$ | async; as bookings) {
+    <app-bookings-table
+      [bookings]="bookings"
+      [loading]="facade.loading()"
+      (viewBooking)="onViewBooking($event)"
+      (updateStatus)="onUpdateStatus($event)" />
+  }
+
+  @if (facade.pagination().total > 0) {
+    <app-pagination
+      [totalItems]="facade.pagination().total"
+      [pageSize]="facade.pagination().pageSize"
+      [currentPage]="facade.pagination().page"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)" />
+  }
+
+  @if (facade.activeModal() === 'view' && facade.selectedBooking()) {
+    <app-booking-view-modal />
+  }
+
+  @if (facade.activeModal() === 'update' && facade.selectedBooking()) {
+    <app-booking-status-modal />
+  }
+
+  @if (isCreateBookingOpen()) {
+    <div class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Add booking" (click)="closeCreateBookingModal()">
+      <div class="modal-card bookings-create-modal-card" (click)="$event.stopPropagation()">
+        <app-create-booking-page
+          [overlayMode]="true"
+          (closeRequested)="closeCreateBookingModal()" />
+      </div>
+    </div>
+  }
+</section>

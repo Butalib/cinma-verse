@@ -1,0 +1,88 @@
+<div class="tab-container">
+  <div class="tab-search-bar">
+    <span class="search-icon" aria-hidden="true">🔍</span>
+    <input
+      type="text"
+      [placeholder]="searchPlaceholder"
+      [value]="searchTerm()"
+      (input)="searchTerm.set($any($event.target).value)"
+      aria-label="Search tickets"
+    />
+  </div>
+
+  <div class="tab-table-wrapper">
+    <table class="tab-table">
+      <thead>
+        <tr>
+          <th>Ticket ID</th>
+          <th>Ticket number</th>
+          <th>Movie</th>
+          <th>Showtime</th>
+          <th>Seat</th>
+          <th>Hall</th>
+          <th>Branch</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of pagedItems(); track item.id) {
+        <tr>
+          <td class="td-id">{{ item.ticketId }}</td>
+          <td class="td-mono">{{ item.ticketNumber }}</td>
+          <td>
+            <div class="movie-cell">
+              <div class="movie-thumb" role="img" aria-hidden="true"></div>
+              <div>
+                <div class="movie-title">{{ item.movieTitle }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ item.showtime }}</td>
+          <td>
+            <div class="seat-badges">
+              <span class="seat-badge">{{ item.seat }}</span>
+            </div>
+          </td>
+          <td>{{ item.hall }}</td>
+          <td>{{ item.branch }}</td>
+          <td class="amount-cell">{{ formatMoney(item.amount) }}</td>
+          <td>
+            @switch (item.status) {
+            @case ('active') {
+            <span class="status-label">{{ item.status }}</span>
+            }
+            @case ('used') {
+            <span class="status-label status-label--pending">{{ item.status }}</span>
+            }
+            @case ('cancelled') {
+            <span class="status-label status-label--danger">{{ item.status }}</span>
+            }
+            }
+          </td>
+          <td>
+            <button type="button" class="action-btn" aria-label="View ticket">
+              <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+            </button>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td [attr.colspan]="columnCount" class="empty-row">No results found</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-footer">
+    <app-pagination [totalItems]="filteredItems().length" [pageSize]="pageSize" [currentPage]="currentPage()"
+        (pageChange)="onPageChange($event)" />
+
+    <div class="footer-actions">
+        <button type="button" class="btn btn-ghost btn-sm" (click)="closeRequested.emit()">Close</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="exportCsvRequested.emit()">↓ Export CSV</button>
+    </div>
+</div>
+</div>

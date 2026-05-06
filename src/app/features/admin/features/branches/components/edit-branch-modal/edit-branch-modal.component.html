@@ -1,0 +1,44 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+    <div class="modal-md modal-card" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="modal-header">
+            <span class="edit-section-label">EDIT OPERATIONS</span>
+            <h2 class="modal-title">Edit Branch Information</h2>
+        </div>
+
+        <!-- Body: 2-column -->
+        <div class="branch-modal-body">
+            <!-- Left: Form -->
+            <div class="branch-form-col">
+                <div class="form-group">
+                    <label>BRANCH NAME</label>
+                    <input class="form-control" [value]="branch().name" />
+                </div>
+
+                <div class="form-group">
+                    <label>BRANCH LOCATION</label>
+                    <textarea class="form-control" rows="3">{{ branch().location }}</textarea>
+                </div>
+            </div>
+
+            <!-- Right: Map Visual (static pin) -->
+            <div class="branch-map-col">
+                <div class="map-visual">
+                    <div class="map-road-v"></div>
+                    <div class="map-pulse map-pulse--static"></div>
+                    <span class="material-symbols-outlined map-pin" aria-hidden="true">location_on</span>
+                    <span class="map-label">Current Branch Location</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+            <button class="btn btn-ghost btn-md" type="button" (click)="onCancel()">Cancel</button>
+            <button class="btn btn-primary btn-md" type="button" (click)="onSave()">
+                <span class="material-symbols-outlined" style="font-size: 16px;">save</span>
+                Save Changes
+            </button>
+        </div>
+    </div>
+</div>

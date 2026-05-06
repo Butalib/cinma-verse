@@ -1,0 +1,172 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ */
+
+:host {
+  /* [OLD-SYSTEM] was: hex incl. green --success #22c55e */
+  --bg-modal: var(--surface);
+  --bg-card: var(--surface-container);
+  --border: var(--ghost-border);
+  --text-primary: var(--on-surface);
+  --text-muted: var(--on-surface-muted);
+  --accent: var(--primary);
+  --success: var(--status-active);
+  --danger: var(--status-danger);
+}
+
+.user-detail-panel {
+  background: var(--bg-card);
+  /* [OLD-SYSTEM] was: border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 10px */
+  border: none;
+  outline: 1px solid var(--ghost-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.user-detail-panel__head {
+  margin-bottom: 16px;
+}
+
+.user-detail-panel__icon {
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.user-detail-panel__title {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.user-detail-panel__subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.user-detail-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 20px;
+}
+
+.user-detail-panel__item--full {
+  grid-column: 1 / -1;
+}
+
+.user-detail-panel__label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.user-detail-panel__value {
+  font-size: 12px;
+  color: var(--text-primary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.user-detail-panel__value--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.user-detail-panel__value--cyan {
+  color: var(--accent);
+}
+
+.user-detail-panel__value--muted {
+  color: var(--text-muted);
+}
+
+.user-detail-panel__value--green {
+  color: var(--success);
+}
+
+.user-detail-panel__value--red {
+  color: var(--danger);
+}
+
+.user-detail-panel__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.user-detail-panel__tag {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #1e2130;
+  color: var(--text-muted);
+}
+
+.user-detail-panel__tag--accent {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent);
+}
+
+.user-detail-panel__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.user-detail-panel__cap-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--bg-modal);
+  font-size: 12px;
+  color: var(--text-primary);
+}
+
+.user-detail-panel__cap-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.user-detail-panel__cap-dot--ok {
+  background: var(--success);
+}
+
+.user-detail-panel__cap-dot--no {
+  background: var(--danger);
+}
+
+.user-detail-panel__cap-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-detail-panel__cap-state {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.user-detail-panel__cap-state--ok {
+  color: var(--success);
+}
+
+.user-detail-panel__cap-state--no {
+  color: var(--danger);
+}
+
+@media (max-width: 520px) {
+  .user-detail-panel__grid {
+    grid-template-columns: 1fr;
+  }
+}

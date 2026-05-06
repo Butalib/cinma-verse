@@ -1,0 +1,34 @@
+<section class="stats-section" aria-label="Showtime statistics">
+  <h3 class="section-label">Statistics</h3>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <span class="material-symbols-outlined stat-icon">payments</span>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Ticket Price</span>
+        <span class="stat-value">{{ stats().ticketPrice }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <span class="material-symbols-outlined stat-icon">bookmark_added</span>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Total Bookings</span>
+        <span class="stat-value">{{ stats().totalBookings }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box">
+        <span class="material-symbols-outlined stat-icon">event_seat</span>
+      </div>
+      <div class="stat-content">
+        <span class="stat-label">Total Tickets</span>
+        <span class="stat-value">{{ stats().totalTickets }}</span>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,169 @@
+<div class="ticket-modal-overlay" (click)="onBackdropClick($event)" role="dialog" aria-modal="true"
+    aria-label="Ticket Details">
+
+    <div class="ticket-modal">
+
+        <!-- ── Left Panel ──────────────────────────── -->
+        <div class="ticket-modal__left">
+            <span class="ticket-modal__status-badge"
+                [class.ticket-modal__status-badge--active]="ticket().ticketStatus === 'ACTIVE'"
+                [class.ticket-modal__status-badge--used]="ticket().ticketStatus === 'USED'"
+                [class.ticket-modal__status-badge--cancelled]="ticket().ticketStatus === 'CANCELLED'">
+                ● {{ ticket().ticketStatus }}
+            </span>
+
+            <div class="ticket-modal__movie-info">
+                <h2 class="ticket-modal__movie-title">{{ ticket().movie }}</h2>
+                <p class="ticket-modal__ticket-ref">Ticket: {{ ticket().ticketNumber }}</p>
+            </div>
+
+            <div class="ticket-modal__showtime-badge">
+                <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+                <span>{{ ticket().showtime }}</span>
+            </div>
+
+            <div class="ticket-modal__qr-block">
+                <img class="ticket-modal__qr" [src]="getQrUrl()" [alt]="'QR code for ticket ' + ticket().ticketNumber"
+                    width="160" height="160" />
+                <p class="ticket-modal__qr-label">SCAN AT ENTRANCE</p>
+            </div>
+
+            <div class="ticket-modal__customer-footer">
+                <div class="ticket-modal__avatar">{{ ticket().customerInitials }}</div>
+                <div>
+                    <p class="ticket-modal__customer-name">{{ ticket().customerName }}</p>
+                    <p class="ticket-modal__customer-role">SUPER ADMIN</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Right Panel ─────────────────────────── -->
+        <div class="ticket-modal__right">
+
+            <div class="ticket-modal__right-header">
+                <div>
+                    <p class="ticket-modal__panel-label">ADMINISTRATION PANEL</p>
+                    <h3 class="ticket-modal__panel-title">Ticket Details</h3>
+                </div>
+                <div class="ticket-modal__right-actions">
+                    <button type="button" class="ticket-modal__icon-btn" aria-label="Print ticket">
+                        <span class="material-symbols-outlined">print</span>
+                    </button>
+                    <button type="button" class="ticket-modal__icon-btn" aria-label="Share ticket">
+                        <span class="material-symbols-outlined">share</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="ticket-modal__sections">
+
+                <!-- Showtime Info -->
+                <section class="ticket-modal__section">
+                    <p class="ticket-modal__section-label">SHOWTIME INFO</p>
+                    <div class="ticket-modal__info-grid">
+                        <div class="ticket-modal__info-item ticket-modal__info-item--full">
+                            <p class="ticket-modal__info-key">LOCATION</p>
+                            <p class="ticket-modal__info-val">{{ ticket().location }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">FORMAT</p>
+                            <p class="ticket-modal__info-val">{{ ticket().format }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">SEAT</p>
+                            <p class="ticket-modal__info-val ticket-modal__info-val--accent">{{ ticket().seat }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">RATING</p>
+                            <p class="ticket-modal__info-val">{{ ticket().rating }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">DURATION</p>
+                            <p class="ticket-modal__info-val">{{ ticket().duration }}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Customer Info -->
+                <section class="ticket-modal__section">
+                    <p class="ticket-modal__section-label">CUSTOMER INFO</p>
+                    <div class="ticket-modal__customer-row">
+                        <div class="ticket-modal__avatar ticket-modal__avatar--lg">{{ ticket().customerInitials }}</div>
+                        <div>
+                            <p class="ticket-modal__info-val">{{ ticket().customerName }}</p>
+                            <p class="ticket-modal__info-key">User ID: {{ ticket().userId }}</p>
+                        </div>
+                    </div>
+                    <div class="ticket-modal__info-grid" style="margin-top:8px">
+                        <div class="ticket-modal__info-item ticket-modal__info-item--full">
+                            <p class="ticket-modal__info-key">EMAIL ADDRESS</p>
+                            <p class="ticket-modal__info-val">{{ ticket().email }}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Financials & Status -->
+                <section class="ticket-modal__section">
+                    <p class="ticket-modal__section-label">FINANCIALS &amp; STATUS</p>
+                    <div class="ticket-modal__info-grid">
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">TICKET ID</p>
+                            <p class="ticket-modal__info-val">{{ ticket().id }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">PRICE</p>
+                            <p class="ticket-modal__info-val ticket-modal__info-val--price">{{ ticket().price }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">BOOKING ID</p>
+                            <p class="ticket-modal__info-val">{{ ticket().bookingId }}</p>
+                        </div>
+                        <div class="ticket-modal__info-item">
+                            <p class="ticket-modal__info-key">B. STATUS</p>
+                            <span class="ticket-modal__booking-badge"
+                                [class.ticket-modal__booking-badge--pending]="ticket().bookingStatus === 'PENDING'"
+                                [class.ticket-modal__booking-badge--confirmed]="ticket().bookingStatus === 'CONFIRMED'"
+                                [class.ticket-modal__booking-badge--cancelled]="ticket().bookingStatus === 'CANCELLED'">
+                                {{ ticket().bookingStatus }}
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Usage Audit -->
+                <section class="ticket-modal__section">
+                    <p class="ticket-modal__section-label">USAGE AUDIT</p>
+                    <div class="ticket-modal__checkin-status">
+                        <span class="material-symbols-outlined ticket-modal__checkin-icon"
+                            [class.ticket-modal__checkin-icon--used]="ticket().checkInStatus === 'CHECKED_IN'"
+                            aria-hidden="true">
+                            {{ ticket().checkInStatus === 'CHECKED_IN' ? 'check_circle' : 'schedule' }}
+                        </span>
+                        <p class="ticket-modal__checkin-text">
+                            @if (ticket().checkInStatus === 'CHECKED_IN') {
+                            Checked in{{ ticket().checkInTime ? ' at ' + ticket().checkInTime : '' }}
+                            } @else {
+                            Not used yet
+                            }
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="ticket-modal__footer">
+                <button type="button" class="ticket-modal__btn ticket-modal__btn--ghost"
+                    (click)="closeModal.emit()">
+                    <span class="material-symbols-outlined">close</span>
+                    Close
+                </button>
+                <button type="button" class="ticket-modal__btn ticket-modal__btn--primary"
+                    (click)="viewBooking.emit(ticket().bookingId)">
+                    <span class="material-symbols-outlined">book_online</span>
+                    View Booking
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

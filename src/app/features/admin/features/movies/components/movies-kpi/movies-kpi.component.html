@@ -1,0 +1,49 @@
+<section class="kpi-grid" aria-label="Movie KPIs">
+    <article class="kpi-card">
+        <div class="kpi-card__top">
+            <div class="kpi-card__icon-box" aria-hidden="true">
+                <span class="material-symbols-outlined kpi-card__icon">movie</span>
+            </div>
+        </div>
+        <p class="kpi-card__value">{{ totalMoviesDisplay() }}</p>
+        <div class="kpi-card__bottom">
+            <p class="kpi-card__title">TOTAL MOVIES</p>
+        </div>
+    </article>
+
+    <article class="kpi-card">
+        <div class="kpi-card__top">
+            <div class="kpi-card__icon-box" aria-hidden="true">
+                <span class="material-symbols-outlined kpi-card__icon">play_circle</span>
+            </div>
+        </div>
+        <p class="kpi-card__value">{{ nowShowingDisplay() }}</p>
+        <div class="kpi-card__bottom">
+            <p class="kpi-card__title">NOW SHOWING (ACTIVE)</p>
+        </div>
+    </article>
+
+    <article class="kpi-card">
+        <div class="kpi-card__top">
+            <div class="kpi-card__icon-box" aria-hidden="true">
+                <span class="material-symbols-outlined kpi-card__icon">schedule</span>
+            </div>
+        </div>
+        <p class="kpi-card__value">{{ comingSoonDisplay() }}</p>
+        <div class="kpi-card__bottom">
+            <p class="kpi-card__title">COMING SOON</p>
+        </div>
+    </article>
+
+    <article class="kpi-card">
+        <div class="kpi-card__top">
+            <div class="kpi-card__icon-box" aria-hidden="true">
+                <span class="material-symbols-outlined kpi-card__icon">star</span>
+            </div>
+        </div>
+        <p class="kpi-card__value">{{ averageRatingDisplay() }}</p>
+        <div class="kpi-card__bottom">
+            <p class="kpi-card__title">AVG RATING</p>
+        </div>
+    </article>
+</section>

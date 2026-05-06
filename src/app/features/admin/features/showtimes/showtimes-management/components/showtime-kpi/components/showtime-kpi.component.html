@@ -1,0 +1,17 @@
+<section class="showtime-kpi-grid" aria-label="Showtimes KPIs">
+    @for (item of kpiItems; track item.title) {
+    <article class="showtime-kpi-card">
+        <div class="showtime-kpi-card__top">
+            <div class="showtime-kpi-card__icon-box" aria-hidden="true">
+                <span class="material-symbols-outlined showtime-kpi-card__icon">{{ item.icon }}</span>
+            </div>
+        </div>
+
+        <p class="showtime-kpi-card__value">{{ item.value }}</p>
+
+        <div class="showtime-kpi-card__bottom">
+            <p class="showtime-kpi-card__title">{{ item.title }}</p>
+        </div>
+    </article>
+    }
+</section>

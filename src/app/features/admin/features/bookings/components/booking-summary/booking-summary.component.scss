@@ -1,0 +1,120 @@
+:host {
+  display: block;
+}
+
+.booking-summary-card {
+  background: var(--surface-container-low);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--ghost-border);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.booking-summary-card__header h2 {
+  margin: 0 0 6px;
+  font-size: var(--text-subtitle);
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.booking-summary-card__header p {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.booking-summary-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-container);
+  border: 1px solid var(--ghost-border);
+}
+
+.booking-summary-hero__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--primary-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.booking-summary-hero__info h3 {
+  margin: 0 0 4px;
+  font-size: var(--text-title-sm);
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.booking-summary-hero__info p {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.booking-summary-list {
+  display: grid;
+  gap: 12px;
+}
+
+.booking-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
+  border: 1px solid var(--ghost-border);
+}
+
+.booking-summary-label {
+  font-size: var(--text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-muted);
+}
+
+.booking-summary-value {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.booking-summary-muted {
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.booking-summary-totals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.booking-summary-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
+  border: 1px solid var(--ghost-border);
+  font-size: var(--text-body);
+  color: var(--on-surface-variant);
+}
+
+.booking-summary-total strong {
+  color: var(--on-surface);
+  font-size: var(--text-title-sm);
+}
+
+.booking-summary-total--primary {
+  background: var(--surface-container-high);
+}

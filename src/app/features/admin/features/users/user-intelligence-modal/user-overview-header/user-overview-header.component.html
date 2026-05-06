@@ -1,0 +1,57 @@
+@let o = overview();
+
+<div class="user-overview-header">
+  <button
+    type="button"
+    class="user-overview-header__card"
+    [class.user-overview-header__card--active]="isActive('userId')"
+    (click)="onCardClick('userId')"
+  >
+    <span class="user-overview-header__card-arrow" aria-hidden="true">↗</span>
+    <span class="user-overview-header__label">User id</span>
+    <span class="user-overview-header__value">{{ o.id }}</span>
+  </button>
+
+  <button
+    type="button"
+    class="user-overview-header__card"
+    [class.user-overview-header__card--active]="isActive('accountStatus')"
+    (click)="onCardClick('accountStatus')"
+  >
+    <span class="user-overview-header__card-arrow" aria-hidden="true">↗</span>
+    <span class="user-overview-header__label">Account status</span>
+    <span
+      class="user-overview-header__value user-overview-header__value--status"
+      [class.user-overview-header__value--suspended]="o.accountStatus === 'Suspended'"
+      [class.user-overview-header__value--pending]="o.accountStatus === 'Pending'"
+    >
+      {{ o.accountStatus }}
+    </span>
+  </button>
+
+  <button
+    type="button"
+    class="user-overview-header__card"
+    [class.user-overview-header__card--active]="isActive('role')"
+    (click)="onCardClick('role')"
+  >
+    <span class="user-overview-header__card-arrow" aria-hidden="true">↗</span>
+    <span class="user-overview-header__label">Role</span>
+    <span class="user-overview-header__value user-overview-header__value--role">{{ o.role }}</span>
+  </button>
+
+  <button
+    type="button"
+    class="user-overview-header__card"
+    [class.user-overview-header__card--active]="isActive('emailConfirmed')"
+    (click)="onCardClick('emailConfirmed')"
+  >
+    <span class="user-overview-header__card-arrow" aria-hidden="true">↗</span>
+    <span class="user-overview-header__label">Email confirmed</span>
+    @if (o.emailConfirmed) {
+      <span class="user-overview-header__value user-overview-header__value--accent">True</span>
+    } @else {
+      <span class="user-overview-header__value">False</span>
+    }
+  </button>
+</div>

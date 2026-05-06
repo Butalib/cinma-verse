@@ -1,0 +1,24 @@
+<section class="create-booking-layout" [class.create-booking-layout--overlay]="overlayMode()">
+  <header class="create-booking-header">
+    <div>
+      <h1>Create Booking</h1>
+      <p>Build and review a new booking in one place.</p>
+    </div>
+
+    @if (overlayMode()) {
+      <button type="button" class="modal-close create-booking-header__close" aria-label="Close booking form"
+        (click)="closeRequested.emit()">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    }
+  </header>
+
+  <div class="create-booking-grid">
+    <div class="create-booking-form">
+      <app-booking-create-form />
+    </div>
+    <aside class="create-booking-summary">
+      <app-booking-summary />
+    </aside>
+  </div>
+</section>

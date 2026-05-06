@@ -1,0 +1,20 @@
+<section class="schedule-section" aria-label="Schedule information">
+  <h3 class="section-label">Schedule</h3>
+  <div class="schedule-grid">
+    <div class="schedule-card">
+      <span class="material-symbols-outlined schedule-card-icon">play_circle</span>
+      <div class="schedule-card-content">
+        <span class="schedule-card-label">Start Time</span>
+        <span class="schedule-card-value">{{ formatTimeTo12h(showtime().startTime) }}</span>
+      </div>
+    </div>
+
+    <div class="schedule-card">
+      <span class="material-symbols-outlined schedule-card-icon">stop_circle</span>
+      <div class="schedule-card-content">
+        <span class="schedule-card-label">End Time</span>
+        <span class="schedule-card-value">{{ formatTimeTo12h(showtime().endTime) }}</span>
+      </div>
+    </div>
+  </div>
+</section>

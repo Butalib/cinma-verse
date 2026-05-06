@@ -1,0 +1,168 @@
+<div class="modal-backdrop" (click)="closeModal.emit()">
+  <div class="modal-card modal-lg add-movie-modal-card" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header" style="display:flex; align-items:flex-start; justify-content:space-between;">
+      <div>
+        <h2 class="modal-title">Edit Movie</h2>
+        <p class="modal-subtitle">Update the details for "{{ movie().title }}".</p>
+      </div>
+      <button class="modal-close" type="button" aria-label="Close" (click)="closeModal.emit()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <form #movieForm (ngSubmit)="onSubmit(movieForm)" novalidate>
+      <div class="add-movie-modal-body">
+
+        <!-- LEFT: Poster column -->
+        <div class="poster-col">
+          <div class="poster-upload-area">
+            @if (movie().posterUrl) {
+              <img [src]="movie().posterUrl" [alt]="movie().title" class="poster-preview-img" />
+            } @else {
+              <span class="material-symbols-outlined poster-upload-icon">movie</span>
+              <p class="poster-upload-text">Click to change poster</p>
+              <p class="poster-upload-hint">PNG, JPG up to 5MB</p>
+            }
+          </div>
+
+          <div class="gallery-section">
+            <p class="gallery-label">GALLERY</p>
+            <div class="gallery-placeholder">
+              <span class="material-symbols-outlined gallery-icon">add_photo_alternate</span>
+              <span class="gallery-hint">Add screenshots</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Fields column -->
+        <div class="fields-col">
+
+          <!-- 1. Title -->
+          <div class="form-group field-full">
+            <label>MOVIE TITLE <span class="field-api-hint">(movieTitle)</span></label>
+            <input class="form-control" name="title" type="text" [value]="movie().title" placeholder="Enter movie title..." />
+          </div>
+
+          <!-- 2. Age Rating | Duration -->
+          <div class="form-group">
+            <label>AGE RATING <span class="field-api-hint">(ageRating)</span></label>
+            <select class="form-control" name="ageRating">
+              @for (r of ['G','PG','PG-13','R','NC-17']; track r) {
+                <option [value]="r" [selected]="r === movie().ageRating">{{ r }}</option>
+              }
+            </select>
+          </div>
+          <div class="form-group">
+            <label>DURATION (min) <span class="field-api-hint">(duration)</span></label>
+            <input class="form-control" name="duration" type="number" min="1" [value]="movie().duration" />
+          </div>
+
+          <!-- 3. Internal Rating | Language -->
+          <div class="form-group">
+            <label>INTERNAL RATING <span class="field-api-hint">(internalRating)</span></label>
+            <input class="form-control" name="internalRating" type="number" min="0" max="10" step="0.1" [value]="movie().internalRating" />
+          </div>
+          <div class="form-group">
+            <label>LANGUAGE <span class="field-api-hint">(language)</span></label>
+            <select class="form-control" name="language">
+              @for (l of ['English','Arabic','French','Spanish','Latvian']; track l) {
+                <option [value]="l" [selected]="l === movie().language">{{ l }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- 4. Status | Release Date -->
+          <div class="form-group">
+            <label>STATUS <span class="field-api-hint">(status)</span></label>
+            <select class="form-control" name="status">
+              <option value="ACTIVE"      [selected]="movie().status === 'ACTIVE'">Active</option>
+              <option value="INACTIVE"    [selected]="movie().status === 'INACTIVE'">Inactive</option>
+              <option value="COMING_SOON" [selected]="movie().status === 'COMING_SOON'">Coming Soon</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>RELEASE DATE <span class="field-api-hint">(releaseDate)</span></label>
+            <input class="form-control" name="releaseDate" type="date" [value]="movie().releaseDate" />
+          </div>
+
+          <!-- 5. Trailer URL -->
+          <div class="form-group field-full">
+            <label>TRAILER URL <span class="field-api-hint">(trailerUrl)</span></label>
+            <input class="form-control" name="trailerUrl" type="url" [value]="movie().trailerUrl" placeholder="https://youtube.com/watch?v=..." />
+          </div>
+
+          <!-- 6. Genres tags -->
+          <div class="form-group field-full">
+            <label>GENRES <span class="field-api-hint">(genres)</span></label>
+            <div class="tags-input-wrapper">
+              @for (genre of getGenres(); track genre) {
+                <span class="tag-pill">
+                  {{ genre }}
+                  <button class="tag-remove" type="button" (click)="removeGenre(genre)">×</button>
+                </span>
+              }
+              <input
+                class="tags-text-input"
+                type="text"
+                placeholder="+ Add genre"
+                [value]="genreInput()"
+                (input)="genreInput.set($any($event.target).value)"
+                (keydown.enter)="$event.preventDefault(); addGenre()"
+                (keydown.comma)="$event.preventDefault(); addGenre()"
+              />
+            </div>
+            <span class="field-hint">Press Enter or comma to add</span>
+          </div>
+
+          <!-- 7. Cast Members tags -->
+          <div class="form-group field-full">
+            <label>CAST MEMBERS <span class="field-api-hint">(cast)</span></label>
+            <div class="tags-input-wrapper">
+              @for (member of getCastMembers(); track member) {
+                <span class="tag-pill">
+                  {{ member }}
+                  <button class="tag-remove" type="button" (click)="removeCast(member)">×</button>
+                </span>
+              }
+              <input
+                class="tags-text-input"
+                type="text"
+                placeholder="+ Add cast member"
+                [value]="castInput()"
+                (input)="castInput.set($any($event.target).value)"
+                (keydown.enter)="$event.preventDefault(); addCast()"
+                (keydown.comma)="$event.preventDefault(); addCast()"
+              />
+            </div>
+            <span class="field-hint">Press Enter or comma to add</span>
+          </div>
+
+          <!-- 8. Description -->
+          <div class="form-group field-full">
+            <label>DESCRIPTION / SYNOPSIS
+              <span class="field-api-hint">(movieDescription)</span>
+            </label>
+            <textarea
+              class="form-control"
+              name="description"
+              rows="4"
+              [value]="movie().description"
+              placeholder="Write a brief synopsis of the movie..."
+            ></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost btn-md" (click)="closeModal.emit()">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-md">Update Movie</button>
+      </div>
+    </form>
+
+  </div>
+</div>

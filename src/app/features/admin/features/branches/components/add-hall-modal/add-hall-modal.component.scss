@@ -1,0 +1,143 @@
+/*
+ * Add / Edit Hall Modal
+ */
+
+.modal-sm-md {
+  width: 100%;
+  max-width: 560px;
+}
+
+.hall-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hall-form-section {
+  padding: 20px 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.hall-map-section {
+  margin: 0 28px 10px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  height: 110px;
+  position: relative;
+}
+
+select.form-control {
+  border-radius: var(--radius-lg);
+}
+
+// ─── PREVIEW PLACEHOLDER (add mode) ─────────────────────────
+.preview-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--primary-container);
+  opacity: 0.7;
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(0, 200, 255, 0.2);
+
+  span:first-child {
+    font-size: 7px;
+    color: var(--primary-container);
+  }
+}
+
+// ─── MAP VISUAL (edit mode) ─────────────────────────────────
+.map-visual {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #0a1628 0%, #0e1f35 50%, #081422 100%);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 200, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 200, 255, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 38%;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: rgba(0, 200, 255, 0.12);
+  }
+}
+
+.map-road-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 45%;
+  width: 8px;
+  background: rgba(0, 200, 255, 0.12);
+}
+
+.map-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--primary-container);
+  font-size: 22px;
+  filter: drop-shadow(0 0 12px rgba(0, 200, 255, 0.6));
+  z-index: 2;
+}
+
+.map-label {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 200, 255, 0.4);
+}
+
+// ─── VALIDATION ERRORS ──────────────────────────────────────
+.field-error {
+  font-size: 10px;
+  color: var(--status-danger);
+  margin-top: 4px;
+}
+
+.modal-footer {
+  margin: 8px 28px 24px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--ghost-border);
+
+  .btn {
+    min-width: 140px;
+    justify-content: center;
+    margin-inline-start: 6px;
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px !important;
+    line-height: 1;
+  }
+}

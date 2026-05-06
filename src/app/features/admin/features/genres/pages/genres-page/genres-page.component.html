@@ -1,0 +1,100 @@
+<section class="genres-page-layout">
+  <app-genres-stats
+    [totalGenres]="facade.stats().totalGenres"
+    [mostPopular]="facade.stats().mostPopular"
+    [recentlyAdded]="facade.stats().recentlyAdded" />
+
+  <app-genres-toolbar
+    (searchChange)="onSearchChange($event)"
+    (sortChange)="onSortChange($event)"
+    (addClicked)="openCreateModal()" />
+
+  @if (facade.error(); as errorMessage) {
+    <div class="genres-page-error" role="alert">{{ errorMessage }}</div>
+  }
+
+  <app-genres-table
+    [genres]="facade.list()"
+    (viewGenre)="onViewGenre($event)"
+    (editGenre)="onEditGenre($event)"
+    (deleteGenre)="onDeleteGenre($event)" />
+
+  @if (facade.total() > 0) {
+    <app-pagination
+      [totalItems]="facade.total()"
+      [pageSize]="facade.pageSize()"
+      [currentPage]="facade.page()"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)" />
+  }
+
+  @if (facade.isCreateModalOpen()) {
+    <app-create-genre-modal
+      [isSaving]="facade.createLoading()"
+      [successTick]="facade.createSuccessTick()"
+      [title]="'Add New Genre'"
+      [subtitle]="'Create a new catalog genre'"
+      [submitLabel]="'Create Genre'"
+      [savingLabel]="'Creating...'"
+      (closeModal)="closeCreateModal()"
+      (submitGenre)="onCreateGenre($event)" />
+  }
+
+  @if (facade.isViewModalOpen() && facade.selectedGenre(); as genre) {
+    <div class="modal-backdrop" (click)="closeViewGenre()">
+      <div class="modal-card modal-sm genres-view-modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title">Genre Details</h2>
+            <p class="modal-subtitle">{{ genre.id }} · {{ genre.name }}</p>
+          </div>
+          <div class="genres-modal-header-actions">
+            <button type="button" class="modal-close" aria-label="Close modal" (click)="closeViewGenre()">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-body">
+          <div class="genres-view-grid">
+            <div class="genres-view-item">
+              <span class="genres-view-label">Genre Name</span>
+              <strong class="genres-view-value">{{ genre.name }}</strong>
+            </div>
+
+            <div class="genres-view-item">
+              <span class="genres-view-label">Genre ID</span>
+              <strong class="genres-view-value genres-view-value--mono">{{ genre.id }}</strong>
+            </div>
+
+            <div class="genres-view-item">
+              <span class="genres-view-label">Movies Count</span>
+              <strong class="genres-view-value">{{ genre.moviesCount }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" (click)="closeViewGenre()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="closeViewGenre(); onEditGenre(genre.id)">
+            <span class="material-symbols-outlined">edit</span>
+            Edit Genre
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (facade.isEditModalOpen() && facade.selectedGenre(); as genre) {
+    <app-create-genre-modal
+      [isSaving]="facade.updateLoading()"
+      [successTick]="facade.updateSuccessTick()"
+      [title]="'Edit Genre'"
+      [subtitle]="'Update genre details'"
+      [submitLabel]="'Save Changes'"
+      [savingLabel]="'Saving...'"
+      [initialName]="genre.name"
+      (closeModal)="closeEditGenre()"
+      (submitGenre)="onUpdateGenre($event)" />
+  }
+</section>

@@ -1,0 +1,45 @@
+@if (facade.summary(); as summary) {
+  <section class="booking-summary-card">
+    <header class="booking-summary-card__header">
+      <h2>Booking Summary</h2>
+      <p>Review the booking before submitting.</p>
+    </header>
+
+    <div class="booking-summary-hero">
+      <div class="booking-summary-hero__icon">
+        <span class="material-symbols-outlined">confirmation_number</span>
+      </div>
+      <div class="booking-summary-hero__info">
+        <h3>{{ summary.showtimeTitle }}</h3>
+        <p>{{ summary.showtimeMeta }}</p>
+      </div>
+    </div>
+
+    <div class="booking-summary-list">
+      <div class="booking-summary-item">
+        <span class="booking-summary-label">Customer</span>
+        <span class="booking-summary-value">{{ summary.customerName }}</span>
+        <span class="booking-summary-muted">{{ summary.customerEmail }}</span>
+      </div>
+      <div class="booking-summary-item">
+        <span class="booking-summary-label">Location</span>
+        <span class="booking-summary-value">{{ summary.location }}</span>
+      </div>
+      <div class="booking-summary-item">
+        <span class="booking-summary-label">Seats</span>
+        <span class="booking-summary-value">{{ summary.seats }}</span>
+      </div>
+    </div>
+
+    <div class="booking-summary-totals">
+      <div class="booking-summary-total">
+        <span>Price per seat</span>
+        <strong>{{ summary.pricePerSeat }}</strong>
+      </div>
+      <div class="booking-summary-total booking-summary-total--primary">
+        <span>Total</span>
+        <strong>{{ summary.totalPrice }}</strong>
+      </div>
+    </div>
+  </section>
+}

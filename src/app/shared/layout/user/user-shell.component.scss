@@ -1,0 +1,16 @@
+.user-shell-nav {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--surface-container-low, #e5e7eb);
+
+  a {
+    color: var(--on-surface, #111827);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

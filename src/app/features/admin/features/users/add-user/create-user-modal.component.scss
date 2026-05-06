@@ -1,0 +1,225 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Rollback: search [OLD-SYSTEM] comments
+ */
+
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: block;
+}
+
+.create-user-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  /* [OLD-SYSTEM] was: background rgba(2,8,23,0.72); blur(3px) */
+  background: rgba(9, 12, 16, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.create-user-modal {
+  width: min(880px, 100%);
+  max-height: min(88vh, 920px);
+  overflow: auto;
+  /* [OLD-SYSTEM] was: border-radius 20px; border 1px cyan; gradient bg; black-tint shadow */
+  border-radius: var(--radius-xl);
+  border: none;
+  outline: 1px solid var(--ghost-border);
+  background: rgba(22, 28, 34, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: var(--shadow-modal);
+}
+
+.modal-header {
+  padding: 24px 28px 18px;
+  /* [OLD-SYSTEM] was: border-bottom: 1px solid rgba(125, 135, 150, 0.24) */
+  border-bottom: none;
+  background: var(--surface-container-low);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  h2 {
+    margin: 0;
+    color: var(--on-surface);
+    font-size: var(--text-subtitle);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: var(--on-surface-variant);
+    font-size: var(--text-body);
+    line-height: 1.45;
+  }
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--primary-container);
+    color: var(--on-surface);
+    background: var(--surface-container-high);
+  }
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.modal-form {
+  padding: 18px 22px 22px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  span {
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--on-surface-variant);
+    letter-spacing: 0.02em;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    /* [OLD-SYSTEM] was: border rgba(125,135,150,0.35); background #111925 */
+    border: 1px solid var(--ghost-border);
+    border-radius: var(--radius-md);
+    background: var(--surface-container);
+    color: var(--on-surface);
+    font-size: var(--text-body);
+    padding: 11px 12px;
+    outline: none;
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  input,
+  select {
+    min-height: 44px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 96px;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--on-surface-muted);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--primary-container);
+    box-shadow: var(--accent-glow-soft);
+  }
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.error {
+  color: var(--status-danger);
+  font-size: var(--text-body-sm);
+}
+
+.modal-footer {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn--secondary {
+  border-color: var(--ghost-border);
+  color: var(--on-surface-variant);
+  background: transparent;
+
+  &:hover {
+    background: var(--primary-glow);
+    border-color: var(--primary-container);
+  }
+}
+
+.btn--primary {
+  color: var(--on-primary);
+  /* [OLD-SYSTEM] was: 3-stop blue gradient; hover shadow rgba(14,165,233) */
+  background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+
+  &:hover {
+    filter: brightness(1.06);
+    box-shadow: var(--shadow-card);
+  }
+}
+
+@media (max-width: 768px) {
+  .create-user-modal-backdrop {
+    padding: 12px;
+  }
+
+  .create-user-modal {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 16px 16px 12px;
+  }
+
+  .modal-form {
+    padding: 14px 16px 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field--full {
+    grid-column: auto;
+  }
+}

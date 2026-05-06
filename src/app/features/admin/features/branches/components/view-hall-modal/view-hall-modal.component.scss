@@ -1,0 +1,274 @@
+/*
+ * View Hall Details Modal
+ */
+
+.view-hall-card {
+  width: 100%;
+  max-width: 780px;
+}
+
+// ─── HEADER ──────────────────────────────────────────────────
+.hall-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 22px 28px 16px;
+  border-bottom: 1px solid var(--ghost-border);
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.header-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--primary-dim);
+  color: var(--primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--on-surface);
+  margin: 0;
+}
+
+.header-subtitle {
+  font-size: 12px;
+  color: var(--on-surface-muted);
+  margin: 0;
+}
+
+.header-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-right: 48px; // space for close button
+}
+
+.header-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &--type {
+    background: rgba(0, 200, 255, 0.1);
+    color: var(--primary-container);
+    border: 1px solid rgba(0, 200, 255, 0.25);
+  }
+
+  &--status {
+    border: 1px solid rgba(0, 200, 255, 0.2);
+  }
+
+  &--active {
+    background: rgba(0, 200, 255, 0.08);
+    color: var(--primary);
+  }
+
+  &--maintenance {
+    background: var(--status-suspended-bg);
+    color: var(--status-suspended);
+    border-color: var(--status-suspended-br);
+  }
+}
+
+// ─── CLOSE BUTTON ────────────────────────────────────────────
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--ghost-border);
+  border-radius: 50%;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  z-index: 10;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--on-surface);
+  }
+}
+
+// ─── BODY ────────────────────────────────────────────────────
+.hall-details-body {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 0;
+  padding: 20px 28px;
+}
+
+// ─── LEFT — SEAT LAYOUT ─────────────────────────────────────
+.seat-layout-section {
+  padding-right: 24px;
+  border-right: 1px solid var(--ghost-border);
+}
+
+.seat-layout-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin: 0 0 2px;
+}
+
+.seat-layout-subtitle {
+  font-size: 10px;
+  color: var(--on-surface-muted);
+  margin: 0 0 12px;
+}
+
+.screen-bar {
+  width: 80%;
+  margin: 16px auto 4px;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 200, 255, 0.4),
+    rgba(0, 200, 255, 0.8),
+    rgba(0, 200, 255, 0.4),
+    transparent
+  );
+  border-radius: 3px;
+}
+
+.screen-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-surface-muted);
+  text-align: center;
+  margin: 4px 0 20px;
+}
+
+.seat-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.row-label {
+  width: 14px;
+  font-size: 10px;
+  color: var(--on-surface-muted);
+  text-align: right;
+  font-weight: 600;
+}
+
+.seat {
+  width: 22px;
+  height: 20px;
+  background: var(--surface-container-high);
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--on-surface-muted);
+  font-weight: 600;
+
+  &--aisle {
+    margin-left: 10px;
+  }
+}
+
+// ─── RIGHT — HALL INFORMATION ───────────────────────────────
+.hall-info-section {
+  padding-left: 20px;
+}
+
+.section-label-inline {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-container);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.info-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ghost-border);
+
+  &--last {
+    border-bottom: none;
+  }
+}
+
+.info-row-label {
+  font-size: 11px;
+  color: var(--on-surface-muted);
+}
+
+.info-row-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--on-surface);
+
+  &--type {
+    color: var(--primary-container);
+    font-weight: 600;
+  }
+
+  &--status {
+    color: var(--primary-container);
+  }
+}
+
+// ─── FOOTER ──────────────────────────────────────────────────
+.hall-details-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 28px 20px;
+  border-top: 1px solid var(--ghost-border);
+}

@@ -1,0 +1,19 @@
+:host {
+  display: contents;
+}
+
+.genres-row__id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  color: var(--on-surface-variant);
+  font-size: var(--text-body-sm);
+}
+
+.genres-row__name {
+  color: var(--on-surface);
+  font-weight: 600;
+}
+
+.genres-row__count {
+  color: var(--on-surface-variant);
+  font-weight: 500;
+}

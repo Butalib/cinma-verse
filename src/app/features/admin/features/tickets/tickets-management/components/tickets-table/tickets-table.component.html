@@ -1,0 +1,89 @@
+<section class="tickets-table-section" aria-label="Tickets table">
+    @if (tickets().length === 0) {
+    <div class="tickets-table-empty">
+        <span class="material-symbols-outlined tickets-table-empty__icon">local_activity</span>
+        <p>No tickets found.</p>
+    </div>
+    } @else {
+    <div class="tickets-table-shell">
+        <table class="tickets-table">
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Ticket Number</th>
+                    <th>Movie</th>
+                    <th>Showtime</th>
+                    <th>Price</th>
+                    <th>Branch</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th class="tickets-table__actions-head">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (ticket of tickets(); track ticket.id) {
+                <tr>
+                    <td class="tickets-table__id">{{ ticket.id }}</td>
+                    <td class="tickets-table__mono">{{ ticket.ticketNumber }}</td>
+                    <td class="tickets-table__movie">{{ ticket.movie }}</td>
+                    <td class="tickets-table__showtime">{{ ticket.showtime }}</td>
+                    <td class="tickets-table__price">{{ ticket.price }}</td>
+                    <td>{{ ticket.branch }}</td>
+                    <td>
+                        <div class="tickets-table__customer">
+                            <div class="tickets-table__avatar" [attr.data-initials]="ticket.customerInitials">
+                                {{ ticket.customerInitials }}
+                            </div>
+                            <span>{{ ticket.customerName }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge"
+                            [class.badge--active]="ticket.status === 'ACTIVE'"
+                            [class.badge--used]="ticket.status === 'USED'"
+                            [class.badge--cancelled]="ticket.status === 'CANCELLED'">
+                            {{ ticket.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="tickets-table__actions tickets-table__actions--desktop">
+                            <button type="button" class="icon-btn" aria-label="View ticket"
+                                (click)="onView(ticket.id)">
+                                <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                            </button>
+                            <button type="button" class="icon-btn icon-btn--danger" aria-label="Delete ticket"
+                                (click)="onDelete(ticket.id)">
+                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                            </button>
+                        </div>
+
+                        <details class="tickets-table__actions-menu" name="ticket-actions"
+                            (toggle)="onActionsMenuToggle($event)">
+                            <summary class="icon-btn tickets-table__menu-trigger" aria-label="Open actions menu">
+                                <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+                            </summary>
+
+                            <div class="tickets-table__menu-list" role="menu" aria-label="Ticket actions">
+                                <button type="button" class="tickets-table__menu-item" role="menuitem"
+                                    (click)="onMenuView($event, ticket.id)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                                    <span>View</span>
+                                </button>
+
+                                <button type="button"
+                                    class="tickets-table__menu-item tickets-table__menu-item--danger"
+                                    role="menuitem" (click)="onMenuDelete($event, ticket.id)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    }
+</section>

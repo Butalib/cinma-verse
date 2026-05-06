@@ -1,0 +1,35 @@
+<div class="pagination-wrapper">
+    @if (totalItems() > 0) {
+    <div class="pagination-info">
+        Showing <span class="pagination-info__count">{{ showingFrom() }}</span>–<span class="pagination-info__count">{{ showingTo() }}</span> of <span class="pagination-info__count">{{ totalItems() }}</span> items
+    </div>
+    }
+
+    <nav class="pagination-controls" aria-label="Table pagination">
+        <button type="button" class="pagination-btn" [disabled]="currentPage() === 1" aria-label="Previous page"
+            (click)="onPrev()">
+            &lt;
+        </button>
+
+        @for (page of pages(); track page) {
+        <button type="button" class="pagination-btn" [class.pagination-btn--active]="page === currentPage()"
+            [attr.aria-current]="page === currentPage() ? 'page' : null" (click)="onSelect(page)">
+            {{ page }}
+        </button>
+        }
+
+        <button type="button" class="pagination-btn" [disabled]="currentPage() === totalPages()"
+            aria-label="Next page" (click)="onNext()">
+            &gt;
+        </button>
+    </nav>
+
+    <div class="pagination-size">
+        <label for="page-size-select">Rows per page:</label>
+        <select id="page-size-select" class="form-control" [value]="pageSize()" (change)="onPageSizeChange($event)">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+</div>

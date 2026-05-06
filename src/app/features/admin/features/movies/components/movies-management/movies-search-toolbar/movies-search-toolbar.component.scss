@@ -1,0 +1,192 @@
+.movies-search-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background: var(--surface-container);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--ghost-border);
+}
+
+.movies-search-toolbar__top-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.movies-search-toolbar__search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.movies-search-toolbar__search-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.movies-search-toolbar__search-field:focus-within {
+  border-color: var(--accent-border-strong);
+  box-shadow: var(--accent-glow-soft);
+}
+
+.movies-search-toolbar__search-icon {
+  font-size: 1.25rem;
+  color: var(--on-surface-muted);
+}
+
+.movies-search-toolbar__search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--text-body);
+  color: var(--on-surface);
+}
+
+.movies-search-toolbar__search-input::placeholder {
+  color: var(--on-surface-muted);
+}
+
+.movies-search-toolbar__toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--on-surface);
+  background: var(--surface);
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.movies-search-toolbar__toggle:hover {
+  border-color: var(--accent-border-strong);
+  background: var(--surface-container-high);
+}
+
+.movies-search-toolbar__toggle-icon {
+  font-size: 1.25rem;
+}
+
+.movies-search-toolbar__filters-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid var(--ghost-border);
+  animation: slideDown 0.2s ease;
+  width: 100%;
+}
+
+.movies-search-toolbar__filters-container > * {
+  width: auto !important;
+  min-width: 140px;
+  flex: 0 0 auto;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.movies-search-toolbar__select,
+.movies-search-toolbar__date {
+  width: auto !important;
+  min-width: 140px;
+  max-width: 180px;
+  height: 40px;
+  padding: 8px 14px;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface);
+  background: var(--surface);
+  border: 1px solid var(--ghost-border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.movies-search-toolbar__select:hover,
+.movies-search-toolbar__date:hover {
+  border-color: var(--accent-border-strong);
+}
+
+.movies-search-toolbar__select:focus,
+.movies-search-toolbar__date:focus {
+  outline: none;
+  border-color: var(--accent-border-strong);
+  box-shadow: var(--accent-glow-soft);
+}
+
+.movies-search-toolbar__select option,
+.movies-search-toolbar__date option {
+  background: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.movies-search-toolbar__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: var(--text-body);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+  white-space: nowrap;
+}
+
+.movies-search-toolbar__button--primary {
+  background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+  color: var(--on-primary);
+  box-shadow: 0 2px 12px rgba(138, 235, 255, 0.25);
+}
+
+.movies-search-toolbar__button--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(138, 235, 255, 0.35);
+}
+
+.movies-search-toolbar__button--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(138, 235, 255, 0.2);
+}
+
+.movies-search-toolbar__button-icon {
+  font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .movies-search-toolbar__top-bar {
+    flex-wrap: wrap;
+  }
+
+  .movies-search-toolbar__search {
+    flex: 1 1 100%;
+    min-width: unset;
+  }
+
+  .movies-search-toolbar__filters-container {
+    justify-content: flex-start;
+  }
+}

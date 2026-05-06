@@ -1,0 +1,49 @@
+@if (user(); as u) {
+  <div class="user-profile-card">
+    <div class="user-profile-card__avatar-wrap">
+      <div class="user-profile-card__avatar-ring">
+        @if (u.avatarUrl) {
+          <img class="user-profile-card__avatar-img" [src]="u.avatarUrl" [alt]="u.displayName" />
+        } @else {
+          <span class="user-profile-card__avatar-fallback" aria-hidden="true">{{ initials() }}</span>
+        }
+      </div>
+      <span class="user-profile-card__online" aria-label="Online"></span>
+    </div>
+
+    <h2 class="user-profile-card__name">{{ u.displayName }}</h2>
+
+    @if (showPremium()) {
+      <p class="user-profile-card__badge">Premium member</p>
+    }
+
+    <ul class="user-profile-card__info">
+      <li class="user-profile-card__info-row contact-rows">
+        <span class="material-symbols-outlined user-profile-card__icon" aria-hidden="true">mail</span>
+        <span class="user-profile-card__info-text">{{ u.email }}</span>
+      </li>
+      <li class="user-profile-card__info-row contact-rows">
+        <span class="material-symbols-outlined user-profile-card__icon" aria-hidden="true">call</span>
+        <span class="user-profile-card__info-text">{{ u.phone }}</span>
+      </li>
+      <li class="user-profile-card__info-row joined-row">
+        <span class="material-symbols-outlined user-profile-card__icon" aria-hidden="true">calendar_today</span>
+        <span class="user-profile-card__info-text">{{ u.joinedLabel }}</span>
+      </li>
+    </ul>
+
+    <div class="user-profile-card__actions profile-buttons">
+      <button type="button" class="user-profile-card__btn user-profile-card__btn--primary" (click)="editProfile.emit()">
+        <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+        Edit Profile
+      </button>
+      <button type="button" class="user-profile-card__btn user-profile-card__btn--ghost" (click)="suspendUser.emit()">
+        Suspend User
+      </button>
+    </div>
+  </div>
+} @else {
+  <div class="user-profile-card user-profile-card--empty">
+    <p class="user-profile-card__empty">No user selected</p>
+  </div>
+}

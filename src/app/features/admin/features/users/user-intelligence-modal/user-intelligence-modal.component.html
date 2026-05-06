@@ -1,0 +1,44 @@
+<div
+  class="user-intelligence-modal__backdrop"
+  (click)="onBackdropClick($event)"
+  role="presentation"
+>
+  <div
+    class="user-intelligence-modal__card modal-wrapper"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="user-intelligence-heading"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="user-intelligence-modal__layout">
+      <aside class="user-intelligence-modal__sidebar profile-panel" aria-label="User profile">
+        <app-user-profile-card [user]="selectedUser()" />
+      </aside>
+
+      <section class="user-intelligence-modal__main intelligence-panel" aria-label="User intelligence content">
+        <app-user-intelligence-header
+          [activeTab]="activeTab()"
+          (tabChange)="setActiveTab($event)"
+          (closeClick)="onCloseClick()"
+        />
+
+        <div class="user-intelligence-modal__body tab-content-area">
+          @switch (activeTab()) {
+            @case ('overview') {
+              <app-user-overview [overview]="resolvedOverview()" />
+            }
+            @case ('bookings') {
+              <app-user-bookings [user]="selectedUser()" (closeRequested)="onCloseClick()" />
+            }
+            @case ('tickets') {
+              <app-user-tickets [user]="selectedUser()" (closeRequested)="onCloseClick()" />
+            }
+            @case ('payments') {
+              <app-user-payments [user]="selectedUser()" (closeRequested)="onCloseClick()" />
+            }
+          }
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

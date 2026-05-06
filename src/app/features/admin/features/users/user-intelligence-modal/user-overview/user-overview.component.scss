@@ -1,0 +1,63 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ */
+
+:host {
+  /* [OLD-SYSTEM] was: hex --text-primary #ffffff */
+  --bg-modal: var(--surface);
+  --text-primary: var(--on-surface);
+  --text-muted: var(--on-surface-muted);
+  --accent: var(--primary);
+
+  display: block;
+}
+
+.user-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 24px;
+  min-height: 0;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-overview__detail {
+  animation: slideDown 0.2s ease;
+}
+
+.user-overview__info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .user-overview {
+    padding: 16px 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .user-overview__info-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 540px) {
+  .user-overview {
+    padding: 12px 14px 16px;
+    gap: 10px;
+  }
+}

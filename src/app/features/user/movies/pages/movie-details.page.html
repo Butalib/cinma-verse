@@ -1,0 +1,7 @@
+<a routerLink="/user/movies">Back to list</a>
+<app-section-card title="Movie Details">
+  @if (movie$ | async; as movie) {
+    <h3>{{ movie.title }}</h3>
+    <p>Genre: {{ movie.genre || 'N/A' }}</p>
+  }
+</app-section-card>

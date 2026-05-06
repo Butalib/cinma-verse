@@ -1,0 +1,117 @@
+<section class="booking-create-card">
+  <header class="booking-create-card__header">
+    <h2>Create Booking</h2>
+    <p>Capture customer details, showtime, and seats.</p>
+  </header>
+
+  <form class="booking-create-form" (submit)="onSubmit($event)">
+    <div class="booking-create-form__grid">
+      <div class="form-group">
+        <label for="booking-customer-name">Customer Name</label>
+        <input
+          id="booking-customer-name"
+          type="text"
+          class="form-control"
+          placeholder="Enter customer name"
+          [value]="facade.customerName()"
+          [class.form-control--error]="facade.customerNameInvalid()"
+          (input)="onCustomerNameInput($event)"
+          (blur)="facade.markTouched('customerName')" />
+        @if (facade.customerNameInvalid()) {
+          <span class="form-error">{{ facade.customerNameError() }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="booking-customer-email">Customer Email</label>
+        <input
+          id="booking-customer-email"
+          type="email"
+          class="form-control"
+          placeholder="Enter customer email"
+          [value]="facade.customerEmail()"
+          [class.form-control--error]="facade.customerEmailInvalid()"
+          (input)="onCustomerEmailInput($event)"
+          (blur)="facade.markTouched('customerEmail')" />
+        @if (facade.customerEmailInvalid()) {
+          <span class="form-error">{{ facade.customerEmailError() }}</span>
+        }
+      </div>
+
+      <div class="form-group form-group--full">
+        <label for="booking-showtime">Showtime</label>
+        <select
+          id="booking-showtime"
+          class="form-control"
+          [value]="facade.selectedShowtimeValue()"
+          [class.form-control--error]="facade.showtimeInvalid()"
+          (change)="onShowtimeChange($event)"
+          (blur)="facade.markTouched('showtime')">
+          <option value="">Select showtime</option>
+          @if (facade.showtimes$ | async; as showtimes) {
+            @for (showtime of showtimes; track showtime.id) {
+              <option [value]="showtime.id">
+                {{ showtime.movieTitle }} · {{ showtime.date }} · {{ showtime.startTime }}
+              </option>
+            }
+          }
+        </select>
+        @if (facade.showtimeInvalid()) {
+          <span class="form-error">{{ facade.showtimeError() }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="booking-seat-block">
+      <div class="booking-seat-block__header">
+        <div>
+          <h3>Seat Selection</h3>
+          <p>Select seats for this booking.</p>
+        </div>
+        <div class="booking-seat-block__meta">
+          <span>{{ facade.pricePerSeatLabel() }} per seat</span>
+          <strong>{{ facade.totalPriceLabel() }}</strong>
+        </div>
+      </div>
+
+      @if (!facade.hasSeatOptions()) {
+        <div class="booking-seat-empty">
+          @if (facade.hasSelectedShowtime()) {
+            <p>No seats available for this showtime.</p>
+          } @else {
+            <p>Select a showtime to view available seats.</p>
+          }
+        </div>
+      } @else {
+        <div class="booking-seat-grid" [class.booking-seat-grid--disabled]="facade.seatSelectionDisabled()">
+          @for (seat of facade.seatOptions(); track seat) {
+            <label class="seat-option" [class.seat-option--selected]="facade.selectedSeatSet().has(seat)">
+              <input
+                type="checkbox"
+                [id]="seat"
+                [name]="seat"
+                [checked]="facade.selectedSeatSet().has(seat)"
+                [disabled]="facade.seatSelectionDisabled()"
+                (change)="onSeatToggle(seat)" />
+              <span>{{ seat }}</span>
+            </label>
+          }
+        </div>
+      }
+
+      @if (facade.seatsInvalid()) {
+        <span class="form-error">{{ facade.seatsError() }}</span>
+      }
+    </div>
+
+    <div class="booking-form-actions">
+      <button type="submit" class="btn btn-primary btn-md" [disabled]="facade.isSubmitting()">
+        @if (facade.isSubmitting()) {
+          Creating...
+        } @else {
+          Create Booking
+        }
+      </button>
+    </div>
+  </form>
+</section>

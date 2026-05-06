@@ -1,0 +1,269 @@
+:host { display: block; }
+
+.view-movie-modal-card {
+  width: 100%;
+  max-width: 860px;
+}
+
+/* ── HEADER ─────────────────────────────────────────── */
+.view-movie-header { padding: 24px 28px 18px; }
+
+.view-movie-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.view-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── BODY ───────────────────────────────────────────── */
+.view-movie-body {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 28px;
+  padding: 0 28px 8px;
+  max-height: calc(90vh - 180px);
+  overflow-y: auto;
+
+  &::-webkit-scrollbar       { width: 4px; }
+  &::-webkit-scrollbar-track  { background: transparent; }
+  &::-webkit-scrollbar-thumb  { background: var(--surface-container-high); border-radius: 2px; }
+}
+
+/* ── POSTER COLUMN ──────────────────────────────────── */
+.view-poster-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.view-poster-frame {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-container);
+  aspect-ratio: 2/3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-poster-img { width: 100%; height: 100%; object-fit: cover; }
+
+.view-poster-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--surface-container);
+}
+
+.view-poster-icon { font-size: 48px; color: var(--on-surface-muted); }
+
+/* ── INFO CARDS ─────────────────────────────────────── */
+.view-info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.view-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ghost-border);
+}
+
+.view-info-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-muted);
+}
+
+.view-info-value {
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.view-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--status-suspended);
+}
+
+.view-star { font-size: 13px; color: var(--status-suspended); }
+
+.view-status-row { display: flex; }
+
+/* ── STATUS BADGES ───────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: var(--text-label); font-weight: 600;
+  letter-spacing: 0.05em; border: 1px solid transparent; white-space: nowrap;
+  &::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+}
+.badge-active      { color: var(--status-active); background: var(--status-active-bg); border-color: var(--status-active-br); }
+.badge-inactive    { color: var(--on-surface-muted); background: var(--surface-container-high); border-color: var(--ghost-border); }
+.badge-coming-soon { color: var(--status-pending); background: var(--status-pending-bg); border-color: var(--status-pending-br); }
+
+/* ── DETAILS COLUMN ─────────────────────────────────── */
+.view-details-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 8px;
+}
+
+.view-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── GENRE PILLS ─────────────────────────────────────── */
+.view-genre-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.genre-pill {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+  background: var(--primary-dim); color: var(--primary-container);
+  border: 1px solid rgba(34, 211, 238, 0.2); white-space: nowrap;
+}
+
+/* ── SYNOPSIS ────────────────────────────────────────── */
+.view-synopsis {
+  font-size: var(--text-body);
+  color: var(--on-surface-variant);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── CAST ────────────────────────────────────────────── */
+.view-cast-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.cast-chip {
+  display: inline-flex; align-items: center;
+  padding: 4px 12px; border-radius: 20px;
+  font-size: var(--text-body-sm); font-weight: 500;
+  background: var(--surface-container-high);
+  color: var(--on-surface-variant);
+  border: 1px solid var(--ghost-border);
+}
+
+/* ── TRAILER LINK ────────────────────────────────────── */
+.trailer-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--primary-container);
+  font-size: var(--text-body-sm); font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition);
+  &:hover { color: var(--primary); }
+  span { font-size: 18px; }
+}
+
+/* ── EMPTY HINT ──────────────────────────────────────── */
+.view-empty-hint {
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-muted);
+  font-style: italic;
+}
+
+/* ── RESPONSIVE: TABLET (≤768px) ─────────────────────── */
+@media (max-width: 768px) {
+  .view-movie-modal-card {
+    max-width: 100%;
+  }
+
+  .view-movie-header {
+    padding: 20px 20px 16px;
+  }
+
+  .view-movie-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 20px 8px;
+  }
+
+  .view-poster-col {
+    align-items: center;
+  }
+
+  .view-poster-frame {
+    max-width: 180px;
+    width: 100%;
+  }
+
+  .view-info-cards {
+    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
+  }
+
+  .view-status-row {
+    justify-content: center;
+  }
+
+  .view-details-col {
+    gap: 20px;
+  }
+}
+
+/* ── RESPONSIVE: PHONE (≤480px) ──────────────────────── */
+@media (max-width: 480px) {
+  .view-movie-header {
+    padding: 16px 16px 12px;
+  }
+
+  .view-movie-title-row {
+    gap: 12px;
+  }
+
+  .view-movie-body {
+    padding: 0 16px 8px;
+    gap: 16px;
+    max-height: calc(85vh - 160px);
+  }
+
+  .view-poster-frame {
+    max-width: 140px;
+  }
+
+  .view-poster-icon {
+    font-size: 36px;
+  }
+
+  .view-info-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .view-info-card {
+    padding: 8px 10px;
+  }
+
+  .view-info-label {
+    font-size: 8px;
+  }
+
+  .view-details-col {
+    gap: 16px;
+  }
+
+  .view-synopsis {
+    font-size: var(--text-body-sm);
+    line-height: 1.6;
+  }
+}

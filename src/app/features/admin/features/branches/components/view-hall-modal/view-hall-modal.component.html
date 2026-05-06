@@ -1,0 +1,94 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+    <div class="view-hall-card modal-card" (click)="$event.stopPropagation()">
+
+        <!-- ── Header ── -->
+        <div class="hall-details-header">
+            <div class="header-left">
+                <div class="header-icon">
+                    <span class="material-symbols-outlined">meeting_room</span>
+                </div>
+                <div class="header-text">
+                    <h2 class="header-title">Hall Details: {{ hall().type }} Screen {{ hall().number }}</h2>
+                    <p class="header-subtitle">{{ hall().branchName }}</p>
+                </div>
+            </div>
+
+            <div class="header-badges">
+                <span class="header-badge header-badge--type">{{ hall().type }}</span>
+                <span class="header-badge header-badge--status"
+                    [class.header-badge--active]="hall().status === 'ACTIVE'"
+                    [class.header-badge--maintenance]="hall().status === 'MAINTENANCE'">
+                    {{ hall().status === 'ACTIVE' ? 'Active' : 'Maintenance' }}
+                </span>
+            </div>
+
+            <button class="close-btn" type="button" aria-label="Close" (click)="onClose()">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+        </div>
+
+        <!-- ── Body ── -->
+        <div class="hall-details-body">
+            <!-- Left — Seat Layout -->
+            <div class="seat-layout-section">
+                <h3 class="seat-layout-title">Hall Seat Layout Preview</h3>
+                <p class="seat-layout-subtitle">Uniform seat visualization (View Only)</p>
+
+                <!-- Screen -->
+                <div class="screen-bar"></div>
+                <p class="screen-label">SCREEN</p>
+
+                <!-- Seat Grid -->
+                <div class="seat-grid">
+                    @for (row of seatRows; track row.label) {
+                    <div class="seat-row">
+                        <span class="row-label">{{ row.label }}</span>
+                        @for (seat of row.seats; track seat; let i = $index) {
+                        <div class="seat" [class.seat--aisle]="i === 3">{{ seat }}</div>
+                        }
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Right — Hall Information -->
+            <div class="hall-info-section">
+                <span class="section-label-inline">HALL INFORMATION</span>
+
+                <div class="info-rows">
+                    <div class="info-row">
+                        <span class="info-row-label">Hall Type</span>
+                        <span class="info-row-value info-row-value--type">{{ hall().type }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-row-label">Status</span>
+                        <span class="info-row-value info-row-value--status">{{
+                            hall().status === 'ACTIVE' ? 'Active' : 'Maintenance'
+                            }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-row-label">Capacity</span>
+                        <span class="info-row-value">{{ hall().capacity }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-row-label">Branch Name</span>
+                        <span class="info-row-value">{{ hall().branchName }}</span>
+                    </div>
+                    <div class="info-row info-row--last">
+                        <span class="info-row-label">Total Seats</span>
+                        <span class="info-row-value">{{ hall().capacity }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Footer ── -->
+        <div class="hall-details-footer">
+            <button class="btn btn-ghost btn-md" type="button" (click)="onClose()">Close</button>
+            <button class="btn btn-primary btn-md" type="button" (click)="onEditHall()">
+                <span class="material-symbols-outlined" style="font-size: 16px;">edit</span>
+                Edit Hall
+            </button>
+        </div>
+    </div>
+</div>

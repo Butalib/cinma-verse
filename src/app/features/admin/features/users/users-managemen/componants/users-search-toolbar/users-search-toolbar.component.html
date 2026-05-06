@@ -1,0 +1,33 @@
+<div class="users-search-toolbar">
+    <div class="users-search-toolbar__search">
+        <label class="users-search-toolbar__search-field" for="users-search-toolbar-input">
+            <span class="users-search-toolbar__search-icon material-symbols-outlined" aria-hidden="true">
+                search
+            </span>
+
+            <input id="users-search-toolbar-input" class="users-search-toolbar__search-input" type="search"
+                placeholder="Search by name, email, or user ID..." aria-label="Search by name, email, or user ID"
+                (input)="onSearchInput($event)" />
+        </label>
+    </div>
+
+    <div class="users-search-toolbar__actions" aria-label="User actions">
+        <button class="users-search-toolbar__button users-search-toolbar__button--secondary" type="button"
+            (click)="filterClicked.emit()">
+            <span class="material-symbols-outlined users-search-toolbar__button-icon" aria-hidden="true">tune</span>
+            <span>Filter</span>
+        </button>
+
+        <button class="users-search-toolbar__button users-search-toolbar__button--secondary" type="button"
+            (click)="exportClicked.emit()">
+            <span class="material-symbols-outlined users-search-toolbar__button-icon" aria-hidden="true">download</span>
+            <span>Export</span>
+        </button>
+
+        <button class="users-search-toolbar__button users-search-toolbar__button--primary" type="button"
+            (click)="addClicked.emit()">
+            <span class="material-symbols-outlined users-search-toolbar__button-icon" aria-hidden="true">add</span>
+            <span>Add User</span>
+        </button>
+    </div>
+</div>

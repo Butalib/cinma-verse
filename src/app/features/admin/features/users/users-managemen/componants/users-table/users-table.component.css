@@ -1,0 +1,255 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Rollback: search [OLD-SYSTEM] comments
+ */
+
+:host {
+  display: block;
+}
+
+.users-table-section {
+  margin-top: 10px;
+}
+
+.users-table-shell {
+  /* [OLD-SYSTEM] was: border: 1px solid var(--accent-border); border-radius: 16px */
+  border: none;
+  border-radius: var(--radius-xl);
+  background: var(--surface-container-low);
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.users-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: auto;
+  border-collapse: collapse;
+  color: var(--on-surface);
+}
+
+.users-table th,
+.users-table td {
+  padding: 12px 16px;
+  /* [OLD-SYSTEM] was: border-bottom: 1px solid rgba(125, 135, 150, 0.2) */
+  border-bottom: none;
+  white-space: normal;
+  word-break: break-word;
+  text-align: left;
+  font-size: var(--text-body-sm);
+  transition: background var(--transition);
+}
+
+.users-table thead th {
+  color: var(--on-surface-variant);
+  font-size: var(--text-label);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  /* [OLD-SYSTEM] was: background: rgba(13, 19, 28, 0.85) */
+  background: var(--surface-container);
+}
+
+.users-table tbody tr:hover {
+  background: var(--surface-container);
+}
+
+.users-table__mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.users-table__name {
+  font-weight: 600;
+}
+
+.users-table__date {
+  white-space: nowrap;
+  font-size: var(--text-label);
+  color: var(--on-surface-muted);
+}
+
+.users-table__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.users-table__actions-menu {
+  display: none;
+  position: relative;
+}
+
+.users-table__menu-trigger {
+  list-style: none;
+}
+
+.users-table__menu-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.users-table__actions-menu--drop-up .users-table__menu-list {
+  top: auto;
+  bottom: calc(100% + 6px);
+}
+
+.users-table__menu-list {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 6px);
+  min-width: 132px;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  /* [OLD-SYSTEM] was: border: 1px solid rgba(125, 135, 150, 0.3); background #111a27; box-shadow rgba(0,0,0,0.35) */
+  border: 1px solid var(--ghost-border);
+  background: var(--surface-container-high);
+  box-shadow: var(--shadow-float);
+  z-index: 8;
+}
+
+.users-table__menu-item {
+  width: 100%;
+  height: 30px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--on-surface-variant);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  cursor: pointer;
+  font-size: var(--text-body-sm);
+}
+
+.users-table__menu-item span:first-child {
+  font-size: 0.9rem;
+}
+
+.users-table__menu-item:hover {
+  background: var(--primary-dim);
+  color: var(--on-surface);
+}
+
+.users-table__menu-item--danger:hover {
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+}
+
+.users-table__actions-head {
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.badge--role {
+  /* [OLD-SYSTEM] was: gray-violet hardcoded */
+  color: var(--on-surface-variant);
+  border-color: var(--ghost-border);
+  background: var(--surface-container-high);
+}
+
+.badge--role-admin {
+  /* [OLD-SYSTEM] was: blue-tint #c9dbff */
+  color: var(--status-pending);
+  border-color: var(--status-pending-br);
+  background: var(--status-pending-bg);
+}
+
+.badge--status-active,
+.badge--email-confirmed {
+  /* [OLD-SYSTEM] was: green #6df9c8 / rgba(57, 222, 154, …) */
+  color: var(--status-active);
+  border-color: var(--status-active-br);
+  background: var(--status-active-bg);
+}
+
+.badge--status-suspended {
+  /* [OLD-SYSTEM] was: muted gray */
+  color: var(--status-suspended);
+  border-color: var(--status-suspended-br);
+  background: var(--status-suspended-bg);
+}
+
+.badge--email-not-confirmed {
+  color: var(--status-danger);
+  border-color: var(--status-danger-br);
+  background: var(--status-danger-bg);
+}
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  /* [OLD-SYSTEM] was: border 1px rgba(125,135,150,0.32); background rgba(13,19,28,0.8); color #b8c8d5 */
+  border: 1px solid var(--ghost-border);
+  background: var(--surface-container);
+  color: var(--on-surface-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.icon-btn span {
+  font-size: 0.92rem;
+}
+
+.icon-btn:hover {
+  border-color: var(--status-active-br);
+  color: var(--primary);
+}
+
+.icon-btn--danger:hover {
+  border-color: var(--status-danger-br);
+  background: var(--status-danger-bg);
+  color: var(--status-danger);
+}
+
+.users-table-empty {
+  /* [OLD-SYSTEM] was: dashed border hardcoded grays */
+  border: 1px dashed var(--ghost-border);
+  border-radius: var(--radius-lg);
+  color: var(--on-surface-muted);
+  padding: 18px;
+  text-align: center;
+  background: var(--surface-container-low);
+}
+
+@media (max-width: 1024px) {
+  .users-table {
+    min-width: 980px;
+  }
+
+  .users-table th,
+  .users-table td {
+    white-space: nowrap;
+    word-break: normal;
+  }
+
+  .users-table__actions--desktop {
+    display: none;
+  }
+
+  .users-table__actions-menu {
+    display: inline-block;
+  }
+}

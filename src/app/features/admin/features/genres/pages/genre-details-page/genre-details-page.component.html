@@ -1,0 +1,71 @@
+<section class="genre-details-layout">
+  @if (facade.loading()) {
+    <div class="genre-details-state">Loading genre details...</div>
+  }
+
+  @if (facade.error(); as errorMessage) {
+    <div class="genre-details-state genre-details-state--error" role="alert">{{ errorMessage }}</div>
+  }
+
+  @if (facade.genre(); as genre) {
+    <header class="genre-details-header">
+      <div class="genre-details-header__left">
+        <button type="button" class="genre-details-back" aria-label="Back to genres" (click)="onBack()">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+
+        <div class="genre-details-heading">
+          <h1 class="genre-details-title">Genre Details</h1>
+          <p class="genre-details-subtitle">{{ facade.headerSubtitle() }}</p>
+        </div>
+      </div>
+
+      <div class="genre-details-header__actions">
+        @if (!isEditMode()) {
+          <button type="button" class="btn btn-primary btn-md" (click)="openEdit()">
+            <span class="material-symbols-outlined">edit</span>
+            Edit Genre
+          </button>
+        } @else {
+          <button type="button" class="btn btn-ghost btn-md" [disabled]="facade.saving()" (click)="cancelEdit()">Cancel</button>
+          <button type="button" class="btn btn-primary btn-md" [disabled]="facade.saving()" (click)="saveEdit()">
+            {{ facade.saving() ? 'Saving...' : 'Save Changes' }}
+          </button>
+        }
+      </div>
+    </header>
+
+    <div class="genre-details-grid">
+      <article class="genre-details-card">
+        <span class="genre-details-card__label">Genre Name</span>
+
+        @if (!isEditMode()) {
+          <h2 class="genre-details-card__value">{{ genre.name }}</h2>
+        } @else {
+          <input
+            class="form-control genre-details-input"
+            type="text"
+            [formControl]="editForm.controls.name"
+            placeholder="Genre name" />
+        }
+      </article>
+
+      <article class="genre-details-card">
+        <span class="genre-details-card__label">Genre ID</span>
+        <h2 class="genre-details-card__value genre-details-card__value--mono">{{ genre.id }}</h2>
+      </article>
+
+      <article class="genre-details-card">
+        <span class="genre-details-card__label">Movies Count</span>
+        <h2 class="genre-details-card__value">{{ genre.moviesCount }}</h2>
+      </article>
+    </div>
+
+    <div class="genre-details-danger-zone">
+      <button type="button" class="btn btn-danger btn-md" [disabled]="facade.saving()" (click)="deleteGenre()">
+        <span class="material-symbols-outlined">delete</span>
+        Delete Genre
+      </button>
+    </div>
+  }
+</section>

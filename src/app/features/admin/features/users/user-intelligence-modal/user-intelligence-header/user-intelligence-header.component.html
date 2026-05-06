@@ -1,0 +1,31 @@
+<header class="user-intelligence-header">
+  <div class="user-intelligence-header__top">
+    <div class="user-intelligence-header__titles">
+      <h2 class="user-intelligence-header__title" id="user-intelligence-heading">User Intelligence</h2>
+      <p class="user-intelligence-header__subtitle">Comprehensive view of member activity and financial records.</p>
+    </div>
+    <button
+      type="button"
+      class="user-intelligence-header__close"
+      (click)="closeClick.emit()"
+      aria-label="Close modal"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    </button>
+  </div>
+
+  <nav class="user-intelligence-header__tabs" aria-label="User intelligence sections">
+    @for (t of tabs; track t.id) {
+      <button
+        type="button"
+        class="user-intelligence-header__tab"
+        [class.user-intelligence-header__tab--active]="activeTab() === t.id"
+        (click)="onTabClick(t.id)"
+        [attr.aria-selected]="activeTab() === t.id"
+        role="tab"
+      >
+        {{ t.label }}
+      </button>
+    }
+  </nav>
+</header>

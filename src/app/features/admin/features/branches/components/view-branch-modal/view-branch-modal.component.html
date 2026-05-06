@@ -1,0 +1,141 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+    <div class="modal-lg view-branch-card modal-card" (click)="$event.stopPropagation()">
+
+        <!-- ── Hero Banner ── -->
+        <div class="branch-hero">
+            <span class="branch-id-label">BRANCH · {{ branch().id }}</span>
+            <h2 class="branch-name">{{ branch().name }}</h2>
+            <button class="close-btn" type="button" aria-label="Close" (click)="onClose()">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+        </div>
+
+        <!-- ── Content: Left Panel + Right Panel ── -->
+        <div class="branch-content">
+            <!-- Left Panel — Branch Info -->
+            <div class="branch-info-panel">
+                <div class="info-block">
+                    <span class="info-label">LOCATION</span>
+                    <div class="info-value-row">
+                        <span class="material-symbols-outlined info-icon" aria-hidden="true">location_on</span>
+                        <span class="info-value info-value--sm">{{ branch().location }}</span>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <span class="info-label">TOTAL HALLS</span>
+                    <div class="info-value-row">
+                        <span class="info-icon">🏛️</span>
+                        <span class="info-value info-value--lg">{{ branch().totalHalls }}</span>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <span class="info-label">TOTAL CAPACITY</span>
+                    <div class="info-value-row">
+                        <span class="info-icon">👥</span>
+                        <span class="info-value info-value--lg">{{ totalCapacity() | number }}</span>
+                    </div>
+                </div>
+
+                <!-- Mini Map -->
+                <div class="mini-map-wrapper">
+                    <div class="map-visual map-visual--mini">
+                        <div class="map-road-v"></div>
+                        <span class="material-symbols-outlined map-pin map-pin--static"
+                            aria-hidden="true">location_on</span>
+                        <span class="map-label">Branch Location</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel — Halls Table -->
+            <div class="halls-panel">
+                <div class="halls-header">
+                    <div class="halls-header-left">
+                        <span class="section-label-inline">HALLS & CAPACITY MANAGEMENT</span>
+                    </div>
+                    <div class="halls-header-right">
+                        <button class="btn btn-primary btn-sm" type="button" (click)="onAddHall()">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">add</span>
+                            Add Hall
+                        </button>
+                        <span class="type-pill type-pill--imax">IMAX × {{ imaxCount() }}</span>
+                        <span class="type-pill">PREMIUM × {{ premiumCount() }}</span>
+                        <span class="type-pill">STANDARD × {{ standardCount() }}</span>
+                    </div>
+                </div>
+
+                <!-- Halls Table -->
+                <div class="halls-table-shell">
+                    <table class="halls-table">
+                        <thead>
+                            <tr>
+                                <th>Hall ID</th>
+                                <th>No.</th>
+                                <th>Type</th>
+                                <th>Capacity</th>
+                                <th>Status</th>
+                                <th class="halls-actions-head">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (hall of pagedHalls(); track hall.id) {
+                            <tr>
+                                <td class="hall-id-cell">{{ hall.id }}</td>
+                                <td class="hall-no-cell">{{ hall.number }}</td>
+                                <td>
+                                    <span class="hall-type-badge"
+                                        [class.hall-type-badge--imax]="hall.type === 'IMAX 4K'"
+                                        [class.hall-type-badge--dolby]="hall.type === 'DOLBY'"
+                                        [class.hall-type-badge--standard]="hall.type === 'STANDARD'"
+                                        [class.hall-type-badge--premium]="hall.type === 'PREMIUM'">
+                                        {{ hall.type }}
+                                    </span>
+                                </td>
+                                <td class="hall-capacity-cell">{{ hall.capacity }}</td>
+                                <td>
+                                    <span class="hall-status" [class.hall-status--active]="hall.status === 'ACTIVE'"
+                                        [class.hall-status--maintenance]="hall.status === 'MAINTENANCE'">
+                                        {{ hall.status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="hall-actions">
+                                        <button type="button" class="icon-btn" title="View Hall"
+                                            (click)="onViewHall(hall)">
+                                            <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                                        </button>
+                                        <button type="button" class="icon-btn" title="Edit Hall"
+                                            (click)="onEditHall(hall)">
+                                            <span class="material-symbols-outlined" aria-hidden="true">edit</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Halls Footer -->
+                <div class="halls-footer">
+                    <span class="halls-showing">SHOWING {{ hallsFrom() }}-{{ hallsTo() }} OF {{ hallsTotal() }}
+                        HALLS</span>
+                    <div class="halls-pagination">
+                        <button class="page-arrow" type="button" [disabled]="hallsPage() === 1"
+                            (click)="prevHallsPage()">&lt;</button>
+                        <button class="page-arrow" type="button" [disabled]="hallsPage() === totalHallPages()"
+                            (click)="nextHallsPage()">&gt;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Bottom Footer ── -->
+        <div class="branch-modal-footer">
+            <button class="btn btn-ghost btn-md" type="button" (click)="onEditBranch()">Edit Branch Details</button>
+            <button class="btn btn-secondary btn-md" type="button" (click)="onClose()">Close</button>
+        </div>
+    </div>
+</div>

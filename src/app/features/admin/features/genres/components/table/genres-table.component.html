@@ -1,0 +1,35 @@
+<section class="genres-table-section" aria-label="Genres table">
+  @if (genres().length === 0) {
+    <div class="genres-table-empty">No genres found.</div>
+  } @else {
+    <div class="genres-table-shell">
+      <table class="genres-table">
+        <thead>
+          <tr>
+            <th>Genre ID</th>
+            <th>Name</th>
+            <th>Movies Count</th>
+            <th class="genres-table__actions-head">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (genre of genres(); track trackByGenreId($index, genre)) {
+            <tr>
+              <td class="genres-table__mono">{{ genre.id }}</td>
+              <td class="genres-table__name">{{ genre.name }}</td>
+              <td>{{ genre.moviesCount }}</td>
+              <td>
+                <app-genre-actions
+                  [genreId]="genre.id"
+                  (viewClicked)="viewGenre.emit($event)"
+                  (editClicked)="editGenre.emit($event)"
+                  (deleteClicked)="deleteGenre.emit($event)" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

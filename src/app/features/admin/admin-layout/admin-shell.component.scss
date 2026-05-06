@@ -1,0 +1,75 @@
+/*
+ * [REFACTOR] Design System v2 applied
+ * Date: 2026-04-18
+ * Rollback: search [OLD-SYSTEM] comments
+ */
+
+.admin-shell {
+  display: flex;
+  height: 100vh;
+  min-height: 100vh;
+  /* [OLD-SYSTEM] was: background-color: var(--surface, #0a0f14) */
+  background-color: var(--surface-dim);
+  overflow: hidden;
+}
+
+.admin-backdrop {
+  display: none;
+}
+
+.admin-backdrop--visible {
+  display: block;
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-main-header {
+  position: static;
+}
+
+.admin-content {
+  flex: 1;
+  min-height: 0;
+}
+
+@media (max-width: 1024px) {
+  .admin-shell {
+    overflow-x: clip;
+  }
+
+  .admin-shell--sidebar-open {
+    overflow: hidden;
+  }
+
+  .admin-backdrop--visible {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    border: 0;
+    padding: 0;
+    /* [OLD-SYSTEM] was: background: rgba(2, 8, 23, 0.72); backdrop-filter: blur(2px) */
+    background: rgba(9, 12, 16, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-shell {
+    flex-direction: column;
+    min-height: 100dvh;
+    height: 100dvh;
+  }
+
+  .admin-main {
+    height: 100dvh;
+    overflow: auto;
+  }
+}

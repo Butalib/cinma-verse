@@ -1,0 +1,585 @@
+:host {
+  display: block;
+}
+
+/* ── Overlay ──────────────────────────────────────── */
+.checkin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Modal Card ───────────────────────────────────── */
+.checkin-modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--surface-container-low);
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-float);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── Header ───────────────────────────────────────── */
+.checkin-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border-bottom: 1px solid var(--ghost-border);
+  flex-shrink: 0;
+}
+
+.checkin-modal__title {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.checkin-modal__subtitle {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+.checkin-modal__close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--ghost-border);
+  background: transparent;
+  color: var(--on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.checkin-modal__close-btn:hover:not(:disabled) {
+  color: var(--status-danger);
+  background: var(--status-danger-bg);
+  border-color: var(--status-danger-br);
+}
+
+.checkin-modal__close-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkin-modal__close-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+/* ── Content ──────────────────────────────────────── */
+.checkin-modal__content {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+/* ── INPUT SECTION ────────────────────────────────── */
+.checkin-modal__input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkin-modal__input-label {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--on-surface-variant);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.checkin-modal__input-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.checkin-modal__input {
+  flex: 1;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
+  color: var(--on-surface);
+  font-size: var(--text-body-sm);
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  transition: all var(--transition);
+}
+
+.checkin-modal__input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--surface-container-high);
+  box-shadow: 0 0 0 3px rgba(138, 235, 255, 0.1);
+}
+
+.checkin-modal__input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--surface-container);
+}
+
+.checkin-modal__scan-btn {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--ghost-border);
+  border-radius: var(--radius-md);
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.checkin-modal__scan-btn:hover:not(:disabled) {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--primary-dim);
+}
+
+.checkin-modal__scan-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkin-modal__scan-btn .material-symbols-outlined {
+  font-size: 1.25rem;
+}
+
+/* ── ERROR MESSAGE ────────────────────────────────── */
+.checkin-modal__error {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--status-danger-bg);
+  border: 1px solid var(--status-danger-br);
+  color: var(--status-danger);
+}
+
+.checkin-modal__error-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checkin-modal__error-text {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.4;
+}
+
+/* ── HINT TEXT ────────────────────────────────────– */
+.checkin-modal__hint {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface-container-high);
+  border: 1px solid var(--ghost-border);
+  color: var(--on-surface-variant);
+  font-size: var(--text-body-sm);
+}
+
+.checkin-modal__hint .material-symbols-outlined {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.checkin-modal__hint code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  background: var(--surface-container);
+  color: var(--primary);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* ── TICKET PREVIEW ───────────────────────────────── */
+.checkin-modal__ticket-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkin-modal__preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.checkin-modal__preview-label {
+  font-size: var(--text-label);
+  font-weight: 700;
+  color: var(--on-surface-variant);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.checkin-modal__status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  border: 1px solid var(--ghost-border);
+}
+
+.checkin-modal__status-badge--active {
+  background: var(--status-active-bg);
+  border-color: var(--status-active-br);
+  color: var(--status-active);
+}
+
+/* Ticket card */
+.checkin-modal__ticket-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--ghost-border);
+  background: var(--surface-container);
+  transition: all var(--transition);
+}
+
+.checkin-modal__ticket-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary-dim);
+}
+
+.checkin-modal__ticket-card--compact {
+  gap: 12px;
+  padding: 12px;
+}
+
+.checkin-modal__ticket-poster {
+  width: 80px;
+  height: 110px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface-container-high);
+  border: 1px solid var(--ghost-border);
+}
+
+.checkin-modal__ticket-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.checkin-modal__movie-title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--on-surface);
+  line-height: 1.3;
+}
+
+.checkin-modal__ticket-number {
+  margin: 0 0 8px;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+}
+
+.checkin-modal__ticket-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+
+.checkin-modal__detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.checkin-modal__detail-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--on-surface-variant);
+}
+
+.checkin-modal__detail-value {
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  color: var(--on-surface);
+}
+
+.checkin-modal__detail-value--accent {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.checkin-modal__detail-value--success {
+  color: var(--status-active);
+  font-weight: 700;
+}
+
+.checkin-modal__detail-value--error {
+  color: var(--status-danger);
+  font-weight: 700;
+}
+
+/* ── RESULT SECTION ───────────────────────────────── */
+.checkin-modal__result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkin-modal__result-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.checkin-modal__result-banner--success {
+  background: var(--status-active-bg);
+  border-color: var(--status-active-br);
+  color: var(--status-active);
+}
+
+.checkin-modal__result-banner--failed {
+  background: var(--status-danger-bg);
+  border-color: var(--status-danger-br);
+  color: var(--status-danger);
+}
+
+.checkin-modal__result-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.checkin-modal__result-text {
+  flex: 1;
+}
+
+.checkin-modal__result-title {
+  margin: 0 0 4px;
+  font-size: var(--text-body-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.checkin-modal__result-message {
+  margin: 0;
+  font-size: var(--text-body-sm);
+  color: var(--on-surface-variant);
+}
+
+/* Context */
+.checkin-modal__context {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkin-modal__context-label {
+  font-size: var(--text-label);
+  font-weight: 700;
+  color: var(--on-surface-variant);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── SPINNER ──────────────────────────────────────── */
+.checkin-modal__spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── FOOTER ───────────────────────────────────────── */
+.checkin-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--ghost-border);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.checkin-modal__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.checkin-modal__btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.checkin-modal__btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.checkin-modal__btn--ghost {
+  background: transparent;
+  color: var(--on-surface-variant);
+  border-color: var(--ghost-border);
+}
+
+.checkin-modal__btn--ghost:hover:not(:disabled) {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+  border-color: var(--primary);
+}
+
+.checkin-modal__btn--primary {
+  background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+  color: var(--on-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.checkin-modal__btn--primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: var(--shadow-float);
+}
+
+.checkin-modal__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.checkin-modal__btn .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────– */
+@media (max-width: 480px) {
+  .checkin-modal-overlay {
+    padding: 12px;
+  }
+
+  .checkin-modal {
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+  }
+
+  .checkin-modal__footer {
+    flex-direction: column-reverse;
+  }
+
+  .checkin-modal__btn {
+    width: 100%;
+  }
+
+  .checkin-modal__ticket-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── ACCESSIBILITY ────────────────────────────────– */
+.checkin-modal__close-btn:focus-visible,
+.checkin-modal__btn:focus-visible,
+.checkin-modal__input:focus-visible,
+.checkin-modal__scan-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
