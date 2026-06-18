@@ -228,6 +228,8 @@ export class ShowtimesLayoutComponent {
   private readonly showtimesService = inject(ShowtimesService);
 
   readonly allShowtimes = signal<ShowtimesTableRow[]>(MOCK_SHOWTIMES);
+  readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
   readonly searchTerm = signal('');
   readonly activeFilters = signal<ShowtimesFilter>({});
   readonly currentPage = signal(1);
@@ -293,6 +295,10 @@ export class ShowtimesLayoutComponent {
     const pages = Math.ceil(this.filteredShowtimes().length / this.pageSize());
     return Math.max(pages, 1);
   });
+
+  constructor() {
+    this.loadShowtimesFromApi();
+  }
 
   readonly pagedShowtimes = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize();
@@ -449,17 +455,40 @@ export class ShowtimesLayoutComponent {
   }
 
   onDeleteShowtime(showtimeId: string): void {
-    this.allShowtimes.update((items) => items.filter((item) => item.id !== showtimeId));
+    const applyLocalDelete = () => {
+      this.allShowtimes.update((items) => items.filter((item) => item.id !== showtimeId));
 
-    if (this.selectedViewShowtimeId() === showtimeId) {
-      this.closeViewModal();
-    }
+      if (this.selectedViewShowtimeId() === showtimeId) {
+        this.closeViewModal();
+      }
 
-    if (this.currentPage() > this.totalPages()) {
-      this.currentPage.set(this.totalPages());
-    }
+      if (this.currentPage() > this.totalPages()) {
+        this.currentPage.set(this.totalPages());
+      }
+    };
 
-    console.log('Delete showtime', showtimeId);
+    this.showtimesService.deleteShowtime(showtimeId).subscribe({
+      next: () => applyLocalDelete(),
+      error: () => applyLocalDelete(),
+    });
+  }
+
+  private loadShowtimesFromApi(): void {
+    this.loading.set(true);
+    this.loadError.set(null);
+
+    this.showtimesApi.getShowtimes({ page: 1, pageSize: 100 }).subscribe({
+      next: (items) => {
+        if (items.length > 0) {
+          this.allShowtimes.set(items);
+        }
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set('Failed to load showtimes from API.');
+      },
+    });
   }
 
   private parseDateValue(value: string): Date | null {

@@ -12,13 +12,13 @@
             <div class="branch-form-col">
                 <div class="form-group">
                     <label>BRANCH NAME</label>
-                    <input class="form-control" placeholder="e.g., CinemaVerse Downtown" />
+                    <input #branchNameInput class="form-control" placeholder="e.g., CinemaVerse Downtown" />
                 </div>
 
                 <!-- Location BELOW name -->
                 <div class="form-group">
                     <label>BRANCH LOCATION</label>
-                    <input class="form-control" placeholder="e.g., Downtown Metro Center" />
+                    <input #branchLocationInput class="form-control" placeholder="e.g., Downtown Metro Center" />
                 </div>
             </div>
 
@@ -37,7 +37,8 @@
         <!-- Footer -->
         <div class="modal-footer">
             <button class="btn btn-ghost btn-md" type="button" (click)="onCancel()">Cancel</button>
-            <button class="btn btn-primary btn-md" type="button" (click)="onSubmit()">
+            <button class="btn btn-primary btn-md" type="button"
+                (click)="onSubmit(branchNameInput.value, branchLocationInput.value)">
                 <span class="material-symbols-outlined" style="font-size: 16px;">add_location</span>
                 Register Branch
             </button>

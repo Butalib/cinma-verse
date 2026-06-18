@@ -45,6 +45,12 @@ export class SidebarComponent {
       route: '/admin/movies',
     },
     {
+      id: 'genres',
+      label: 'Genres',
+      icon: 'category',
+      route: '/admin/genres',
+    },
+    {
       id: 'showtimes',
       label: 'Showtimes',
       icon: 'schedule',

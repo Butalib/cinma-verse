@@ -23,6 +23,8 @@
 
     @if (isUserIntelligenceModalOpen() && intelligenceSelectedUser(); as intelUser) {
     <app-user-intelligence-modal [selectedUser]="intelUser" [overviewOverride]="intelligenceOverview()"
+        [bookingsOverride]="intelligenceBookings()" [ticketsOverride]="intelligenceTickets()"
+        [paymentsOverride]="intelligencePayments()"
         (backdropDismiss)="closeUserIntelligenceModal()" />
     }
 </section>

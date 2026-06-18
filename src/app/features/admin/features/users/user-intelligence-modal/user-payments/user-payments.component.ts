@@ -14,11 +14,12 @@ import { MOCK_PAYMENTS, type UserPaymentRow } from './user-payments.mock';
 })
 export class UserPaymentsComponent {
   readonly user = input<UserIntelligenceSelectedUser | null>(null);
+  readonly itemsOverride = input<UserPaymentRow[] | null>(null);
 
   readonly closeRequested = output<void>();
   readonly exportCsvRequested = output<void>();
 
-  private readonly allItems = signal<UserPaymentRow[]>(MOCK_PAYMENTS);
+  readonly allItems = computed(() => this.itemsOverride() ?? MOCK_PAYMENTS);
 
   readonly searchPlaceholder = 'Search by Payment ID or Booking ID...';
   readonly itemLabel = 'payments';

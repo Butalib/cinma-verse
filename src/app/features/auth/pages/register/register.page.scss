@@ -1,0 +1,52 @@
+@use '../login/login.page.scss';
+
+.auth-panel {
+  width: min(100%, 860px);
+  position: relative;
+  padding: 38px;
+  border: 1px solid rgba(127, 218, 255, 0.2);
+  border-radius: 34px;
+  background: linear-gradient(145deg, rgba(8, 18, 31, 0.88), rgba(4, 9, 18, 0.74));
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.5), 0 0 70px rgba(0, 191, 255, 0.13);
+  backdrop-filter: blur(22px);
+  animation: cardIn 420ms ease-out both;
+}
+
+.form-section {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field--wide {
+  grid-column: 1 / -1;
+}
+
+select {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  color: #ffffff;
+  background: transparent;
+  font: inherit;
+}
+
+option {
+  color: #06101c;
+}
+
+@media (max-width: 720px) {
+  .auth-panel {
+    padding: 28px 20px;
+    border-radius: 26px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

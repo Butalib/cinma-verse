@@ -1,0 +1,41 @@
+<header class="navbar">
+  <div class="navbar__container">
+
+    <div class="navbar__brand">
+      <a routerLink="/movies">
+        CINEMAVERSE
+      </a>
+    </div>
+
+    <nav class="navbar__menu">
+      <a
+        routerLink="/movies"
+        routerLinkActive="navbar__link--active"
+        class="navbar__link">
+        Movies
+      </a>
+
+      <a
+        routerLink="/bookings"
+        routerLinkActive="navbar__link--active"
+        class="navbar__link">
+        My Bookings
+      </a>
+
+      <a
+        routerLink="/tickets"
+        routerLinkActive="navbar__link--active"
+        class="navbar__link">
+        My Tickets
+      </a>
+    </nav>
+
+    <div class="navbar__profile">
+      <button type="button" class="navbar__profile-btn btn btn-ghost">
+        <i class="pi pi-user"></i>
+        <span>Profile</span>
+      </button>
+    </div>
+
+  </div>
+</header>

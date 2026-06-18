@@ -1,15 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { TokenStoreService } from '../auth/token-store.service';
+import { AuthService } from '../auth/services/auth.service';
 
 export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
   return () => {
-    const tokenStore = inject(TokenStoreService);
+    const authService = inject(AuthService);
     const router = inject(Router);
-    const role = tokenStore.getRole();
+    const role = authService.getCurrentRole();
+    const normalizedAllowedRoles = allowedRoles.map((value) => value.toLowerCase());
+    const normalizedRole = role?.toLowerCase();
 
-    if (!role || !allowedRoles.includes(role)) {
-      return router.createUrlTree(['/']);
+    if (!normalizedRole || !normalizedAllowedRoles.includes(normalizedRole)) {
+      return router.createUrlTree(['/unauthorized']);
     }
 
     return true;

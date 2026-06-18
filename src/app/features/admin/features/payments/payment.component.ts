@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component'; 
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { PaymentsService } from './services/payments.service';
 type PaymentStatus = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED';
 
 interface PaymentRow {
+  sourceId?: number;
   id: string;
   paymentId: string;
   bookingId: string;
@@ -110,10 +112,14 @@ const MOCK_PAYMENTS: PaymentRow[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaymentComponent {
+  private readonly paymentsService = inject(PaymentsService);
+
   readonly searchTerm = signal('');
   readonly currentPage = signal(1);
   readonly pageSize = signal(10);
   readonly selectedPayment = signal<PaymentViewModel | null>(null);
+  readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
 
   private readonly payments = signal<PaymentRow[]>(MOCK_PAYMENTS);
   private readonly moneyFormatter = new Intl.NumberFormat('en-US', {
@@ -130,7 +136,8 @@ export class PaymentComponent {
     }
 
     return items.filter((payment) => {
-      const target = `${payment.paymentId} ${payment.bookingId} ${payment.transactionDate} ${payment.status}`.toLowerCase();
+      const target =
+        `${payment.paymentId} ${payment.bookingId} ${payment.transactionDate} ${payment.status}`.toLowerCase();
       return target.includes(search);
     });
   });
@@ -143,6 +150,10 @@ export class PaymentComponent {
     const start = (this.currentPage() - 1) * this.pageSize();
     return this.paymentRows().slice(start, start + this.pageSize());
   });
+
+  constructor() {
+    this.loadPaymentsFromApi();
+  }
 
   readonly stats = computed(() => {
     const payments = this.filteredPayments();
@@ -183,6 +194,51 @@ export class PaymentComponent {
 
   trackByPaymentId(_: number, payment: PaymentViewModel): string {
     return payment.id;
+  }
+
+  private loadPaymentsFromApi(): void {
+    this.loading.set(true);
+    this.loadError.set(null);
+
+    this.paymentsService.getPayments({ page: 1, pageSize: 100 }).subscribe({
+      next: (response) => {
+        const items = (response.items ?? response.data ?? response.results ?? []).map(
+          (item, index) => {
+            const status = (item.status ?? 'Pending').toUpperCase() as PaymentStatus;
+
+            return {
+              sourceId: item.paymentId,
+              id: item.paymentId ? `pay-${item.paymentId}` : `pay-api-${index + 1}`,
+              paymentId: item.paymentId ? `PMT-${item.paymentId}` : `PMT-${44000 + index + 1}`,
+              bookingId: item.bookingId ? `BKG-${item.bookingId}` : 'BKG-—',
+              transactionDate: item.transactionDate
+                ? new Date(item.transactionDate).toISOString().slice(0, 16).replace('T', ' ')
+                : '—',
+              amount: item.amount ?? 0,
+              currency: item.currency ?? 'USD',
+              status: this.normalizeStatus(status),
+            };
+          },
+        );
+
+        if (items.length > 0) {
+          this.payments.set(items);
+        }
+
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set('Failed to load payments from API.');
+      },
+    });
+  }
+
+  private normalizeStatus(status: string): PaymentStatus {
+    if (status === 'COMPLETED') return 'COMPLETED';
+    if (status === 'FAILED') return 'FAILED';
+    if (status === 'CANCELLED') return 'CANCELLED';
+    return 'PENDING';
   }
 
   private toViewModel(payment: PaymentRow): PaymentViewModel {

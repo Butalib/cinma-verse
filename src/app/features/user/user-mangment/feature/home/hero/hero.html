@@ -1,0 +1,38 @@
+@if (movie$ | async; as movie) {
+  <section class="hero-section d-flex align-items-center justify-content-between">
+    <div class="hero-content">
+      <span class="exclusive">
+        {{ movie.language }}
+      </span>
+
+      <h1 class="collection fw-bold my-3">
+        {{ movie.movieName }}
+      </h1>
+
+      <p>
+        Duration: {{ movie.movieDuration }}
+      </p>
+
+      <div class="d-flex gap-3">
+        <button class="btn btn-info">
+          Get Tickets
+        </button>
+
+        <button class="btn btn-outline-light">
+          Watch Trailer
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img
+        [src]="movie.moviePosterImageUrl"
+        [alt]="movie.movieName"
+      />
+    </div>
+  </section>
+} @else {
+  <section class="hero-section d-flex align-items-center justify-content-center">
+    <p class="hero-empty mb-0">No hero movie available right now.</p>
+  </section>
+}

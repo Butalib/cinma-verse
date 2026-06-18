@@ -1,0 +1,60 @@
+<main class="auth-page">
+  <section class="auth-card" aria-labelledby="login-title">
+    <div class="brand">
+      <span class="brand__mark">CV</span>
+      <p class="eyebrow">Cinematic access</p>
+      <h1 id="login-title">CinemaVerse</h1>
+      <p class="subtitle">Sign in to manage the streaming control room.</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="alert" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">error</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <p class="section-label">Account information</p>
+
+      <label class="field">
+        <span>Email address</span>
+        <span class="input-shell">
+          <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+          <input formControlName="email" type="email" autocomplete="email" placeholder="you@cinemaverse.com" />
+        </span>
+        @if (hasError('email', 'required')) {
+          <small>Email is required.</small>
+        }
+        @if (hasError('email', 'email')) {
+          <small>Enter a valid email address.</small>
+        }
+      </label>
+
+      <label class="field">
+        <span>Password</span>
+        <span class="input-shell">
+          <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+          <input
+            formControlName="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+          />
+          <button class="ghost-icon" type="button" (click)="togglePassword()" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+            <span class="material-symbols-outlined" aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </span>
+        @if (hasError('password', 'required')) {
+          <small>Password is required.</small>
+        }
+      </label>
+
+      <button class="primary-action" type="submit" [disabled]="isLoading() || form.invalid">
+        <span>{{ isLoading() ? 'Signing in...' : 'Sign in' }}</span>
+      </button>
+
+      <p class="switch-link">New to CinemaVerse? <a routerLink="/register">Create account</a></p>
+    </form>
+  </section>
+</main>

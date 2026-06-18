@@ -86,10 +86,10 @@
                                 <td class="hall-no-cell">{{ hall.number }}</td>
                                 <td>
                                     <span class="hall-type-badge"
-                                        [class.hall-type-badge--imax]="hall.type === 'IMAX 4K'"
-                                        [class.hall-type-badge--dolby]="hall.type === 'DOLBY'"
-                                        [class.hall-type-badge--standard]="hall.type === 'STANDARD'"
-                                        [class.hall-type-badge--premium]="hall.type === 'PREMIUM'">
+                                        [class.hall-type-badge--imax]="isImaxType(hall.type)"
+                                        [class.hall-type-badge--dolby]="isDolbyType(hall.type)"
+                                        [class.hall-type-badge--standard]="isStandardType(hall.type)"
+                                        [class.hall-type-badge--premium]="isPremiumType(hall.type)">
                                         {{ hall.type }}
                                     </span>
                                 </td>

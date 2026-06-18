@@ -1,16 +1,32 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { UsersSearchToolbarComponent } from '../componants/users-search-toolbar/users-search-toolbar.component';
-import { UsersFilterPanelComponent, UsersFilter } from '../componants/users-filter-panel/users-filter-panel.component';
+import {
+  UsersFilterPanelComponent,
+  UsersFilter,
+} from '../componants/users-filter-panel/users-filter-panel.component';
 import { UserKpiComponent } from '../componants/userKpi/components/user-kpi.component';
-import { UsersTableComponent, UsersTableRow } from '../componants/users-table/users-table.component';
+import {
+  UsersTableComponent,
+  UsersTableRow,
+} from '../componants/users-table/users-table.component';
 import { PaginationComponent } from '../componants/pagination/pagination.component';
-import { CreateUserModalComponent, CreateUserPayload } from '../../add-user/create-user-modal.component';
-import { UsersApiService } from '../services/users-api.service';
+import {
+  CreateUserModalComponent,
+  CreateUserPayload,
+} from '../../add-user/create-user-modal.component';
 import { EditUserModalComponent, EditUserDetails } from '../../edit-user/edit-user-modal.component';
-import { UpdateUserPayload, UserDetailsResponse, UsersService } from '../services/users.service';
+import {
+  UpdateUserFormPayload,
+  UpdateUserPayload,
+  UserDetailsResponse,
+  UsersService,
+} from '../services/users.service';
 import { UserIntelligenceModalComponent } from '../../user-intelligence-modal/user-intelligence-modal.component';
 import type { UserIntelligenceSelectedUser } from '../../user-intelligence-modal/user-intelligence.types';
 import type { UserOverview } from '../../user-intelligence-modal/user-overview/user-overview.model';
+import type { UserBookingRow } from '../../user-intelligence-modal/user-bookings/user-bookings.mock';
+import type { UserTicketRow } from '../../user-intelligence-modal/user-tickets/user-tickets.mock';
+import type { UserPaymentRow } from '../../user-intelligence-modal/user-payments/user-payments.mock';
 import {
   mapUsersTableRowToSelectedUser,
   mapUsersTableRowToUserOverview,
@@ -28,7 +44,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-01-15',
-    dateOfBirth: '1996-04-22'
+    dateOfBirth: '1996-04-22',
   },
   {
     id: 'USR-1002',
@@ -41,7 +57,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-02-02',
-    dateOfBirth: '1992-11-08'
+    dateOfBirth: '1992-11-08',
   },
   {
     id: 'USR-1003',
@@ -54,7 +70,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'SUSPENDED',
     emailConfirmed: 'NOT CONFIRMED',
     createdAt: '2025-02-10',
-    dateOfBirth: '1989-06-15'
+    dateOfBirth: '1989-06-15',
   },
   {
     id: 'USR-1004',
@@ -67,7 +83,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-02-24',
-    dateOfBirth: '1998-01-03'
+    dateOfBirth: '1998-01-03',
   },
   {
     id: 'USR-1005',
@@ -80,7 +96,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-03-04',
-    dateOfBirth: '1987-09-11'
+    dateOfBirth: '1987-09-11',
   },
   {
     id: 'USR-1006',
@@ -93,7 +109,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-03-08',
-    dateOfBirth: '1995-02-27'
+    dateOfBirth: '1995-02-27',
   },
   {
     id: 'USR-1007',
@@ -106,7 +122,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'SUSPENDED',
     emailConfirmed: 'NOT CONFIRMED',
     createdAt: '2025-03-15',
-    dateOfBirth: '1999-05-13'
+    dateOfBirth: '1999-05-13',
   },
   {
     id: 'USR-1008',
@@ -119,7 +135,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-03-25',
-    dateOfBirth: '1993-10-29'
+    dateOfBirth: '1993-10-29',
   },
   {
     id: 'USR-1009',
@@ -132,7 +148,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-04-01',
-    dateOfBirth: '1991-12-05'
+    dateOfBirth: '1991-12-05',
   },
   {
     id: 'USR-1010',
@@ -145,7 +161,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'NOT CONFIRMED',
     createdAt: '2025-04-03',
-    dateOfBirth: '2000-03-19'
+    dateOfBirth: '2000-03-19',
   },
   {
     id: 'USR-1011',
@@ -158,7 +174,7 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'SUSPENDED',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-04-06',
-    dateOfBirth: '1988-08-01'
+    dateOfBirth: '1988-08-01',
   },
   {
     id: 'USR-1012',
@@ -171,8 +187,8 @@ const MOCK_USERS: UsersTableRow[] = [
     status: 'ACTIVE',
     emailConfirmed: 'CONFIRMED',
     createdAt: '2025-04-07',
-    dateOfBirth: '1994-07-09'
-  }
+    dateOfBirth: '1994-07-09',
+  },
 ];
 
 @Component({
@@ -191,7 +207,7 @@ const MOCK_USERS: UsersTableRow[] = [
   templateUrl: './layout-componant.html',
   styleUrl: './layout-componant.css',
 })
-export class LayoutComponant {
+export class LayoutComponant implements OnInit {
   readonly pageSize = signal(10);
 
   readonly isFilterOpen = signal(false);
@@ -200,14 +216,20 @@ export class LayoutComponant {
   readonly isUserIntelligenceModalOpen = signal(false);
   readonly intelligenceSelectedUser = signal<UserIntelligenceSelectedUser | null>(null);
   readonly intelligenceOverview = signal<UserOverview | null>(null);
+  readonly intelligenceBookings = signal<UserBookingRow[] | null>(null);
+  readonly intelligenceTickets = signal<UserTicketRow[] | null>(null);
+  readonly intelligencePayments = signal<UserPaymentRow[] | null>(null);
   readonly selectedUserDetails = signal<EditUserDetails | null>(null);
   readonly isEditSaving = signal(false);
-  private readonly usersApi = inject(UsersApiService);
   private readonly usersService = inject(UsersService);
   readonly allUsers = signal<UsersTableRow[]>(MOCK_USERS);
   readonly searchTerm = signal('');
   readonly activeFilters = signal<UsersFilter>({});
   readonly currentPage = signal(1);
+
+  ngOnInit(): void {
+    this.loadUsers();
+  }
 
   readonly filteredUsers = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -294,8 +316,7 @@ export class LayoutComponant {
   }
 
   onCreateUser(payload: CreateUserPayload) {
-    // Call backend API; on failure fall back to local add
-    this.usersApi.createUser(payload).subscribe({
+    this.usersService.createUser(payload).subscribe({
       next: (created) => {
         this.allUsers.update((users) => [created, ...users]);
         this.currentPage.set(1);
@@ -317,13 +338,13 @@ export class LayoutComponant {
           status: 'ACTIVE',
           emailConfirmed: 'CONFIRMED',
           createdAt: today,
-          dateOfBirth: payload.dateOfBirth || undefined
+          dateOfBirth: payload.dateOfBirth || undefined,
         };
 
         this.allUsers.update((users) => [newUser, ...users]);
         this.currentPage.set(1);
         this.isCreateUserModalOpen.set(false);
-      }
+      },
     });
   }
 
@@ -358,6 +379,7 @@ export class LayoutComponant {
     }
     this.intelligenceSelectedUser.set(mapUsersTableRowToSelectedUser(row));
     this.intelligenceOverview.set(mapUsersTableRowToUserOverview(row));
+    this.loadUserIntelligenceCollections(userId);
     this.isUserIntelligenceModalOpen.set(true);
   }
 
@@ -365,6 +387,9 @@ export class LayoutComponant {
     this.isUserIntelligenceModalOpen.set(false);
     this.intelligenceSelectedUser.set(null);
     this.intelligenceOverview.set(null);
+    this.intelligenceBookings.set(null);
+    this.intelligenceTickets.set(null);
+    this.intelligencePayments.set(null);
   }
 
   onEditUser(user: UsersTableRow) {
@@ -379,7 +404,7 @@ export class LayoutComponant {
         console.error('Get user details failed, opening with table data', err);
         this.selectedUserDetails.set(this.mapEditDetailsFromRow(user));
         this.isEditUserModalOpen.set(true);
-      }
+      },
     });
   }
 
@@ -392,7 +417,7 @@ export class LayoutComponant {
     this.selectedUserDetails.set(null);
   }
 
-  onSaveUserChanges(payload: UpdateUserPayload) {
+  onSaveUserChanges(payload: UpdateUserFormPayload) {
     const selected = this.selectedUserDetails();
     if (!selected) {
       return;
@@ -400,45 +425,218 @@ export class LayoutComponant {
 
     this.isEditSaving.set(true);
 
-    this.usersService.updateUser(selected.id, payload).subscribe({
-      next: (updated) => {
-        this.allUsers.update((items) =>
-          items.map((user) =>
-            user.id === selected.id
-              ? this.applyEditResult(user, payload, updated)
-              : user
-          )
-        );
+    this.usersService
+      .updateUser(selected.id, this.buildUpdatePayload(selected, payload))
+      .subscribe({
+        next: () => {
+          const activationRequest$ = payload.isActive
+            ? this.usersService.activateUser(selected.id)
+            : this.usersService.deactivateUser(selected.id);
 
-        this.isEditSaving.set(false);
-        this.isEditUserModalOpen.set(false);
-        this.selectedUserDetails.set(null);
-      },
-      error: (err) => {
-        console.error('Update user failed, applying local update', err);
-        this.allUsers.update((items) =>
-          items.map((user) =>
-            user.id === selected.id
-              ? this.applyEditResult(user, payload)
-              : user
-          )
-        );
-
-        this.isEditSaving.set(false);
-        this.isEditUserModalOpen.set(false);
-        this.selectedUserDetails.set(null);
-      }
-    });
+          activationRequest$.subscribe({
+            next: () => this.finalizeUserEdit(selected.id, payload),
+            error: () => this.finalizeUserEdit(selected.id, payload),
+          });
+        },
+        error: (err) => {
+          console.error('Update user failed, applying local update', err);
+          this.finalizeUserEdit(selected.id, payload);
+        },
+      });
   }
 
   onDeleteUser(userId: string) {
+    this.usersService.deleteUser(userId).subscribe({
+      next: () => this.removeUserFromList(userId),
+      error: (err) => {
+        console.error('Delete user API failed, applying local delete', err);
+        this.removeUserFromList(userId);
+      },
+    });
+  }
+
+  private loadUsers(): void {
+    this.usersService.getUsers().subscribe({
+      next: (users) => {
+        if (users.length > 0) {
+          this.allUsers.set(users);
+          this.currentPage.set(1);
+        }
+      },
+      error: (err) => {
+        console.error('Load users API failed, using mock data', err);
+      },
+    });
+  }
+
+  private removeUserFromList(userId: string): void {
     this.allUsers.update((items) => items.filter((user) => user.id !== userId));
 
     if (this.currentPage() > this.totalPages()) {
       this.currentPage.set(this.totalPages());
     }
+  }
 
-    console.log('Delete user', userId);
+  private loadUserIntelligenceCollections(userId: string): void {
+    this.usersService.getUserBookings(userId).subscribe({
+      next: (items) => this.intelligenceBookings.set(this.mapBookings(items)),
+      error: () => this.intelligenceBookings.set(null),
+    });
+
+    this.usersService.getUserTickets(userId).subscribe({
+      next: (items) => this.intelligenceTickets.set(this.mapTickets(items)),
+      error: () => this.intelligenceTickets.set(null),
+    });
+
+    this.usersService.getUserPayments(userId).subscribe({
+      next: (items) => this.intelligencePayments.set(this.mapPayments(items)),
+      error: () => this.intelligencePayments.set(null),
+    });
+  }
+
+  private mapBookings(items: Record<string, unknown>[]): UserBookingRow[] {
+    return items.map((item, index) => {
+      const seats = this.toStringArray(item['seatLabels'] ?? item['seats']);
+      const ticketsCount =
+        this.toNumber(item['ticketsCount'] ?? item['ticketCount']) ?? Math.max(seats.length, 1);
+
+      return {
+        id: this.toString(item['id']) ?? `booking-${index}`,
+        bookingId: this.prefix(
+          this.toString(item['bookingId']) ?? this.toString(item['id']),
+          '#BK-',
+        ),
+        movieTitle:
+          this.toString(item['movieTitle']) ?? this.toString(item['title']) ?? 'Unknown movie',
+        movieSub: this.toString(item['movieSub']) ?? this.toString(item['hall']) ?? '—',
+        showtime: this.toString(item['showtime']) ?? this.toString(item['showTime']) ?? '—',
+        expires: this.toString(item['expires']) ?? this.toString(item['expiresAt']) ?? '—',
+        seatLabels: seats.length > 0 ? seats.slice(0, 2) : ['—'],
+        seatMore: seats.length > 2 ? seats.length - 2 : undefined,
+        ticketsCount,
+        amount: this.toNumber(item['amount']) ?? this.toNumber(item['totalAmount']) ?? 0,
+        status: this.normalizeBookingStatus(this.toString(item['status'])),
+        createdAt: this.toString(item['createdAt']) ?? this.toString(item['created']) ?? '—',
+        createdIso: this.toString(item['createdIso']) ?? this.toString(item['createdAt']) ?? '',
+      };
+    });
+  }
+
+  private mapTickets(items: Record<string, unknown>[]): UserTicketRow[] {
+    return items.map((item, index) => ({
+      id: this.toString(item['id']) ?? `ticket-${index}`,
+      ticketId: this.prefix(this.toString(item['ticketId']) ?? this.toString(item['id']), '#TK-'),
+      ticketNumber: this.toString(item['ticketNumber']) ?? this.toString(item['number']) ?? '—',
+      movieTitle:
+        this.toString(item['movieTitle']) ?? this.toString(item['title']) ?? 'Unknown movie',
+      showtime: this.toString(item['showtime']) ?? this.toString(item['showTime']) ?? '—',
+      showtimeId: this.toString(item['showtimeId']) ?? this.toString(item['showTimeId']) ?? '—',
+      bookingIdRef: this.prefix(
+        this.toString(item['bookingId']) ?? this.toString(item['bookingRef']),
+        '#BK-',
+      ),
+      seat: this.toString(item['seat']) ?? this.toString(item['seatLabel']) ?? '—',
+      hall: this.toString(item['hall']) ?? '—',
+      branch: this.toString(item['branch']) ?? this.toString(item['branchName']) ?? '—',
+      amount: this.toNumber(item['amount']) ?? this.toNumber(item['price']) ?? 0,
+      status: this.normalizeTicketStatus(this.toString(item['status'])),
+    }));
+  }
+
+  private mapPayments(items: Record<string, unknown>[]): UserPaymentRow[] {
+    return items.map((item, index) => ({
+      id: this.toString(item['id']) ?? `payment-${index}`,
+      paymentId: this.prefix(
+        this.toString(item['paymentId']) ?? this.toString(item['id']),
+        '#PMT-',
+      ),
+      bookingRef: this.prefix(
+        this.toString(item['bookingId']) ?? this.toString(item['bookingRef']),
+        '#BK-',
+      ),
+      amount: this.toNumber(item['amount']) ?? 0,
+      transactionDate:
+        this.toString(item['transactionDate']) ?? this.toString(item['createdAt']) ?? '—',
+      transactionIso:
+        this.toString(item['transactionIso']) ?? this.toString(item['createdAt']) ?? '',
+      status: this.normalizePaymentStatus(this.toString(item['status'])),
+    }));
+  }
+
+  private normalizeBookingStatus(value: string | null): UserBookingRow['status'] {
+    const normalized = value?.toLowerCase();
+    if (normalized === 'pending') {
+      return 'pending';
+    }
+    if (normalized === 'cancelled' || normalized === 'canceled') {
+      return 'cancelled';
+    }
+    if (normalized === 'expired') {
+      return 'expired';
+    }
+    return 'confirmed';
+  }
+
+  private normalizeTicketStatus(value: string | null): UserTicketRow['status'] {
+    const normalized = value?.toLowerCase();
+    if (normalized === 'used') {
+      return 'used';
+    }
+    if (normalized === 'cancelled' || normalized === 'canceled') {
+      return 'cancelled';
+    }
+    return 'active';
+  }
+
+  private normalizePaymentStatus(value: string | null): UserPaymentRow['status'] {
+    const normalized = value?.toLowerCase();
+    if (normalized === 'pending') {
+      return 'pending';
+    }
+    if (normalized === 'failed') {
+      return 'failed';
+    }
+    if (normalized === 'cancelled' || normalized === 'canceled') {
+      return 'cancelled';
+    }
+    return 'completed';
+  }
+
+  private toString(value: unknown): string | null {
+    return typeof value === 'string' && value.trim() ? value.trim() : null;
+  }
+
+  private toNumber(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === 'string' && value.trim()) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    return null;
+  }
+
+  private toStringArray(value: unknown): string[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value.filter(
+      (item): item is string => typeof item === 'string' && item.trim().length > 0,
+    );
+  }
+
+  private prefix(value: string | null, prefixValue: string): string {
+    if (!value) {
+      return `${prefixValue}—`;
+    }
+
+    return value.startsWith('#') || value.startsWith(prefixValue)
+      ? value
+      : `${prefixValue}${value}`;
   }
 
   private parseDateValue(value: string): Date | null {
@@ -472,11 +670,14 @@ export class LayoutComponant {
       address: '',
       role: user.role === 'Admin' ? 'admin' : 'user',
       isActive: user.status === 'ACTIVE',
-      emailConfirmed: user.emailConfirmed === 'CONFIRMED'
+      emailConfirmed: user.emailConfirmed === 'CONFIRMED',
     };
   }
 
-  private mapEditDetailsFromApi(user: UsersTableRow, details: UserDetailsResponse): EditUserDetails {
+  private mapEditDetailsFromApi(
+    user: UsersTableRow,
+    details: UserDetailsResponse,
+  ): EditUserDetails {
     const fallback = this.mapEditDetailsFromRow(user);
 
     return {
@@ -490,7 +691,7 @@ export class LayoutComponant {
       address: details.address ?? fallback.address,
       role: this.normalizeRole(details.role, fallback.role),
       isActive: this.normalizeIsActive(details, fallback.isActive),
-      emailConfirmed: this.normalizeEmailConfirmed(details, fallback.emailConfirmed)
+      emailConfirmed: this.normalizeEmailConfirmed(details, fallback.emailConfirmed),
     };
   }
 
@@ -522,9 +723,30 @@ export class LayoutComponant {
     return fallback;
   }
 
+  private buildUpdatePayload(
+    selected: EditUserDetails,
+    payload: UpdateUserFormPayload,
+  ): UpdateUserPayload {
+    const [firstName, ...rest] = selected.fullName.trim().split(/\s+/);
+
+    return {
+      email: selected.email,
+      firstName: firstName || selected.fullName || 'User',
+      lastName: rest.join(' ') || '-',
+      phoneNumber: selected.phoneNumber,
+      address: selected.address,
+      city: selected.city,
+      dateOfBirth: selected.dateOfBirth,
+      isActive: payload.isActive,
+      isEmailConfirmed: payload.emailConfirmed,
+      gender: selected.gender.toLowerCase() === 'female' ? 'Female' : 'Male',
+      role: payload.role.toLowerCase() === 'admin' ? 'Admin' : 'User',
+    };
+  }
+
   private applyEditResult(
     user: UsersTableRow,
-    payload: UpdateUserPayload,
+    payload: UpdateUserFormPayload,
     updated?: UserDetailsResponse,
   ): UsersTableRow {
     const role = this.normalizeRole(updated?.role, payload.role === 'admin' ? 'admin' : 'user');
@@ -537,7 +759,21 @@ export class LayoutComponant {
       ...user,
       role: role === 'admin' ? 'Admin' : 'Customer',
       status: isActive ? 'ACTIVE' : 'SUSPENDED',
-      emailConfirmed: emailConfirmed ? 'CONFIRMED' : 'NOT CONFIRMED'
+      emailConfirmed: emailConfirmed ? 'CONFIRMED' : 'NOT CONFIRMED',
     };
+  }
+
+  private finalizeUserEdit(
+    id: string,
+    payload: UpdateUserFormPayload,
+    updated?: UserDetailsResponse,
+  ): void {
+    this.allUsers.update((items) =>
+      items.map((user) => (user.id === id ? this.applyEditResult(user, payload, updated) : user)),
+    );
+
+    this.isEditSaving.set(false);
+    this.isEditUserModalOpen.set(false);
+    this.selectedUserDetails.set(null);
   }
 }

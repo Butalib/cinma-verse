@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UpdateUserPayload } from '../users-managemen/services/users.service';
+import { UpdateUserFormPayload } from '../users-managemen/services/users.service';
 
 export interface EditUserDetails {
   id: string;
@@ -32,7 +32,7 @@ export class EditUserModalComponent {
   readonly isSaving = input(false);
 
   readonly closeModal = output<void>();
-  readonly saveChanges = output<UpdateUserPayload>();
+  readonly saveChanges = output<UpdateUserFormPayload>();
 
   readonly form = this.fb.group({
     role: this.fb.control<'user' | 'admin'>('user', [Validators.required]),

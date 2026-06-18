@@ -2,7 +2,7 @@ import { Component, AfterViewInit, OnDestroy, inject, PLATFORM_ID } from '@angul
 import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Chart, LineController, LineElement, PointElement, CategoryScale, LinearScale, Tooltip } from 'chart.js';
-import { WeeklyBookingsService } from '../../data-access/weekly-bookings.service';
+import { AdminDashboardService } from '../../data-access/admin-dashboard.service';
 
 Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearScale, Tooltip);
 
@@ -13,7 +13,7 @@ Chart.register(LineController, LineElement, PointElement, CategoryScale, LinearS
   styleUrls: ['./weekly-bookings-chart.component.scss'],
 })
 export class WeeklyBookingsChartComponent implements AfterViewInit, OnDestroy {
-  private readonly weeklyBookingsService = inject(WeeklyBookingsService);
+  private readonly adminDashboardService = inject(AdminDashboardService);
   private readonly platformId = inject(PLATFORM_ID);
   
   private subscription = new Subscription();
@@ -26,7 +26,7 @@ export class WeeklyBookingsChartComponent implements AfterViewInit, OnDestroy {
   }
 
   private fetchDataAndRender(): void {
-    const sub = this.weeklyBookingsService.getWeeklyBookings().subscribe({
+    const sub = this.adminDashboardService.getWeeklyBookings().subscribe({
       next: (response) => {
         const labels = response?.labels?.length ? response.labels : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
         const data = response?.data?.length ? response.data : [15, 25, 20, 45, 80, 110, 95];

@@ -64,9 +64,16 @@ export class GenreDetailsFacade {
     this._error.set(null);
 
     this.genresService.updateGenre(id, payload).subscribe({
-      next: (response) => {
+      next: () => {
         this._saving.set(false);
-        this._genre.set(this.mapGenre(response, id));
+
+        const current = this._genre();
+        if (current) {
+          this._genre.set({
+            ...current,
+            name: payload.name,
+          });
+        }
       },
       error: () => {
         this._saving.set(false);
@@ -118,9 +125,11 @@ export class GenreDetailsFacade {
   }
 
   private mapGenre(dto: GenreApiDto, fallbackId: string): Genre {
+    const numericId = typeof dto.genreId === 'number' ? dto.genreId : null;
+
     return {
-      id: dto.id ?? fallbackId,
-      name: dto.name ?? 'Untitled Genre',
+      id: dto.id ?? (numericId !== null ? `GEN-${String(numericId).padStart(3, '0')}` : fallbackId),
+      name: dto.genreName ?? dto.name ?? 'Untitled Genre',
       moviesCount: dto.moviesCount ?? dto.movieCount ?? dto.totalMovies ?? 0,
       createdAt: dto.createdAt ?? dto.created_at ?? '',
     };

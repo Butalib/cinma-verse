@@ -7,6 +7,7 @@ export interface MovieRow {
   id: string;
   title: string;
   genres: string[];
+  genreIds?: number[];
   ageRating: string;
   duration: number;
   language: string;
@@ -25,7 +26,7 @@ export interface MovieRow {
   imports: [CommonModule],
   templateUrl: './movies-table.component.html',
   styleUrls: ['./movies-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoviesTableComponent {
   readonly movies = input.required<MovieRow[]>();
@@ -64,9 +65,11 @@ export class MoviesTableComponent {
     if (classFn) {
       return classFn(status);
     }
-    return status === 'ACTIVE' ? 'badge badge-active' :
-           status === 'COMING_SOON' ? 'badge badge-coming-soon' :
-           'badge badge-inactive';
+    return status === 'ACTIVE'
+      ? 'badge badge-active'
+      : status === 'COMING_SOON'
+        ? 'badge badge-coming-soon'
+        : 'badge badge-inactive';
   }
 
   getStatusLabel(status: string): string {
@@ -74,8 +77,6 @@ export class MoviesTableComponent {
     if (labelFn) {
       return labelFn(status);
     }
-    return status === 'ACTIVE' ? 'Active' :
-           status === 'COMING_SOON' ? 'Coming Soon' :
-           'Inactive';
+    return status === 'ACTIVE' ? 'Active' : status === 'COMING_SOON' ? 'Coming Soon' : 'Inactive';
   }
 }

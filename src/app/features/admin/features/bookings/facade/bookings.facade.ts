@@ -52,7 +52,14 @@ export class BookingsFacade {
   private readonly statusUpdateRequests = new Subject<BookingStatusUpdateRequest>();
 
   readonly filters = signal<BookingsFilters>(DEFAULT_FILTERS);
-  readonly pagination = signal<BookingsPagination>({ page: 1, pageSize: 10, total: 0 });
+  readonly page = signal(1);
+  readonly pageSize = signal(10);
+  readonly total = signal(0);
+  readonly pagination = computed<BookingsPagination>(() => ({
+    page: this.page(),
+    pageSize: this.pageSize(),
+    total: this.total(),
+  }));
   readonly loading = signal(false);
   readonly stats = signal<BookingsStats>(DEFAULT_STATS);
 
@@ -62,12 +69,11 @@ export class BookingsFacade {
 
   private readonly query = computed<BookingsQuery>(() => {
     const filters = this.filters();
-    const pagination = this.pagination();
 
     return {
       ...filters,
-      page: pagination.page,
-      pageSize: pagination.pageSize,
+      page: this.page(),
+      pageSize: this.pageSize(),
     };
   });
 
@@ -98,10 +104,7 @@ export class BookingsFacade {
     ),
     map((response) => this.normalizeResponse(response)),
     tap((result) => {
-      this.pagination.update((pagination) => ({
-        ...pagination,
-        total: result.total,
-      }));
+      this.total.set(result.total);
       this.stats.set(result.stats);
     }),
     map((result) => result.items),
@@ -124,11 +127,12 @@ export class BookingsFacade {
   }
 
   setPage(page: number): void {
-    this.pagination.update((pagination) => ({ ...pagination, page }));
+    this.page.set(page);
   }
 
   setPageSize(pageSize: number): void {
-    this.pagination.update((pagination) => ({ ...pagination, page: 1, pageSize }));
+    this.page.set(1);
+    this.pageSize.set(pageSize);
   }
 
   openModal(modal: Exclude<BookingModal, null>, booking?: Booking): void {
@@ -158,7 +162,7 @@ export class BookingsFacade {
   }
 
   private resetPage(): void {
-    this.pagination.update((pagination) => ({ ...pagination, page: 1 }));
+    this.page.set(1);
   }
 
   private normalizeResponse(response: BookingsApiResponse): {

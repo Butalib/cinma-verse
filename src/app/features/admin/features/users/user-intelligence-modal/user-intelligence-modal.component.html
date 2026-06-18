@@ -28,13 +28,16 @@
               <app-user-overview [overview]="resolvedOverview()" />
             }
             @case ('bookings') {
-              <app-user-bookings [user]="selectedUser()" (closeRequested)="onCloseClick()" />
+              <app-user-bookings [user]="selectedUser()" [itemsOverride]="bookingsOverride()"
+                (closeRequested)="onCloseClick()" />
             }
             @case ('tickets') {
-              <app-user-tickets [user]="selectedUser()" (closeRequested)="onCloseClick()" />
+              <app-user-tickets [user]="selectedUser()" [itemsOverride]="ticketsOverride()"
+                (closeRequested)="onCloseClick()" />
             }
             @case ('payments') {
-              <app-user-payments [user]="selectedUser()" (closeRequested)="onCloseClick()" />
+              <app-user-payments [user]="selectedUser()" [itemsOverride]="paymentsOverride()"
+                (closeRequested)="onCloseClick()" />
             }
           }
         </div>

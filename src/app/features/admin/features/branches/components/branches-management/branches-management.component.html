@@ -173,24 +173,27 @@
 
     <!-- ── Modals ── -->
     @if (isAddBranchOpen()) {
-    <app-add-branch-modal (closeModal)="closeAddBranch()" />
+    <app-add-branch-modal (closeModal)="closeAddBranch()" (createBranch)="onCreateBranch($event)" />
     }
 
     @if (isEditBranchOpen() && selectedBranch(); as branch) {
-    <app-edit-branch-modal [branch]="branch" (closeModal)="closeEditBranch()" />
+    <app-edit-branch-modal [branch]="branch" (closeModal)="closeEditBranch()" (saveBranch)="onSaveBranch($event)" />
     }
 
     @if (isViewBranchOpen() && selectedBranch(); as branch) {
-    <app-view-branch-modal [branch]="branch" (closeModal)="closeViewBranch()" (editBranch)="openEditFromView()"
-        (addHall)="openAddHall()" (viewHall)="openViewHall($event)" (editHall)="openEditHall($event)" />
+    <app-view-branch-modal [branch]="branch" [halls]="selectedBranchHalls()" (closeModal)="closeViewBranch()"
+        (editBranch)="openEditFromView()" (addHall)="openAddHall()" (viewHall)="openViewHall($event)"
+        (editHall)="openEditHall($event)" />
     }
 
     @if (isAddHallOpen()) {
-    <app-add-hall-modal (closeModal)="closeAddHall()" />
+    <app-add-hall-modal [branches]="branchOptions()" [selectedBranchId]="selectedBranch()?.id ?? ''"
+        (closeModal)="closeAddHall()" (createHall)="onCreateHall($event)" />
     }
 
     @if (isEditHallOpen() && selectedHall(); as hall) {
-    <app-edit-hall-modal [hall]="hall" (closeModal)="closeEditHall()" />
+    <app-edit-hall-modal [hall]="hall" [branches]="branchOptions()" (closeModal)="closeEditHall()"
+        (saveHall)="onSaveHall($event)" (deleteHall)="onDeleteHall()" />
     }
 
     @if (isViewHallOpen() && selectedHall(); as hall) {

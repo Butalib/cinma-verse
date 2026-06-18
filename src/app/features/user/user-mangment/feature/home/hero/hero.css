@@ -1,0 +1,36 @@
+.hero-section {
+  min-height: 80vh;
+  padding: 4rem;
+  background: #07111f;
+  color: white;
+}
+
+.hero-content {
+  max-width: 600px;
+}
+
+.exclusive {
+  color: #45dfff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.collection {
+  font-size: 4rem;
+  line-height: 1.1;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  color: #bdbdbd;
+}
+
+.hero-image img {
+  max-height: 700px;
+  object-fit: cover;
+}
+
+.hero-empty {
+  color: #bdbdbd;
+  font-size: 1.1rem;
+}

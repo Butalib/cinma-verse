@@ -8,13 +8,16 @@
  * ensuring consistency across the application.
  */
 
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { QrTicketResult, CheckInValidationResult, CheckInResponse } from '../models/ticket.models';
+import { TicketsApiService } from './tickets-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CheckInService {
+  private readonly ticketsApi = inject(TicketsApiService);
   /**
    * Audit log for check-in operations
    * In production, this would be persisted to a backend service
@@ -166,10 +169,46 @@ export class CheckInService {
     ticket: QrTicketResult,
     delayMs = 800,
   ): Promise<CheckInResponse> {
-    // Simulate network latency
     await new Promise((resolve) => setTimeout(resolve, delayMs));
 
-    // Perform validation
+    try {
+      const response = await firstValueFrom(this.ticketsApi.checkIn(token));
+
+      const result = (response.result ?? '').toLowerCase();
+      if (response.success && result === 'success') {
+        this.logCheckInAudit(token, 'success');
+        return {
+          result: 'success',
+          checkedInAt: new Date().toISOString(),
+        };
+      }
+
+      if (result === 'alreadyused') {
+        this.logCheckInAudit(token, 'already_used');
+        return {
+          result: 'already_used',
+          reason: response.message ?? 'This ticket has already been checked in.',
+        };
+      }
+
+      if (result === 'cancelled' || result === 'invalidstatus') {
+        this.logCheckInAudit(token, 'invalid_status');
+        return {
+          result: 'invalid_status',
+          reason: response.message ?? 'This ticket cannot be checked in due to its status.',
+        };
+      }
+
+      if (result === 'notfound') {
+        return {
+          result: 'invalid_status',
+          reason: response.message ?? 'Ticket not found.',
+        };
+      }
+    } catch {
+      // ignore and fallback to current local behavior
+    }
+
     return this.checkIn(token, ticket);
   }
 

@@ -233,11 +233,29 @@ export class GenresFacade {
     this._updateLoading.set(true);
 
     this.genresService.updateGenre(id, payload).subscribe({
-      next: (response) => {
+      next: () => {
         this._updateLoading.set(false);
 
-        const updated = this.mapGenre(response, 0);
-        this._selectedGenre.set(updated);
+        this._state.update((state) => ({
+          ...state,
+          list: state.list.map((item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  name: payload.name,
+                }
+              : item,
+          ),
+        }));
+
+        const current = this._selectedGenre();
+        if (current && current.id === id) {
+          this._selectedGenre.set({
+            ...current,
+            name: payload.name,
+          });
+        }
+
         this._updateSuccessTick.update((value) => value + 1);
         this._isEditModalOpen.set(false);
 
@@ -425,6 +443,10 @@ export class GenresFacade {
       return response.length;
     }
 
+    if (typeof response.totalCount === 'number') {
+      return response.totalCount;
+    }
+
     if (typeof response.total === 'number') {
       return response.total;
     }
@@ -437,9 +459,15 @@ export class GenresFacade {
   }
 
   private mapGenre(dto: GenreApiDto, index: number): Genre {
+    const numericId = typeof dto.genreId === 'number' ? dto.genreId : null;
+
     return {
-      id: dto.id ?? `GEN-${String(index + 1).padStart(3, '0')}`,
-      name: dto.name ?? 'Untitled Genre',
+      id:
+        dto.id ??
+        (numericId !== null
+          ? `GEN-${String(numericId).padStart(3, '0')}`
+          : `GEN-${String(index + 1).padStart(3, '0')}`),
+      name: dto.genreName ?? dto.name ?? 'Untitled Genre',
       moviesCount: dto.moviesCount ?? dto.movieCount ?? dto.totalMovies ?? 0,
       createdAt: dto.createdAt ?? dto.created_at ?? '',
     };

@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '../../core/auth/guards/auth.guard';
+import { roleGuard } from '../../core/guards/role.guard';
 import { AdminShellComponent } from './admin-layout/admin-shell.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
     path: '',
     component: AdminShellComponent,
+    canActivate: [authGuard, roleGuard(['Admin', 'Administrator', 'SuperAdmin'])],
     children: [
       {
         path: 'dashboard',

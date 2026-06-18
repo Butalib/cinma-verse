@@ -1,5 +1,7 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { TicketsTableRow, QrTicketResult, TicketsFilter } from '../models/ticket.models';
+import { TicketsApiService } from '../services/tickets-api.service';
+import { AdminTicketListItemDto } from '../../../admin-api.models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TicketsTableComponent } from './components/tickets-table/tickets-table.component';
@@ -162,6 +164,8 @@ const MOCK_TICKETS: TicketsTableRow[] = [
   styleUrl: './tickets-management.css',
 })
 export class TicketsManagementComponent {
+  private readonly ticketsApi = inject(TicketsApiService);
+
   readonly pageSize = signal(10);
   readonly currentPage = signal(1);
   readonly activeFilters = signal<TicketsFilter>({});
@@ -170,6 +174,8 @@ export class TicketsManagementComponent {
   readonly isFilterOpen = signal(false);
   readonly searchQuery = signal('');
   readonly isCheckInModalOpen = signal(false);
+  readonly loading = signal(false);
+  readonly loadError = signal<string | null>(null);
 
   // ── KPI computeds ─────────────────────────────────
   readonly kpiTotalTickets = computed(() => this.allTickets().length.toLocaleString());
@@ -236,6 +242,10 @@ export class TicketsManagementComponent {
     return this.filteredTickets().slice(start, start + this.pageSize());
   });
 
+  constructor() {
+    this.loadTicketsFromApi();
+  }
+
   onApplyFilters(filters: TicketsFilter): void {
     this.activeFilters.set(filters);
     this.currentPage.set(1);
@@ -299,10 +309,23 @@ export class TicketsManagementComponent {
   }
 
   onDeleteTicket(id: string): void {
-    this.allTickets.update((items) => items.filter((t) => t.id !== id));
-    if (this.currentPage() > this.totalPages()) {
-      this.currentPage.set(this.totalPages());
+    const applyLocalDelete = () => {
+      this.allTickets.update((items) => items.filter((t) => t.id !== id));
+      if (this.currentPage() > this.totalPages()) {
+        this.currentPage.set(this.totalPages());
+      }
+    };
+
+    const numericId = this.extractNumericId(id);
+    if (!numericId) {
+      applyLocalDelete();
+      return;
     }
+
+    this.ticketsApi.deleteTicket(numericId).subscribe({
+      next: () => applyLocalDelete(),
+      error: () => applyLocalDelete(),
+    });
   }
 
   onExportCsv(): void {
@@ -338,5 +361,106 @@ export class TicketsManagementComponent {
     );
     // Close modal
     this.isCheckInModalOpen.set(false);
+  }
+
+  private loadTicketsFromApi(): void {
+    this.loading.set(true);
+    this.loadError.set(null);
+
+    this.ticketsApi.getTickets({ page: 1, pageSize: 100 }).subscribe({
+      next: (response) => {
+        const items = (response.items ?? response.data ?? response.results ?? []).map(
+          (item, index) => this.mapApiTicket(item, index),
+        );
+
+        if (items.length > 0) {
+          this.allTickets.set(items);
+        }
+
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loadError.set('Failed to load tickets from API. Showing local fallback data.');
+      },
+    });
+  }
+
+  private mapApiTicket(item: AdminTicketListItemDto, index: number): TicketsTableRow {
+    const ticketId = item.ticketId ?? index + 1;
+    const customerName = item.userFullName?.trim() || 'Unknown User';
+    const customerInitials = this.getInitials(customerName);
+
+    return {
+      id: `#T-${ticketId}`,
+      ticketNumber: item.ticketNumber ?? `CV-TK-${String(10000 + ticketId).slice(-5)}`,
+      movie: item.movieName ?? 'Unknown movie',
+      showtime: this.formatShowtime(item.showStartTime),
+      price: `$${Number(item.price ?? 0).toFixed(2)}`,
+      branch: item.branchName ?? '—',
+      customerInitials,
+      customerName,
+      status: this.mapStatus(item.status),
+    };
+  }
+
+  private formatShowtime(value?: string): string {
+    if (!value) {
+      return '—';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '—';
+    }
+
+    return date.toLocaleString([], {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
+  private mapStatus(status?: string): TicketsTableRow['status'] {
+    const normalized = (status ?? '').toLowerCase();
+
+    if (normalized === 'used') {
+      return 'USED';
+    }
+
+    if (normalized === 'cancelled' || normalized === 'canceled') {
+      return 'CANCELLED';
+    }
+
+    return 'ACTIVE';
+  }
+
+  private getInitials(name: string): string {
+    const parts = name
+      .split(' ')
+      .map((part) => part.trim())
+      .filter(Boolean);
+
+    if (parts.length === 0) {
+      return 'NA';
+    }
+
+    if (parts.length === 1) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+
+  private extractNumericId(value: string): number | null {
+    const match = value.match(/\d+/);
+    if (!match) {
+      return null;
+    }
+
+    const parsed = Number(match[0]);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AdminDashboardService } from './admin-dashboard.service';
 
 export interface WeeklyBookingsData {
   labels: string[];
@@ -11,9 +11,9 @@ export interface WeeklyBookingsData {
   providedIn: 'root'
 })
 export class WeeklyBookingsService {
-  private readonly http = inject(HttpClient);
+  private readonly adminDashboardService = inject(AdminDashboardService);
 
   getWeeklyBookings(): Observable<WeeklyBookingsData> {
-    return this.http.get<WeeklyBookingsData>('/api/admin/dashboard/weekly-bookings');
+    return this.adminDashboardService.getWeeklyBookings();
   }
 }

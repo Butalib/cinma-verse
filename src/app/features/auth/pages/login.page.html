@@ -1,8 +1,0 @@
-    <main class="auth-page">
-      <h1>Login</h1>
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <input formControlName="email" type="email" placeholder="Email" />
-        <input formControlName="password" type="password" placeholder="Password" />
-        <button type="submit" [disabled]="(loading$ | async) || form.invalid">Sign in</button>
-      </form>
-    </main>

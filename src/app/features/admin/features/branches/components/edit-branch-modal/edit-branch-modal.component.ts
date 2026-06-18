@@ -2,6 +2,11 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { CommonModule } from '@angular/common';
 import type { BranchRow } from '../branches-management/branches-management.component';
 
+export interface EditBranchPayload {
+  branchName: string;
+  branchLocation: string;
+}
+
 @Component({
   selector: 'app-edit-branch-modal',
   standalone: true,
@@ -13,6 +18,7 @@ import type { BranchRow } from '../branches-management/branches-management.compo
 export class EditBranchModalComponent {
   readonly branch = input.required<BranchRow>();
   readonly closeModal = output<void>();
+  readonly saveBranch = output<EditBranchPayload>();
 
   onBackdropClick(): void {
     this.closeModal.emit();
@@ -22,8 +28,16 @@ export class EditBranchModalComponent {
     this.closeModal.emit();
   }
 
-  onSave(): void {
-    // Static mock — no real logic
-    this.closeModal.emit();
+  onSave(branchName: string, branchLocation: string): void {
+    const payload: EditBranchPayload = {
+      branchName: branchName.trim(),
+      branchLocation: branchLocation.trim(),
+    };
+
+    if (!payload.branchName || !payload.branchLocation) {
+      return;
+    }
+
+    this.saveBranch.emit(payload);
   }
 }

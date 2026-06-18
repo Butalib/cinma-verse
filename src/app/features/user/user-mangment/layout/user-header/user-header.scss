@@ -1,0 +1,169 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-dim) 100%);
+  box-shadow: var(--shadow-float);
+
+  &__container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 45px;
+    gap: 24px;
+  }
+
+  &__brand {
+    flex-shrink: 0;
+
+    a {
+      display: inline-flex;
+      align-items: center;
+      font-size: var(--text-title-sm);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      // Primary gradient already used by the .btn-primary pattern.
+      background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transition: filter var(--transition);
+
+      &:hover {
+        filter: brightness(1.15);
+      }
+    }
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+  }
+
+  &__link {
+    position: relative;
+    padding: 8px 20px;
+    font-size: var(--text-body);
+    font-weight: 600;
+    color: var(--on-surface-variant);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    letter-spacing: 0.01em;
+    transition:
+      color var(--transition),
+      background-color var(--transition);
+
+    &:hover {
+      color: var(--primary);
+      background-color: var(--primary-dim);
+    }
+
+    &--active {
+      color: var(--primary);
+      background-color: var(--primary-dim);
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 20px;
+        bottom: 4px;
+        left: 20px;
+        height: 2px;
+        background: linear-gradient(90deg, var(--primary-container), var(--primary));
+        border-radius: 1px;
+        box-shadow:
+          0 0 6px var(--primary-glow),
+          0 0 12px var(--primary-glow);
+        transform: scaleX(0);
+        transform-origin: center;
+        animation: navbar-underline-glow 0.35s ease forwards;
+      }
+    }
+  }
+
+  &__profile {
+    flex-shrink: 0;
+  }
+
+  &__profile-btn {
+    gap: 8px;
+  }
+}
+
+@keyframes navbar-underline-glow {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+// Tablet
+@media (max-width: 768px) {
+  .navbar {
+    &__container {
+      padding: 0 20px;
+      min-height: 64px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    &__menu {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+      padding-bottom: 10px;
+    }
+
+    &__link {
+      padding: 6px 14px;
+      font-size: var(--text-body-sm);
+
+      &--active::after {
+        left: 14px;
+        right: 14px;
+        bottom: 3px;
+      }
+    }
+  }
+}
+
+// Mobile
+@media (max-width: 480px) {
+  .navbar {
+    &__container {
+      padding: 0 14px;
+    }
+
+    &__brand a {
+      font-size: var(--text-body);
+      letter-spacing: 0.02em;
+    }
+
+    &__menu {
+      gap: 2px;
+    }
+
+    &__link {
+      padding: 6px 10px;
+    }
+
+    &__profile-btn span {
+      display: none;
+    }
+  }
+}

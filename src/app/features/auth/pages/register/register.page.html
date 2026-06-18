@@ -1,0 +1,153 @@
+<main class="auth-page">
+  <section class="auth-panel" aria-labelledby="register-title">
+    <div class="brand">
+      <span class="brand__mark">CV</span>
+      <p class="eyebrow">Join the universe</p>
+      <h1 id="register-title">Create account</h1>
+      <p class="subtitle">Set up your CinemaVerse profile for bookings, tickets, and dashboard access.</p>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="alert" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">error</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="form-section">
+        <p class="section-label">Account information</p>
+        <div class="form-grid">
+          <label class="field">
+            <span>Email address</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+              <input formControlName="email" type="email" autocomplete="email" placeholder="you@cinemaverse.com" />
+            </span>
+            @if (hasError('email', 'required')) {
+              <small>Email is required.</small>
+            }
+            @if (hasError('email', 'email')) {
+              <small>Enter a valid email address.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+              <input
+                formControlName="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                autocomplete="new-password"
+                placeholder="Minimum 8 characters"
+              />
+              <button class="ghost-icon" type="button" (click)="togglePassword()" [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+                <span class="material-symbols-outlined" aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </span>
+            @if (hasError('password', 'required')) {
+              <small>Password is required.</small>
+            }
+            @if (hasError('password', 'minlength')) {
+              <small>Password must be at least 8 characters.</small>
+            }
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <p class="section-label">Personal information</p>
+        <div class="form-grid">
+          <label class="field">
+            <span>First name</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+              <input formControlName="firstName" type="text" autocomplete="given-name" placeholder="First name" />
+            </span>
+            @if (hasError('firstName', 'required')) {
+              <small>First name is required.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Last name</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">badge</span>
+              <input formControlName="lastName" type="text" autocomplete="family-name" placeholder="Last name" />
+            </span>
+            @if (hasError('lastName', 'required')) {
+              <small>Last name is required.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Phone number</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">call</span>
+              <input formControlName="phoneNumber" type="tel" autocomplete="tel" placeholder="+20 100 000 0000" />
+            </span>
+            @if (hasError('phoneNumber', 'required')) {
+              <small>Phone number is required.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>City</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">location_city</span>
+              <input formControlName="city" type="text" autocomplete="address-level2" placeholder="City" />
+            </span>
+            @if (hasError('city', 'required')) {
+              <small>City is required.</small>
+            }
+          </label>
+
+          <label class="field field--wide">
+            <span>Address</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">home</span>
+              <input formControlName="address" type="text" autocomplete="street-address" placeholder="Street address" />
+            </span>
+            @if (hasError('address', 'required')) {
+              <small>Address is required.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Date of birth</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+              <input formControlName="dateOfBirth" type="date" />
+            </span>
+            @if (hasError('dateOfBirth', 'required')) {
+              <small>Date of birth is required.</small>
+            }
+          </label>
+
+          <label class="field">
+            <span>Gender</span>
+            <span class="input-shell">
+              <span class="material-symbols-outlined" aria-hidden="true">person</span>
+              <select formControlName="gender">
+                <option value="" disabled>Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </span>
+            @if (hasError('gender', 'required')) {
+              <small>Gender is required.</small>
+            }
+          </label>
+        </div>
+      </div>
+
+      <button class="primary-action" type="submit" [disabled]="isLoading() || form.invalid">
+        <span>{{ isLoading() ? 'Creating account...' : 'Create account' }}</span>
+      </button>
+
+      <p class="switch-link">Already have an account? <a routerLink="/login">Sign in</a></p>
+    </form>
+  </section>
+</main>

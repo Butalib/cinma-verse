@@ -1,0 +1,30 @@
+.footer {
+  background: var(--surface-dim);
+  padding: 4rem 0 2rem;
+}
+
+.footer__brand a {
+  color: var(--on-surface);
+  text-decoration: none;
+  font-size: var(--text-page);
+  font-weight: 800;
+}
+
+.footer__copyright {
+  color: var(--on-surface-muted);
+  font-size: var(--text-body-sm);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.footer__links a {
+  color: var(--on-surface-muted);
+  text-decoration: none;
+  font-size: var(--text-body-sm);
+  text-transform: uppercase;
+  transition: color var(--transition);
+}
+
+.footer__links a:hover {
+  color: var(--primary);
+}

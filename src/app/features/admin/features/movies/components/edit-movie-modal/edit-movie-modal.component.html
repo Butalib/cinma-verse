@@ -13,7 +13,7 @@
     </div>
 
     <!-- Body -->
-    <form #movieForm (ngSubmit)="onSubmit(movieForm)" novalidate>
+    <form [formGroup]="movieForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="add-movie-modal-body">
 
         <!-- LEFT: Poster column -->
@@ -43,33 +43,33 @@
           <!-- 1. Title -->
           <div class="form-group field-full">
             <label>MOVIE TITLE <span class="field-api-hint">(movieTitle)</span></label>
-            <input class="form-control" name="title" type="text" [value]="movie().title" placeholder="Enter movie title..." />
+            <input class="form-control" formControlName="title" type="text" placeholder="Enter movie title..." />
           </div>
 
           <!-- 2. Age Rating | Duration -->
           <div class="form-group">
             <label>AGE RATING <span class="field-api-hint">(ageRating)</span></label>
-            <select class="form-control" name="ageRating">
+            <select class="form-control" formControlName="ageRating">
               @for (r of ['G','PG','PG-13','R','NC-17']; track r) {
-                <option [value]="r" [selected]="r === movie().ageRating">{{ r }}</option>
+                <option [value]="r">{{ r }}</option>
               }
             </select>
           </div>
           <div class="form-group">
             <label>DURATION (min) <span class="field-api-hint">(duration)</span></label>
-            <input class="form-control" name="duration" type="number" min="1" [value]="movie().duration" />
+            <input class="form-control" formControlName="duration" type="number" min="1" />
           </div>
 
           <!-- 3. Internal Rating | Language -->
           <div class="form-group">
             <label>INTERNAL RATING <span class="field-api-hint">(internalRating)</span></label>
-            <input class="form-control" name="internalRating" type="number" min="0" max="10" step="0.1" [value]="movie().internalRating" />
+            <input class="form-control" formControlName="internalRating" type="number" min="0" max="10" step="0.1" />
           </div>
           <div class="form-group">
             <label>LANGUAGE <span class="field-api-hint">(language)</span></label>
-            <select class="form-control" name="language">
+            <select class="form-control" formControlName="language">
               @for (l of ['English','Arabic','French','Spanish','Latvian']; track l) {
-                <option [value]="l" [selected]="l === movie().language">{{ l }}</option>
+                <option [value]="l">{{ l }}</option>
               }
             </select>
           </div>
@@ -77,51 +77,39 @@
           <!-- 4. Status | Release Date -->
           <div class="form-group">
             <label>STATUS <span class="field-api-hint">(status)</span></label>
-            <select class="form-control" name="status">
-              <option value="ACTIVE"      [selected]="movie().status === 'ACTIVE'">Active</option>
-              <option value="INACTIVE"    [selected]="movie().status === 'INACTIVE'">Inactive</option>
-              <option value="COMING_SOON" [selected]="movie().status === 'COMING_SOON'">Coming Soon</option>
+            <select class="form-control" formControlName="status">
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+              <option value="COMING_SOON">Coming Soon</option>
             </select>
           </div>
           <div class="form-group">
             <label>RELEASE DATE <span class="field-api-hint">(releaseDate)</span></label>
-            <input class="form-control" name="releaseDate" type="date" [value]="movie().releaseDate" />
+            <input class="form-control" formControlName="releaseDate" type="date" />
           </div>
 
           <!-- 5. Trailer URL -->
           <div class="form-group field-full">
             <label>TRAILER URL <span class="field-api-hint">(trailerUrl)</span></label>
-            <input class="form-control" name="trailerUrl" type="url" [value]="movie().trailerUrl" placeholder="https://youtube.com/watch?v=..." />
+            <input class="form-control" formControlName="trailerUrl" type="url" placeholder="https://youtube.com/watch?v=..." />
           </div>
 
-          <!-- 6. Genres tags -->
+          <!-- 6. Genres multi-select -->
           <div class="form-group field-full">
-            <label>GENRES <span class="field-api-hint">(genres)</span></label>
-            <div class="tags-input-wrapper">
-              @for (genre of getGenres(); track genre) {
-                <span class="tag-pill">
-                  {{ genre }}
-                  <button class="tag-remove" type="button" (click)="removeGenre(genre)">×</button>
-                </span>
+            <label>GENRES <span class="field-api-hint">(genreIds)</span></label>
+            <select class="form-control" formControlName="genreIds" multiple size="6" aria-label="Select genres">
+              @for (genre of genres(); track genre.id) {
+                <option [ngValue]="genre.id">{{ genre.name }}</option>
               }
-              <input
-                class="tags-text-input"
-                type="text"
-                placeholder="+ Add genre"
-                [value]="genreInput()"
-                (input)="genreInput.set($any($event.target).value)"
-                (keydown.enter)="$event.preventDefault(); addGenre()"
-                (keydown.comma)="$event.preventDefault(); addGenre()"
-              />
-            </div>
-            <span class="field-hint">Press Enter or comma to add</span>
+            </select>
+            <span class="field-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple genres.</span>
           </div>
 
           <!-- 7. Cast Members tags -->
           <div class="form-group field-full">
             <label>CAST MEMBERS <span class="field-api-hint">(cast)</span></label>
             <div class="tags-input-wrapper">
-              @for (member of getCastMembers(); track member) {
+              @for (member of castMembers(); track member) {
                 <span class="tag-pill">
                   {{ member }}
                   <button class="tag-remove" type="button" (click)="removeCast(member)">×</button>
@@ -147,9 +135,8 @@
             </label>
             <textarea
               class="form-control"
-              name="description"
+              formControlName="description"
               rows="4"
-              [value]="movie().description"
               placeholder="Write a brief synopsis of the movie..."
             ></textarea>
           </div>

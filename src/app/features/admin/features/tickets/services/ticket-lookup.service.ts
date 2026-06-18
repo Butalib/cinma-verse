@@ -1,23 +1,8 @@
-/**
- * Ticket Lookup Service
- *
- * Responsible for QR code validation and ticket lookup operations.
- * Abstracts the data source (mock, API, cache, etc.)
- *
- * In production, this would integrate with a backend API.
- * Currently uses mock data for demonstration.
- */
-
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { catchError, map, Observable, of } from 'rxjs';
 import { QrTicketResult } from '../models/ticket.models';
+import { TicketsApiService } from './tickets-api.service';
 
-/**
- * Mock QR lookup table
- * Indexed by ticket number (format: CV-TK-{5-digit})
- *
- * In production, this would be replaced by HTTP calls to:
- * POST /api/tickets/lookup { token: string }
- */
 const MOCK_QR_LOOKUP: Record<string, QrTicketResult> = {
   'CV-TK-88291': {
     ticketNumber: 'CV-TK-88291',
@@ -91,78 +76,74 @@ const MOCK_QR_LOOKUP: Record<string, QrTicketResult> = {
   providedIn: 'root',
 })
 export class TicketLookupService {
-  /**
-   * Validate QR token format
-   *
-   * @param token The raw token input
-   * @returns true if token matches expected format
-   */
+  private readonly ticketsApi = inject(TicketsApiService);
+
   validateTokenFormat(token: string): boolean {
     if (!token || typeof token !== 'string') return false;
-    // Format: CV-TK-{5 digits}
     const pattern = /^CV-TK-\d{5}$/i;
     return pattern.test(token.trim());
   }
 
-  /**
-   * Normalize QR token (uppercase, trim)
-   *
-   * @param token The raw token input
-   * @returns Normalized token
-   */
   normalizeToken(token: string): string {
     return token.trim().toUpperCase();
   }
 
-  /**
-   * Lookup ticket by QR token
-   *
-   * In production:
-   * - Call POST /api/tickets/lookup { token }
-   * - Implement exponential backoff retry
-   * - Cache results with TTL (e.g., 5 minutes)
-   * - Handle 404 → null, 500 → error thrown
-   *
-   * @param token The QR token to lookup
-   * @returns QrTicketResult if found, null if not found
-   * @throws Error if lookup fails or token is invalid
-   */
   lookupByToken(token: string): QrTicketResult | null {
-    // Validate token format
     if (!this.validateTokenFormat(token)) {
       return null;
     }
 
-    // Normalize token
     const normalized = this.normalizeToken(token);
-
-    // Mock lookup (replace with HTTP call in production)
-    const result = MOCK_QR_LOOKUP[normalized] ?? null;
-
-    // Simulate network latency (remove in production)
-    // In a real implementation, this would be handled by HttpClient
-
-    return result;
+    return MOCK_QR_LOOKUP[normalized] ?? null;
   }
 
-  /**
-   * Get all available tickets (for testing, debugging, or seed data)
-   *
-   * @returns Array of all available tickets
-   */
+  lookupByTokenAsync(token: string): Observable<QrTicketResult | null> {
+    if (!this.validateTokenFormat(token)) {
+      return of(null);
+    }
+
+    const normalized = this.normalizeToken(token);
+
+    return this.ticketsApi.checkQr(normalized).pipe(
+      map((result) => {
+        if (!result || result.isFound === false) {
+          return this.lookupByToken(normalized);
+        }
+
+        return {
+          ticketNumber: result.ticketNumber ?? normalized,
+          movie: result.movieName ?? 'Unknown movie',
+          showtime: result.showStartTime ? new Date(result.showStartTime).toLocaleString() : '—',
+          location: `${result.branchName ?? '—'}, Hall ${result.hallNumber ?? '—'}`,
+          seat: result.seatLabel ?? '—',
+          price: `$${Number(result.price ?? 0).toFixed(2)}`,
+          status: this.mapStatus(result.status),
+          duration: '—',
+          format: result.hallType ?? 'Standard',
+        } as QrTicketResult;
+      }),
+      catchError(() => of(this.lookupByToken(normalized))),
+    );
+  }
+
   getAllTickets(): QrTicketResult[] {
     return Object.values(MOCK_QR_LOOKUP);
   }
 
-  /**
-   * Check if a ticket exists in the system
-   *
-   * @param token The QR token to check
-   * @returns true if ticket exists
-   */
   ticketExists(token: string): boolean {
     if (!this.validateTokenFormat(token)) return false;
     const normalized = this.normalizeToken(token);
     return normalized in MOCK_QR_LOOKUP;
+  }
+
+  private mapStatus(status?: string): QrTicketResult['status'] {
+    const normalized = (status ?? '').toLowerCase();
+    if (normalized === 'used') {
+      return 'USED';
+    }
+    if (normalized === 'cancelled' || normalized === 'canceled') {
+      return 'CANCELLED';
+    }
+    return 'ACTIVE';
   }
 }

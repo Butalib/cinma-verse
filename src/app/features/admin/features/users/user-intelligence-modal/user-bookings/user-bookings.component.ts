@@ -14,11 +14,12 @@ import { MOCK_BOOKINGS, type UserBookingRow } from './user-bookings.mock';
 })
 export class UserBookingsComponent {
   readonly user = input<UserIntelligenceSelectedUser | null>(null);
+  readonly itemsOverride = input<UserBookingRow[] | null>(null);
 
   readonly closeRequested = output<void>();
   readonly exportCsvRequested = output<void>();
 
-  private readonly allItems = signal<UserBookingRow[]>(MOCK_BOOKINGS);
+  readonly allItems = computed(() => this.itemsOverride() ?? MOCK_BOOKINGS);
 
   readonly searchPlaceholder = 'Search by Booking ID or Movie...';
   readonly itemLabel = 'bookings';

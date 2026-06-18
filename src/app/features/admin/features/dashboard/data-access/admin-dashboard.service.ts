@@ -3,7 +3,20 @@ import { catchError, forkJoin, map, Observable, of } from 'rxjs';
 import { ApiClientService } from '../../../../../core/http/api-client.service';
 import { KpiData } from '../components/kpi-card/kpi-card.component';
 
-export type TimeseriesMetrics = Record<string, number>;
+export interface ChartSeriesData {
+  labels: string[];
+  data: number[];
+}
+
+export interface AdminDashboardSummaryResponse {
+  totalRevenue?: number;
+  totalBookings?: number;
+  activeUsers?: number;
+  occupancyRate?: number;
+}
+
+type TimeseriesMetrics = Record<string, number>;
+type ChartSeriesApiResponse = ChartSeriesData | TimeseriesMetrics;
 
 @Injectable({ providedIn: 'root' })
 export class AdminDashboardService {
@@ -53,6 +66,10 @@ export class AdminDashboardService {
     );
   }
 
+  getDashboardSummary(): Observable<AdminDashboardSummaryResponse> {
+    return this.apiClient.get<AdminDashboardSummaryResponse>('/api/admin/dashboard');
+  }
+
   getTotalRevenue(): Observable<number> {
     return this.apiClient.get<number>('/api/admin/dashboard/total-revenue');
   }
@@ -69,12 +86,16 @@ export class AdminDashboardService {
     return this.apiClient.get<number>('/api/admin/dashboard/occupancy-rate');
   }
 
-  getMonthlyRevenue(): Observable<TimeseriesMetrics> {
-    return this.apiClient.get<TimeseriesMetrics>('/api/admin/dashboard/monthly-revenue');
+  getMonthlyRevenue(): Observable<ChartSeriesData> {
+    return this.apiClient
+      .get<ChartSeriesApiResponse>('/api/admin/dashboard/monthly-revenue')
+      .pipe(map((response) => this.toChartSeriesData(response)));
   }
 
-  getWeeklyBookings(): Observable<TimeseriesMetrics> {
-    return this.apiClient.get<TimeseriesMetrics>('/api/admin/dashboard/weekly-bookings');
+  getWeeklyBookings(): Observable<ChartSeriesData> {
+    return this.apiClient
+      .get<ChartSeriesApiResponse>('/api/admin/dashboard/weekly-bookings')
+      .pipe(map((response) => this.toChartSeriesData(response)));
   }
 
   private formatCurrency(value: number): string {
@@ -91,5 +112,26 @@ export class AdminDashboardService {
 
   private formatPercentage(value: number): string {
     return `${value.toFixed(1)}%`;
+  }
+
+  private toChartSeriesData(response: ChartSeriesApiResponse): ChartSeriesData {
+    if (this.isChartSeriesData(response)) {
+      return response;
+    }
+
+    const entries = Object.entries(response);
+    return {
+      labels: entries.map(([label]) => label),
+      data: entries.map(([, value]) => value)
+    };
+  }
+
+  private isChartSeriesData(value: ChartSeriesApiResponse): value is ChartSeriesData {
+    if (typeof value !== 'object' || value === null) {
+      return false;
+    }
+
+    const candidate = value as Partial<ChartSeriesData>;
+    return Array.isArray(candidate.labels) && Array.isArray(candidate.data);
   }
 }
