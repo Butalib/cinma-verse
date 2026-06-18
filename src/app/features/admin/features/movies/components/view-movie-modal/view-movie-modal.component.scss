@@ -30,6 +30,7 @@
   padding: 0 28px 8px;
   max-height: calc(90vh - 180px);
   overflow-y: auto;
+  min-height: 0;
 
   &::-webkit-scrollbar       { width: 4px; }
   &::-webkit-scrollbar-track  { background: transparent; }
@@ -235,7 +236,7 @@
   .view-movie-body {
     padding: 0 16px 8px;
     gap: 16px;
-    max-height: calc(85vh - 160px);
+    max-height: calc(100vh - 200px);
   }
 
   .view-poster-frame {

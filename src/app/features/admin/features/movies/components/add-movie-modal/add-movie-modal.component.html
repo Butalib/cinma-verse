@@ -61,7 +61,8 @@
           <!-- 3. Internal Rating | Language -->
           <div class="form-group">
             <label>INTERNAL RATING <span class="field-api-hint">(internalRating)</span></label>
-            <input class="form-control" formControlName="internalRating" type="number" min="0" max="10" step="0.1" placeholder="0.0 – 10.0" />
+            <input class="form-control" formControlName="internalRating" type="number" min="0" max="10" step="0.1"
+              placeholder="0.0 – 10.0" />
           </div>
           <div class="form-group">
             <label>LANGUAGE <span class="field-api-hint">(language)</span></label>
@@ -91,18 +92,55 @@
           <!-- 5. Trailer URL — full width -->
           <div class="form-group field-full">
             <label>TRAILER URL <span class="field-api-hint">(trailerUrl)</span></label>
-            <input class="form-control" formControlName="trailerUrl" type="url" placeholder="https://youtube.com/watch?v=..." />
+            <input class="form-control" formControlName="trailerUrl" type="url"
+              placeholder="https://youtube.com/watch?v=..." />
           </div>
 
-          <!-- 6. Genres — multi-select -->
-          <div class="form-group field-full">
+          <!-- 6. Genres — custom multi-select dropdown -->
+          <div class="form-group field-full" style="position: relative;">
             <label>GENRES <span class="field-api-hint">(genreIds)</span></label>
-            <select class="form-control" formControlName="genreIds" multiple size="6" aria-label="Select genres">
+            <div class="form-control genre-select-trigger" (click)="toggleGenreMenu()" tabindex="0"
+              (keydown.space)="$event.preventDefault(); toggleGenreMenu()"
+              (keydown.enter)="$event.preventDefault(); toggleGenreMenu()" role="combobox" aria-haspopup="listbox"
+              [attr.aria-expanded]="isGenreMenuOpen()"
+              style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+              <div class="selected-genres-list"
+                style="display: flex; gap: 4px; flex-wrap: wrap; flex: 1; overflow: hidden; max-height: 48px;">
+                @if ((movieForm.controls.genreIds.value?.length || 0) === 0) {
+                <span style="color: var(--on-surface-muted);">Select genres...</span>
+                } @else {
+                @for (id of movieForm.controls.genreIds.value; track id) {
+                <span class="tag-pill" style="font-size: 11px; padding: 2px 8px;">
+                  {{ getGenreName(id) }}
+                </span>
+                }
+                }
+              </div>
+              <span class="material-symbols-outlined dropdown-icon"
+                style="font-size: 18px; color: var(--on-surface-variant); transition: transform 0.2s;"
+                [style.transform]="isGenreMenuOpen() ? 'rotate(180deg)' : 'rotate(0)'">expand_more</span>
+            </div>
+
+            <!-- Dropdown Panel -->
+            @if (isGenreMenuOpen()) {
+            <div class="genre-dropdown-panel"
+              style="position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface-container-high); border: 1px solid var(--ghost-border); border-radius: var(--radius-md); box-shadow: var(--shadow-float); z-index: 100; max-height: 200px; overflow-y: auto;">
               @for (genre of genres(); track genre.id) {
-                <option [ngValue]="genre.id">{{ genre.name }}</option>
+              <div class="genre-option" [class.selected]="isGenreSelected(genre.id)"
+                (click)="toggleGenreSelection(genre.id)"
+                style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: background 0.2s; color: var(--on-surface);">
+                <span class="material-symbols-outlined"
+                  style="font-size: 18px; color: var(--primary-container); opacity: {{ isGenreSelected(genre.id) ? 1 : 0 }};">check</span>
+                <span>{{ genre.name }}</span>
+              </div>
               }
-            </select>
-            <span class="field-hint">Hold Ctrl (Windows) or Cmd (Mac) to select multiple genres.</span>
+              @if (genres().length === 0) {
+              <div style="padding: 12px 16px; color: var(--on-surface-muted);">No genres found.</div>
+              }
+            </div>
+            <div class="dropdown-backdrop" style="position: fixed; inset: 0; z-index: 99;" (click)="closeGenreMenu()">
+            </div>
+            }
           </div>
 
           <!-- 7. Cast Members — full width tags input -->
@@ -110,20 +148,14 @@
             <label>CAST MEMBERS <span class="field-api-hint">(cast)</span></label>
             <div class="tags-input-wrapper">
               @for (member of castMembers(); track member) {
-                <span class="tag-pill">
-                  {{ member }}
-                  <button class="tag-remove" type="button" (click)="removeCast(member)">×</button>
-                </span>
+              <span class="tag-pill">
+                {{ member }}
+                <button class="tag-remove" type="button" (click)="removeCast(member)">×</button>
+              </span>
               }
-              <input
-                class="tags-text-input"
-                type="text"
-                placeholder="+ Add cast member"
-                [value]="castInput()"
-                (input)="castInput.set($any($event.target).value)"
-                (keydown.enter)="$event.preventDefault(); addCast()"
-                (keydown.comma)="$event.preventDefault(); addCast()"
-              />
+              <input class="tags-text-input" type="text" placeholder="+ Add cast member" [value]="castInput()"
+                (input)="castInput.set($any($event.target).value)" (keydown.enter)="$event.preventDefault(); addCast()"
+                (keydown.comma)="$event.preventDefault(); addCast()" />
             </div>
             <span class="field-hint">Press Enter or comma to add</span>
           </div>
@@ -133,12 +165,8 @@
             <label>DESCRIPTION / SYNOPSIS
               <span class="field-api-hint">(movieDescription)</span>
             </label>
-            <textarea
-              class="form-control"
-              formControlName="description"
-              rows="4"
-              placeholder="Write a brief synopsis of the movie..."
-            ></textarea>
+            <textarea class="form-control" formControlName="description" rows="4"
+              placeholder="Write a brief synopsis of the movie..."></textarea>
           </div>
 
         </div>

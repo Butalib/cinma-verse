@@ -230,6 +230,11 @@
   /* [OLD-SYSTEM] was: border 1px solid #1E2438 */
   outline: 1px solid var(--ghost-border);
   animation: modalIn 0.28s ease;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 85vw;
+  overflow: hidden;
 }
 
 @keyframes modalIn {
@@ -246,6 +251,7 @@
 
 .modal-header {
   padding: 28px 32px 22px;
+  flex-shrink: 0;
 
   .modal-title {
     font-size: var(--text-subtitle);
@@ -283,6 +289,9 @@
 
 .modal-body {
   padding: 8px 32px 24px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .modal-footer {
@@ -290,6 +299,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 // ─── FORM CONTROLS ───────────────────────
@@ -313,17 +323,23 @@
   border: 1px solid var(--ghost-border);
   border-radius: var(--radius-md);
   color: var(--on-surface);
+  -webkit-text-fill-color: var(--on-surface);
   font-family: 'Inter', sans-serif;
   font-size: var(--text-body);
+  line-height: 1.5;
+  min-height: 44px;
   padding: 12px 16px;
   width: 100%;
   transition:
     border-color var(--transition),
-    background var(--transition);
+    background var(--transition),
+    box-shadow var(--transition);
   outline: none;
+  caret-color: var(--primary-container);
 
   &::placeholder {
     color: var(--on-surface-muted);
+    opacity: 1;
   }
 
   &:hover {
@@ -333,17 +349,63 @@
   &:focus {
     border-color: var(--primary-container);
     background: var(--surface-container-high);
+    box-shadow: var(--accent-glow-soft);
   }
+
+  &:-webkit-autofill {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    caret-color: var(--primary-container);
+    transition: background-color 99999s ease-in-out 0s;
+  }
+
+  &:-webkit-autofill:hover {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container) inset;
+  }
+
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container-high) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container-high) inset;
+    border-color: var(--primary-container);
+  }
+
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container) inset;
+  }
+}
+
+input.form-control,
+textarea.form-control,
+select.form-control {
+  color: var(--on-surface);
+  -webkit-text-fill-color: var(--on-surface);
+}
+
+input.form-control[type='date'],
+input.form-control[type='time'] {
+  color-scheme: dark;
 }
 
 select.form-control {
   border-radius: var(--radius-lg);
   cursor: pointer;
   appearance: none;
+  min-height: 44px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23bbc9cd' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
+}
+
+select.form-control option {
+  background: var(--surface-container);
+  color: var(--on-surface);
 }
 
 select:not(.form-control) {
@@ -353,6 +415,8 @@ select:not(.form-control) {
 textarea.form-control {
   resize: vertical;
   min-height: 100px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
 // ─── TOGGLE ──────────────────────────────

@@ -1,4 +1,9 @@
 {
     "workbench.browser.openLocalhostLinks": false,
-    "workbench.browser.showInTitleBar": false
+    "workbench.browser.showInTitleBar": false,
+    "chat.mcp.serverSampling": {
+        "cinmaverse-web/.vscode/mcp.json: angular-cli": {
+            "allowedDuringChat": true
+        }
+    }
 }

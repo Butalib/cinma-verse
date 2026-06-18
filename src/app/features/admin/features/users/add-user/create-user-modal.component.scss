@@ -118,7 +118,7 @@
     background: var(--surface-container);
     color: var(--on-surface);
     font-size: var(--text-body);
-    padding: 11px 12px;
+    padding: 12px 16px;
     outline: none;
     transition:
       border-color var(--transition),
@@ -145,6 +145,26 @@
   textarea:focus {
     border-color: var(--primary-container);
     box-shadow: var(--accent-glow-soft);
+  }
+
+  input:-webkit-autofill {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    transition: background-color 99999s ease-in-out 0s;
+  }
+
+  input:-webkit-autofill:hover {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container) inset;
+  }
+
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--on-surface);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-container-high) inset;
+    box-shadow: 0 0 0 1000px var(--surface-container-high) inset;
+    border-color: var(--primary-container);
   }
 }
 

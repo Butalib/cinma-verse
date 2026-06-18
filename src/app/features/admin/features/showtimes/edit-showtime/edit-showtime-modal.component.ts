@@ -33,6 +33,7 @@ export interface UpdateShowtimePayload {
 })
 export class EditShowtimeModalComponent {
   private readonly fb = inject(FormBuilder);
+  private lastPatchedShowtimeId: string | null = null;
 
   readonly showtime = input<EditShowtimeDetails | null>(null);
   readonly isSaving = input(false);
@@ -52,16 +53,29 @@ export class EditShowtimeModalComponent {
   constructor() {
     effect(() => {
       const data = this.showtime();
-      if (data) {
-        this.form.patchValue({
+      if (!data) {
+        this.lastPatchedShowtimeId = null;
+        return;
+      }
+
+      if (this.lastPatchedShowtimeId === data.id) {
+        return;
+      }
+
+      this.lastPatchedShowtimeId = data.id;
+      this.form.reset(
+        {
           date: data.date,
           startTime: data.startTime,
           endTime: data.endTime,
           price: data.price,
           totalSeats: data.totalSeats,
           status: data.status
-        });
-      }
+        },
+        { emitEvent: false }
+      );
+      this.form.markAsPristine();
+      this.form.markAsUntouched();
     });
   }
 

@@ -21,10 +21,18 @@
   padding: 0;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   /* [OLD-SYSTEM] was: background-color: var(--surface); color: var(--on-surface); margin: 0 */
   background: var(--surface-dim);
   color: var(--on-surface);
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 :where(button, a, select, textarea, [role='button'], [tabindex]:not([tabindex='-1'])) {

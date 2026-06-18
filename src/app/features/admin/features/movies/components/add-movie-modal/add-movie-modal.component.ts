@@ -100,6 +100,10 @@ export class AddMovieModalComponent implements OnInit {
     this.isGenreMenuOpen.set(false);
   }
 
+  getGenreName(id: number): string {
+    return this.genres().find((g) => g.id === id)?.name || '';
+  }
+
   isGenreSelected(genreId: number): boolean {
     return (this.movieForm.controls.genreIds.value ?? []).includes(genreId);
   }

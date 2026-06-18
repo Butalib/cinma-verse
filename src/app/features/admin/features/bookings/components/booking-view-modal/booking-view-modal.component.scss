@@ -2,6 +2,10 @@
   display: block;
 }
 
+.booking-view__content {
+  min-height: 0;
+}
+
 .booking-view__header {
   display: flex;
   align-items: flex-start;

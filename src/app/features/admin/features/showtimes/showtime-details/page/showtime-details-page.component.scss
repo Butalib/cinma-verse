@@ -15,9 +15,8 @@
 
 :host(.showtime-details-page--overlay) .showtime-details-layout {
   max-width: none;
-  height: 100%;
   padding: 24px 28px 28px;
-  overflow-y: auto;
+  min-height: 100%;
 }
 
 /* ── HEADER ─────────────────────────────────────────── */
@@ -73,7 +72,7 @@
 /* ── GRID ───────────────────────────────────────────── */
 .details-grid {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: minmax(280px, 300px) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 }
@@ -81,6 +80,7 @@
 .details-sidebar {
   position: sticky;
   top: 20px;
+  min-width: 0;
 }
 
 :host(.showtime-details-page--overlay) .details-sidebar {
@@ -91,6 +91,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-width: 0;
+  overflow: hidden;
 }
 
 /* ── LOADING STATE ──────────────────────────────────── */

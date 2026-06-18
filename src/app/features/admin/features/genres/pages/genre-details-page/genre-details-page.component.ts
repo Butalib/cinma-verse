@@ -14,6 +14,7 @@ import { GenreDetailsFacade } from '../../facade/genre-details.facade';
 export class GenreDetailsPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
+  private lastSyncedGenreId: string | null = null;
 
   protected readonly facade = inject(GenreDetailsFacade);
 
@@ -38,6 +39,11 @@ export class GenreDetailsPageComponent {
         return;
       }
 
+      if (this.isEditMode() && this.lastSyncedGenreId === genre.id) {
+        return;
+      }
+
+      this.lastSyncedGenreId = genre.id;
       this.editForm.patchValue({ name: genre.name }, { emitEvent: false });
     });
   }
