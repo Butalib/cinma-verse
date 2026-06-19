@@ -1,3 +1,7 @@
+:host {
+  display: block;
+}
+
 .hero {
   position: relative;
   width: 100%;
@@ -8,7 +12,7 @@
   background-repeat: no-repeat;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .hero--empty {
@@ -43,6 +47,7 @@
   z-index: 3;
   width: min(45%, 38rem);
   padding-inline: clamp(1.5rem, 5vw, 6rem);
+  padding-bottom: clamp(3rem, 8vh, 6rem);
   display: flex;
   flex-direction: column;
   gap: 2vh;

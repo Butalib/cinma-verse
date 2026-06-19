@@ -11,7 +11,7 @@
         @if (movie.language) {
           <span class="hero__badge">{{ movie.language }}</span>
         }
-        @if (movie.genres?.length) {
+        @if (movie.genres.length) {
           @for (genre of movie.genres; track genre) {
             <span class="hero__badge">{{ genre }}</span>
           }
