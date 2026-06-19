@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { catchError, map, of } from 'rxjs';
 import { API_BASE_URL } from '../../../../../../core/config/api.config';
@@ -8,7 +8,7 @@ import { MoviesService } from '../../../../user-core/user-services/user-movie/us
 @Component({
   selector: 'app-hero-banner',
   standalone: true,
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, NgStyle],
   templateUrl: './hero.html',
   styleUrl: './hero.css'
 })
@@ -32,6 +32,12 @@ export class HeroBannerComponent {
       return of(null);
     })
   );
+
+  getHeroStyle(posterUrl: string): Record<string, string> {
+    return {
+      'background-image': `url("${posterUrl}")`
+    };
+  }
 
   private resolvePosterUrl(posterUrl: string): string {
     if (posterUrl.startsWith('http://') || posterUrl.startsWith('https://')) {

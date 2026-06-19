@@ -98,7 +98,13 @@ export class BookingsFacade {
     tap(() => this.loading.set(true)),
     switchMap((query) =>
       this.bookingsService.getBookings(query).pipe(
-        catchError(() => this.bookingsService.getFallbackBookings(query)),
+        catchError(() =>
+          of({
+            items: [],
+            total: 0,
+            stats: DEFAULT_STATS,
+          }),
+        ),
         finalize(() => this.loading.set(false)),
       ),
     ),

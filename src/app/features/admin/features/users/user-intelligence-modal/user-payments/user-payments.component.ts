@@ -2,7 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, output, si
 import { CommonModule } from '@angular/common';
 import type { UserIntelligenceSelectedUser } from '../user-intelligence.types';
 import { PaginationComponent } from '../../users-managemen/componants/pagination/pagination.component';
-import { MOCK_PAYMENTS, type UserPaymentRow } from './user-payments.mock';
+
+export interface UserPaymentRow {
+  id: string;
+  paymentId: string;
+  bookingRef: string;
+  amount: number;
+  transactionDate: string;
+  transactionIso: string;
+  status: 'completed' | 'pending' | 'failed' | 'cancelled';
+}
 
 @Component({
   selector: 'app-user-payments',
@@ -19,7 +28,7 @@ export class UserPaymentsComponent {
   readonly closeRequested = output<void>();
   readonly exportCsvRequested = output<void>();
 
-  readonly allItems = computed(() => this.itemsOverride() ?? MOCK_PAYMENTS);
+  readonly allItems = computed(() => this.itemsOverride() ?? []);
 
   readonly searchPlaceholder = 'Search by Payment ID or Booking ID...';
   readonly itemLabel = 'payments';

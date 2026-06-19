@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { PaymentsService } from './services/payments.service';
+
 type PaymentStatus = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED';
 
 interface PaymentRow {
@@ -28,81 +29,6 @@ const STATUS_META: Record<PaymentStatus, { label: string; className: string }> =
   CANCELLED: { label: 'Cancelled', className: 'payment-status-badge--cancelled' },
 };
 
-const MOCK_PAYMENTS: PaymentRow[] = [
-  {
-    id: 'pay-001',
-    paymentId: 'PMT-44021',
-    bookingId: 'BKG-3001',
-    transactionDate: '2026-05-02 19:38',
-    amount: 45,
-    currency: 'USD',
-    status: 'COMPLETED',
-  },
-  {
-    id: 'pay-002',
-    paymentId: 'PMT-44022',
-    bookingId: 'BKG-3002',
-    transactionDate: '2026-05-03 13:08',
-    amount: 36,
-    currency: 'USD',
-    status: 'PENDING',
-  },
-  {
-    id: 'pay-003',
-    paymentId: 'PMT-44023',
-    bookingId: 'BKG-3003',
-    transactionDate: '2026-05-04 20:10',
-    amount: 22.5,
-    currency: 'USD',
-    status: 'FAILED',
-  },
-  {
-    id: 'pay-004',
-    paymentId: 'PMT-44024',
-    bookingId: 'BKG-3004',
-    transactionDate: '2026-05-05 21:04',
-    amount: 33,
-    currency: 'USD',
-    status: 'COMPLETED',
-  },
-  {
-    id: 'pay-005',
-    paymentId: 'PMT-44025',
-    bookingId: 'BKG-3005',
-    transactionDate: '2026-05-06 18:12',
-    amount: 16,
-    currency: 'USD',
-    status: 'CANCELLED',
-  },
-  {
-    id: 'pay-006',
-    paymentId: 'PMT-44026',
-    bookingId: 'BKG-3006',
-    transactionDate: '2026-05-06 15:22',
-    amount: 27,
-    currency: 'USD',
-    status: 'COMPLETED',
-  },
-  {
-    id: 'pay-007',
-    paymentId: 'PMT-44027',
-    bookingId: 'BKG-3007',
-    transactionDate: '2026-05-07 19:41',
-    amount: 22.5,
-    currency: 'USD',
-    status: 'PENDING',
-  },
-  {
-    id: 'pay-008',
-    paymentId: 'PMT-44028',
-    bookingId: 'BKG-3008',
-    transactionDate: '2026-05-08 09:35',
-    amount: 50,
-    currency: 'USD',
-    status: 'COMPLETED',
-  },
-];
-
 @Component({
   selector: 'app-payment',
   standalone: true,
@@ -121,7 +47,7 @@ export class PaymentComponent {
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
 
-  private readonly payments = signal<PaymentRow[]>(MOCK_PAYMENTS);
+  private readonly payments = signal<PaymentRow[]>([]);
   private readonly moneyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -210,10 +136,10 @@ export class PaymentComponent {
               sourceId: item.paymentId,
               id: item.paymentId ? `pay-${item.paymentId}` : `pay-api-${index + 1}`,
               paymentId: item.paymentId ? `PMT-${item.paymentId}` : `PMT-${44000 + index + 1}`,
-              bookingId: item.bookingId ? `BKG-${item.bookingId}` : 'BKG-—',
+              bookingId: item.bookingId ? `BKG-${item.bookingId}` : 'BKG-â€”',
               transactionDate: item.transactionDate
                 ? new Date(item.transactionDate).toISOString().slice(0, 16).replace('T', ' ')
-                : '—',
+                : 'â€”',
               amount: item.amount ?? 0,
               currency: item.currency ?? 'USD',
               status: this.normalizeStatus(status),
@@ -221,15 +147,13 @@ export class PaymentComponent {
           },
         );
 
-        if (items.length > 0) {
-          this.payments.set(items);
-        }
-
+        this.payments.set(items);
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
         this.loadError.set('Failed to load payments from API.');
+        console.error('Load payments API failed', err);
       },
     });
   }

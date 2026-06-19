@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { UserKpiItem, UserKpiService } from '../services/user-kpi.service';
+import { UserKpiService } from '../services/user-kpi.service';
 
 @Component({
   selector: 'app-user-kpi',
@@ -13,5 +13,5 @@ import { UserKpiItem, UserKpiService } from '../services/user-kpi.service';
 export class UserKpiComponent {
   private readonly userKpiService = inject(UserKpiService);
 
-  readonly kpiItems: UserKpiItem[] = this.userKpiService.getUserKpis();
+  readonly kpiItems = this.userKpiService.getUserKpis();
 }

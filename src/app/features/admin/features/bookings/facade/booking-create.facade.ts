@@ -1,6 +1,6 @@
 import { DestroyRef, Injectable, computed, inject, signal } from '@angular/core';
 import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, finalize, shareReplay } from 'rxjs';
+import { catchError, finalize, of, shareReplay } from 'rxjs';
 import { BookingCreateService } from '../services/booking-create.service';
 import type { BookingShowtimeOption, CreateBookingPayload } from '../models/booking-create.model';
 
@@ -27,7 +27,7 @@ export class BookingCreateFacade {
   readonly isSubmitting = signal(false);
 
   readonly showtimes$ = this.service.getShowtimes().pipe(
-    catchError(() => this.service.getFallbackShowtimes()),
+    catchError(() => of([] as BookingShowtimeOption[])),
     shareReplay({ bufferSize: 1, refCount: true }),
   );
 

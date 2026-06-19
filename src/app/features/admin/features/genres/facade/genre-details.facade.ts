@@ -3,13 +3,6 @@ import { Router } from '@angular/router';
 import { Genre, UpdateGenrePayload } from '../models/genre.model';
 import { GenreApiDto, GenresService } from '../services/genres.service';
 
-const MOCK_GENRES: Genre[] = [
-  { id: 'GEN-001', name: 'Action', moviesCount: 42, createdAt: '2026-01-10' },
-  { id: 'GEN-002', name: 'Drama', moviesCount: 37, createdAt: '2026-01-12' },
-  { id: 'GEN-003', name: 'Comedy', moviesCount: 29, createdAt: '2026-01-15' },
-  { id: 'GEN-004', name: 'Sci-Fi', moviesCount: 24, createdAt: '2026-01-18' },
-];
-
 @Injectable()
 export class GenreDetailsFacade {
   private readonly genresService = inject(GenresService);
@@ -31,7 +24,7 @@ export class GenreDetailsFacade {
       return '';
     }
 
-    return `${genre.id} · ${genre.moviesCount} movies`;
+    return `${genre.id} Â· ${genre.moviesCount} movies`;
   });
 
   loadGenreById(id: string): void {
@@ -44,14 +37,6 @@ export class GenreDetailsFacade {
         this._loading.set(false);
       },
       error: () => {
-        const fallback = MOCK_GENRES.find((item) => item.id === id) ?? null;
-        if (fallback) {
-          this._genre.set(fallback);
-          this._loading.set(false);
-          this._error.set(null);
-          return;
-        }
-
         this._genre.set(null);
         this._loading.set(false);
         this._error.set('Genre not found.');

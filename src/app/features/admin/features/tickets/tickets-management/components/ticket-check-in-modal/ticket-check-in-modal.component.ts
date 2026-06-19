@@ -29,6 +29,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { QrTicketResult, CheckInModalState } from '../../../models/ticket.models';
 import { TicketLookupService } from '../../../services/ticket-lookup.service';
 import { CheckInService } from '../../../services/check-in.service';
@@ -214,7 +215,7 @@ export class TicketCheckInModalComponent {
    * Validate ticket and show preview
    * Called when user clicks "Scan QR" or presses Enter
    */
-  validateAndPreview(): void {
+  async validateAndPreview(): Promise<void> {
     if (this.isLoading()) {
       return;
     }
@@ -228,46 +229,42 @@ export class TicketCheckInModalComponent {
     this.isLoading.set(true);
     this.modalState.set('validating');
 
-    // Simulate validation delay (removed in production when using real HTTP)
-    setTimeout(() => {
-      const token = this.lookupService.normalizeToken(this.qrToken());
-      const result = this.lookupService.lookupByToken(token);
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-      this.isLoading.set(false);
+    const token = this.lookupService.normalizeToken(this.qrToken());
+    const result = await firstValueFrom(this.lookupService.lookupByTokenAsync(token));
 
-      if (!result) {
-        this.ticket.set(null);
-        this.errorMessage.set('Ticket not found. Please check the QR token and try again.');
-        this.modalState.set('invalid');
-        return;
-      }
+    this.isLoading.set(false);
 
-      // Store ticket context for result/preview rendering
-      this.ticket.set(result);
+    if (!result) {
+      this.ticket.set(null);
+      this.errorMessage.set('Ticket not found. Please check the QR token and try again.');
+      this.modalState.set('invalid');
+      return;
+    }
 
-      // Check eligibility by status
-      if (result.status === 'USED') {
-        this.errorMessage.set('This ticket has already been checked in.');
-        this.modalState.set('already-used');
-        return;
-      }
+    this.ticket.set(result);
 
-      if (result.status === 'CANCELLED') {
-        this.errorMessage.set('This ticket was cancelled and cannot be checked in.');
-        this.modalState.set('cancelled');
-        return;
-      }
+    if (result.status === 'USED') {
+      this.errorMessage.set('This ticket has already been checked in.');
+      this.modalState.set('already-used');
+      return;
+    }
 
-      if (result.status === 'EXPIRED') {
-        this.errorMessage.set('This ticket has expired and cannot be checked in.');
-        this.modalState.set('error');
-        return;
-      }
+    if (result.status === 'CANCELLED') {
+      this.errorMessage.set('This ticket was cancelled and cannot be checked in.');
+      this.modalState.set('cancelled');
+      return;
+    }
 
-      // Ticket is valid
-      this.errorMessage.set('');
-      this.modalState.set('valid');
-    }, 300);
+    if (result.status === 'EXPIRED') {
+      this.errorMessage.set('This ticket has expired and cannot be checked in.');
+      this.modalState.set('error');
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.modalState.set('valid');
   }
 
   /**

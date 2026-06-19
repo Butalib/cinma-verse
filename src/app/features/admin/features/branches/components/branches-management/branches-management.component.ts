@@ -47,105 +47,6 @@ export interface HallRow {
   branchName: string;
 }
 
-const MOCK_BRANCHES: BranchRow[] = [
-  {
-    id: 'BRN-001',
-    name: 'CinemaVerse Downtown',
-    location: 'Downtown Metro Center, Block A',
-    totalHalls: 12,
-    capacity: 1840,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-002',
-    name: 'CinemaVerse Westfield',
-    location: 'Westfield Mall, Level 3',
-    totalHalls: 8,
-    capacity: 1200,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-003',
-    name: 'CinemaVerse Nile Plaza',
-    location: 'Nile Plaza, Corniche Road',
-    totalHalls: 10,
-    capacity: 1560,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-004',
-    name: 'CinemaVerse Galaxy',
-    location: 'Galaxy Tower, Floor 5',
-    totalHalls: 6,
-    capacity: 900,
-    status: 'MAINTENANCE',
-  },
-  {
-    id: 'BRN-005',
-    name: 'CinemaVerse Sunrise',
-    location: 'Sunrise District, Main Street',
-    totalHalls: 9,
-    capacity: 1350,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-006',
-    name: 'CinemaVerse Park Avenue',
-    location: 'Park Avenue Center, South Wing',
-    totalHalls: 11,
-    capacity: 1720,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-007',
-    name: 'CinemaVerse Marina',
-    location: 'Marina Bay Complex, Tower B',
-    totalHalls: 7,
-    capacity: 1050,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-008',
-    name: 'CinemaVerse Heritage',
-    location: 'Heritage Square, Old Town',
-    totalHalls: 5,
-    capacity: 750,
-    status: 'MAINTENANCE',
-  },
-  {
-    id: 'BRN-009',
-    name: 'CinemaVerse Skyline',
-    location: 'Skyline Towers, Penthouse Level',
-    totalHalls: 14,
-    capacity: 2100,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-010',
-    name: 'CinemaVerse Central',
-    location: 'Central Hub, East Gate',
-    totalHalls: 8,
-    capacity: 1200,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-011',
-    name: 'CinemaVerse Oasis',
-    location: 'Oasis Mall, Ground Floor',
-    totalHalls: 6,
-    capacity: 880,
-    status: 'ACTIVE',
-  },
-  {
-    id: 'BRN-012',
-    name: 'CinemaVerse Promenade',
-    location: 'Promenade Boulevard, Unit 15',
-    totalHalls: 10,
-    capacity: 1500,
-    status: 'ACTIVE',
-  },
-];
-
 @Component({
   selector: 'app-branches-management',
   standalone: true,
@@ -166,29 +67,22 @@ export class BranchesManagementComponent {
   private readonly branchesService = inject(BranchesService);
 
   readonly pageSize = signal(10);
-
-  readonly allBranches = signal<BranchRow[]>(MOCK_BRANCHES);
+  readonly allBranches = signal<BranchRow[]>([]);
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
   readonly searchTerm = signal('');
   readonly locationFilter = signal('');
   readonly currentPage = signal(1);
 
-  // KPI computed values
   readonly totalBranches = computed(() => this.allBranches().length);
   readonly totalHalls = computed(() => this.allBranches().reduce((s, b) => s + b.totalHalls, 0));
-  readonly totalShowtimes = signal('1,254');
+  readonly totalShowtimes = signal('0');
   readonly totalCapacity = computed(() =>
     this.allBranches()
       .reduce((s, b) => s + b.capacity, 0)
       .toLocaleString(),
   );
 
-  constructor() {
-    this.loadBranchesFromApi();
-  }
-
-  // Modal states
   readonly isAddBranchOpen = signal(false);
   readonly isEditBranchOpen = signal(false);
   readonly isViewBranchOpen = signal(false);
@@ -239,6 +133,10 @@ export class BranchesManagementComponent {
 
   readonly totalCount = computed(() => this.filteredBranches().length);
 
+  constructor() {
+    this.loadBranchesFromApi();
+  }
+
   onSearchInput(event: Event): void {
     const target = event.target as HTMLInputElement | null;
     this.searchTerm.set(target?.value ?? '');
@@ -260,7 +158,6 @@ export class BranchesManagementComponent {
     this.currentPage.set(1);
   }
 
-  // Modal operations
   openAddBranch(): void {
     this.isAddBranchOpen.set(true);
   }
@@ -292,26 +189,17 @@ export class BranchesManagementComponent {
   }
 
   openDeleteConfirm(branch: BranchRow): void {
-    const applyLocalDelete = () => {
-      this.allBranches.update((items) => items.filter((b) => b.id !== branch.id));
-      if (this.currentPage() > this.totalPages()) {
-        this.currentPage.set(this.totalPages());
-      }
-    };
-
     const numericId = this.extractNumericId(branch.id);
     if (numericId === null) {
-      applyLocalDelete();
       return;
     }
 
     this.branchesService.deleteBranch(numericId).subscribe({
-      next: () => applyLocalDelete(),
-      error: () => applyLocalDelete(),
+      next: () => this.loadBranchesFromApi(),
+      error: (err) => console.error('Delete branch API failed', err),
     });
   }
 
-  // Hall modal operations (triggered from view-branch)
   openAddHall(): void {
     if (!this.selectedBranch()) {
       return;
@@ -325,7 +213,7 @@ export class BranchesManagementComponent {
   }
 
   openEditHall(hall: HallRow): void {
-    this.isViewHallOpen.set(false); // close view hall first
+    this.isViewHallOpen.set(false);
     this.selectedHall.set(hall);
     this.isEditHallOpen.set(true);
   }
@@ -354,22 +242,12 @@ export class BranchesManagementComponent {
   }
 
   onCreateBranch(payload: AddBranchPayload): void {
-    const request = this.toBranchPayload(payload);
-
-    this.branchesService.createBranch(request).subscribe({
-      next: (created) => {
-        const mapped = this.mapBranchRow(created);
-        if (mapped) {
-          this.allBranches.update((items) => [mapped, ...items]);
-          this.currentPage.set(1);
-        }
+    this.branchesService.createBranch(this.toBranchPayload(payload)).subscribe({
+      next: () => {
         this.closeAddBranch();
+        this.loadBranchesFromApi();
       },
-      error: () => {
-        this.allBranches.update((items) => [this.mapLocalCreatedBranch(payload), ...items]);
-        this.currentPage.set(1);
-        this.closeAddBranch();
-      },
+      error: (err) => console.error('Create branch API failed', err),
     });
   }
 
@@ -380,49 +258,26 @@ export class BranchesManagementComponent {
     }
 
     const numericId = this.extractNumericId(selected.id);
-    const request = this.toBranchPayload(payload);
-
     if (numericId === null) {
-      this.applyLocalBranchEdit(selected.id, payload);
-      this.closeEditBranch();
       return;
     }
 
-    this.branchesService.updateBranch(numericId, request).subscribe({
+    this.branchesService.updateBranch(numericId, this.toBranchPayload(payload)).subscribe({
       next: () => {
-        this.applyLocalBranchEdit(selected.id, payload);
         this.closeEditBranch();
+        this.loadBranchesFromApi();
       },
-      error: () => {
-        this.applyLocalBranchEdit(selected.id, payload);
-        this.closeEditBranch();
-      },
+      error: (err) => console.error('Update branch API failed', err),
     });
   }
 
   onCreateHall(payload: AddHallPayload): void {
-    const request = this.toHallPayload(payload);
-
-    this.branchesService.createHall(request).subscribe({
-      next: (created) => {
-        const selectedBranch = this.selectedBranch();
-        const mapped = this.mapHallRow(created, selectedBranch?.name);
-
-        if (mapped) {
-          this.selectedBranchHalls.update((items) => [mapped, ...items]);
-        }
-
+    this.branchesService.createHall(this.toHallPayload(payload)).subscribe({
+      next: () => {
         this.closeAddHall();
-        this.loadBranchesFromApi();
+        this.loadHallsForBranch(this.selectedBranch()?.id ?? '');
       },
-      error: () => {
-        const selectedBranch = this.selectedBranch();
-        this.selectedBranchHalls.update((items) => [
-          this.mapLocalCreatedHall(payload, selectedBranch),
-          ...items,
-        ]);
-        this.closeAddHall();
-      },
+      error: (err) => console.error('Create hall API failed', err),
     });
   }
 
@@ -434,21 +289,15 @@ export class BranchesManagementComponent {
 
     const numericId = this.extractNumericId(selected.id);
     if (numericId === null) {
-      this.applyLocalHallEdit(selected.id, payload);
-      this.closeEditHall();
       return;
     }
 
     this.branchesService.updateHall(numericId, this.toHallPayload(payload)).subscribe({
       next: () => {
-        this.applyLocalHallEdit(selected.id, payload);
         this.closeEditHall();
-        this.loadBranchesFromApi();
+        this.loadHallsForBranch(this.selectedBranch()?.id ?? '');
       },
-      error: () => {
-        this.applyLocalHallEdit(selected.id, payload);
-        this.closeEditHall();
-      },
+      error: (err) => console.error('Update hall API failed', err),
     });
   }
 
@@ -458,23 +307,17 @@ export class BranchesManagementComponent {
       return;
     }
 
-    const applyLocalDelete = () => {
-      this.selectedBranchHalls.update((items) => items.filter((hall) => hall.id !== selected.id));
-      this.closeEditHall();
-    };
-
     const numericId = this.extractNumericId(selected.id);
     if (numericId === null) {
-      applyLocalDelete();
       return;
     }
 
     this.branchesService.deleteHall(numericId).subscribe({
       next: () => {
-        applyLocalDelete();
-        this.loadBranchesFromApi();
+        this.closeEditHall();
+        this.loadHallsForBranch(this.selectedBranch()?.id ?? '');
       },
-      error: () => applyLocalDelete(),
+      error: (err) => console.error('Delete hall API failed', err),
     });
   }
 
@@ -488,15 +331,13 @@ export class BranchesManagementComponent {
           .map((item) => this.mapBranchRow(item))
           .filter((item): item is BranchRow => Boolean(item));
 
-        if (items.length > 0) {
-          this.allBranches.set(items);
-        }
-
+        this.allBranches.set(items);
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
         this.loadError.set('Failed to load branches from API.');
+        console.error('Load branches API failed', err);
       },
     });
 
@@ -506,7 +347,7 @@ export class BranchesManagementComponent {
           this.totalShowtimes.set(summary.totalShowtimes.toLocaleString());
         }
       },
-      error: () => {},
+      error: (err) => console.error('Load branch summary failed', err),
     });
   }
 
@@ -526,8 +367,9 @@ export class BranchesManagementComponent {
 
         this.selectedBranchHalls.set(halls);
       },
-      error: () => {
+      error: (err) => {
         this.selectedBranchHalls.set([]);
+        console.error('Load halls API failed', err);
       },
     });
   }
@@ -551,7 +393,7 @@ export class BranchesManagementComponent {
         ? `BRN-${String(idValue).padStart(3, '0')}`
         : `BRN-${String(Date.now()).slice(-3)}`,
       name: name || 'Branch',
-      location: item.branchLocation?.trim() || '—',
+      location: item.branchLocation?.trim() || 'â€”',
       totalHalls: item.totalHalls ?? 0,
       capacity: item.totalCapacity ?? 0,
       status: 'ACTIVE',
@@ -587,91 +429,8 @@ export class BranchesManagementComponent {
       branchId: branchIdValue
         ? `BRN-${String(branchIdValue).padStart(3, '0')}`
         : this.selectedBranch()?.id || 'BRN-000',
-      branchName: fallbackBranchName || this.selectedBranch()?.name || '—',
+      branchName: fallbackBranchName || this.selectedBranch()?.name || 'â€”',
     };
-  }
-
-  private mapLocalCreatedBranch(payload: AddBranchPayload): BranchRow {
-    return {
-      id: `BRN-${String(Date.now()).slice(-3)}`,
-      name: payload.branchName,
-      location: payload.branchLocation,
-      totalHalls: 0,
-      capacity: 0,
-      status: 'ACTIVE',
-    };
-  }
-
-  private mapLocalCreatedHall(payload: AddHallPayload, selectedBranch: BranchRow | null): HallRow {
-    const branchId = selectedBranch?.id || `BRN-${String(payload.branchId).padStart(3, '0')}`;
-
-    return {
-      id: `HLL-${String(Date.now()).slice(-3)}`,
-      number: Number(payload.hallNumber) || 0,
-      type: payload.hallType,
-      capacity: 0,
-      status: this.normalizeHallStatus(payload.hallStatus),
-      branchId,
-      branchName: selectedBranch?.name || '—',
-    };
-  }
-
-  private applyLocalBranchEdit(id: string, payload: EditBranchPayload): void {
-    this.allBranches.update((items) =>
-      items.map((branch) =>
-        branch.id === id
-          ? {
-              ...branch,
-              name: payload.branchName,
-              location: payload.branchLocation,
-            }
-          : branch,
-      ),
-    );
-
-    this.selectedBranch.update((branch) =>
-      branch && branch.id === id
-        ? {
-            ...branch,
-            name: payload.branchName,
-            location: payload.branchLocation,
-          }
-        : branch,
-    );
-  }
-
-  private applyLocalHallEdit(id: string, payload: EditHallPayload): void {
-    const targetBranch = this.allBranches().find(
-      (branch) => branch.id === `BRN-${String(payload.branchId).padStart(3, '0')}`,
-    );
-
-    this.selectedBranchHalls.update((items) =>
-      items.map((hall) =>
-        hall.id === id
-          ? {
-              ...hall,
-              number: Number(payload.hallNumber) || hall.number,
-              type: payload.hallType,
-              status: this.normalizeHallStatus(payload.hallStatus),
-              branchId: `BRN-${String(payload.branchId).padStart(3, '0')}`,
-              branchName: targetBranch?.name || hall.branchName,
-            }
-          : hall,
-      ),
-    );
-
-    this.selectedHall.update((hall) =>
-      hall && hall.id === id
-        ? {
-            ...hall,
-            number: Number(payload.hallNumber) || hall.number,
-            type: payload.hallType,
-            status: this.normalizeHallStatus(payload.hallStatus),
-            branchId: `BRN-${String(payload.branchId).padStart(3, '0')}`,
-            branchName: targetBranch?.name || hall.branchName,
-          }
-        : hall,
-    );
   }
 
   private normalizeHallStatus(status?: string): 'ACTIVE' | 'MAINTENANCE' {

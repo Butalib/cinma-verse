@@ -25,6 +25,10 @@ export class ApiClientService {
     return this.http.delete<T>(`${API_BASE_URL}${path}`);
   }
 
+  upload<T>(path: string, formData: FormData): Observable<T> {
+    return this.http.post<T>(`${API_BASE_URL}${path}`, formData);
+  }
+
   private toHttpParams(params?: Record<string, string | number | boolean>): HttpParams | undefined {
     if (!params) {
       return undefined;

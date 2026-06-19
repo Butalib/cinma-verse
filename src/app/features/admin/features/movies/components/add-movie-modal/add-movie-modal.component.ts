@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,11 +8,11 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { catchError, map, of } from 'rxjs';
+import { FormArray, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { catchError, forkJoin, map, Observable, of, throwError } from 'rxjs';
 import { ApiClientService } from '../../../../../../core/http/api-client.service';
 import { AdminGenreDto, AdminPagedResponse } from '../../../../admin-api.models';
-import { MovieRow } from '../movies-management/movies-table/movies-table.component';
+import { CastMember, MovieRow } from '../movies-management/movies-table/movies-table.component';
 
 interface GenreOption {
   id: number;
@@ -35,6 +36,9 @@ export class AddMovieModalComponent implements OnInit {
 
   readonly genres = signal<GenreOption[]>([]);
   readonly isGenreMenuOpen = signal(false);
+  readonly isUploadingPoster = signal(false);
+  readonly isUploadingImages = signal(false);
+  readonly uploadingCastImageIndex = signal<number | null>(null);
 
   readonly selectedGenreNames = computed(() => {
     const selectedIds = this.movieForm.controls.genreIds.value ?? [];
@@ -53,10 +57,6 @@ export class AddMovieModalComponent implements OnInit {
     return `${names.slice(0, 2).join(', ')} +${names.length - 2}`;
   });
 
-  // Cast tags
-  readonly castMembers = signal<string[]>([]);
-  readonly castInput = signal('');
-
   readonly movieForm = this.fb.group({
     title: this.fb.control(''),
     ageRating: this.fb.control('PG-13'),
@@ -68,28 +68,36 @@ export class AddMovieModalComponent implements OnInit {
     trailerUrl: this.fb.control(''),
     description: this.fb.control(''),
     genreIds: this.fb.control<number[]>([]),
-    cast: this.fb.control<string[]>([]),
+    moviePoster: this.fb.control(''),
+    imageUrls: this.fb.control<string[]>([]),
+    castMembers: this.fb.array([]),
   });
 
   ngOnInit(): void {
     this.loadGenres();
   }
 
-  addCast(): void {
-    const value = this.castInput().trim().replace(/,$/, '');
-    if (!value || this.castMembers().includes(value)) {
-      this.castInput.set('');
-      return;
-    }
-
-    this.castMembers.update((arr) => [...arr, value]);
-    this.movieForm.controls.cast.setValue(this.castMembers());
-    this.castInput.set('');
+  get castMembersFormArray(): FormArray {
+    return this.movieForm.controls.castMembers;
   }
 
-  removeCast(member: string): void {
-    this.castMembers.update((arr) => arr.filter((m) => m !== member));
-    this.movieForm.controls.cast.setValue(this.castMembers());
+  addCastMember(): void {
+    const group = this.fb.group({
+      personName: this.fb.control(''),
+      imageUrl: this.fb.control(''),
+      roleType: this.fb.control('Actor'),
+      characterName: this.fb.control(''),
+      displayOrder: this.fb.control(this.castMembersFormArray.length),
+      isLead: this.fb.control(false),
+    });
+    this.castMembersFormArray.push(group);
+  }
+
+  removeCastMember(index: number): void {
+    this.castMembersFormArray.removeAt(index);
+    this.castMembersFormArray.controls.forEach((ctrl, i) => {
+      ctrl.get('displayOrder')?.setValue(i);
+    });
   }
 
   toggleGenreMenu(): void {
@@ -117,8 +125,83 @@ export class AddMovieModalComponent implements OnInit {
     this.movieForm.controls.genreIds.setValue(next);
   }
 
+  onPosterSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.isUploadingPoster.set(true);
+    this.uploadFile(file).subscribe({
+      next: (url: string) => {
+        this.movieForm.patchValue({ moviePoster: url });
+        this.isUploadingPoster.set(false);
+      },
+      error: () => {
+        this.isUploadingPoster.set(false);
+      },
+    });
+    input.value = '';
+  }
+
+  onGalleryFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+    console.log('selected files', files);
+    if (!files.length) return;
+
+    this.isUploadingImages.set(true);
+    console.log('starting upload');
+    const uploads = files.map((file) => this.uploadFile(file));
+
+    forkJoin(uploads).subscribe({
+      next: (urls: string[]) => {
+        console.log('uploaded urls', urls);
+        const current = this.movieForm.controls.imageUrls.value ?? [];
+        console.log('current imageUrls', current);
+        const merged = [...current, ...urls];
+        console.log('merged imageUrls', merged);
+        this.movieForm.patchValue({ imageUrls: merged });
+        console.log('form imageUrls after patch', this.movieForm.get('imageUrls')?.value);
+        this.isUploadingImages.set(false);
+      },
+      error: () => {
+        this.isUploadingImages.set(false);
+      },
+    });
+    input.value = '';
+  }
+
+  removeImage(index: number): void {
+    const current = this.movieForm.controls.imageUrls.value ?? [];
+    this.movieForm.patchValue({
+      imageUrls: current.filter((_, i) => i !== index),
+    });
+  }
+
+  onCastImageSelected(event: Event, castIndex: number): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploadingCastImageIndex.set(castIndex);
+    this.uploadFile(file).subscribe({
+      next: (url: string) => {
+        this.castMembersFormArray.at(castIndex).get('imageUrl')?.setValue(url);
+        this.uploadingCastImageIndex.set(null);
+      },
+      error: () => {
+        this.uploadingCastImageIndex.set(null);
+      },
+    });
+    input.value = '';
+  }
+
   onSubmit(): void {
     const formValue = this.movieForm.getRawValue();
+    console.log('Form raw value:', formValue);
+
+    console.log('submit imageUrls', this.movieForm.value.imageUrls);
+
     const now = new Date();
 
     const selectedGenreIds = (formValue.genreIds ?? [])
@@ -128,6 +211,17 @@ export class AddMovieModalComponent implements OnInit {
     const selectedGenres = this.genres()
       .filter((genre) => selectedGenreIds.includes(genre.id))
       .map((genre) => genre.name);
+
+    const castMembersPayload: CastMember[] = ((formValue.castMembers ?? []) as CastMember[]).map(
+      (member, index) => ({
+        personName: member.personName || '',
+        imageUrl: member.imageUrl || '',
+        roleType: member.roleType || 'Actor',
+        characterName: member.characterName || '',
+        displayOrder: index,
+        isLead: member.isLead ?? false,
+      }),
+    );
 
     const movie: MovieRow = {
       id: `MOV-${now.getTime()}`,
@@ -141,12 +235,78 @@ export class AddMovieModalComponent implements OnInit {
       releaseDate: formValue.releaseDate || now.toISOString().slice(0, 10),
       internalRating: Number(formValue.internalRating) || 0,
       trailerUrl: formValue.trailerUrl || '',
-      posterUrl: '',
+      posterUrl: formValue.moviePoster || '',
       description: formValue.description || '',
-      cast: this.castMembers(),
+      cast: castMembersPayload.map((m) => m.personName).filter(Boolean),
+      imageUrls: this.movieForm.value.imageUrls ?? [],
+      castMembers: castMembersPayload,
     };
 
+    const safeMinutes = Math.max(1, Number.isFinite(movie.duration) ? Math.round(movie.duration) : 1);
+    const hours = Math.floor(safeMinutes / 60);
+    const minutes = safeMinutes % 60;
+    const durationStr = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+
+    console.log('Movie payload:', {
+      movieName: movie.title,
+      movieDescription: movie.description,
+      movieDuration: durationStr,
+      releaseDate: movie.releaseDate,
+      castMembers: movie.castMembers,
+      movieAgeRating: movie.ageRating,
+      movieRating: movie.internalRating,
+      trailerUrl: movie.trailerUrl,
+      moviePoster: movie.posterUrl,
+      genreIds: movie.genreIds,
+      imageUrls: movie.imageUrls,
+      language: movie.language,
+      status: movie.status,
+    });
+
     this.addMovie.emit(movie);
+  }
+
+  private uploadFile(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    console.log('file', formData.get('file'));
+    console.log('name', file.name);
+    console.log('type', file.type);
+    console.log('size', file.size);
+
+    return this.api
+      .upload<Record<string, unknown>>(
+        '/api/admin/media/upload',
+        formData,
+      )
+      .pipe(
+        map((response) => {
+          console.log('upload response', response);
+          console.log('response type', typeof response);
+          console.log('response keys', Object.keys(response ?? {}));
+
+          const url = (response as any)?.url
+            ?? (response as any)?.imageUrl
+            ?? (response as any)?.path
+            ?? (response as any)?.data?.url
+            ?? (response as any)?.fileUrl
+            ?? (response as any)?.mediaUrl
+            ?? (typeof response === 'string' ? response : '');
+
+          console.log('extracted url', url);
+          return url;
+        }),
+        catchError((error) => {
+          console.error('Upload failed', error);
+          if (error instanceof HttpErrorResponse) {
+            console.error('status', error.status);
+            console.error('body', error.error);
+            console.error('headers', error.headers);
+          }
+          return throwError(() => error);
+        }),
+      );
   }
 
   private loadGenres(): void {

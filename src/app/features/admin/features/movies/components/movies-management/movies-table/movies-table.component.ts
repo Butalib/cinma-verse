@@ -3,6 +3,15 @@ import { CommonModule } from '@angular/common';
 
 export type MovieStatus = 'ACTIVE' | 'INACTIVE' | 'COMING_SOON';
 
+export interface CastMember {
+  personName: string;
+  imageUrl: string;
+  roleType: string;
+  characterName: string;
+  displayOrder: number;
+  isLead: boolean;
+}
+
 export interface MovieRow {
   id: string;
   title: string;
@@ -18,6 +27,8 @@ export interface MovieRow {
   posterUrl: string;
   description: string;
   cast: string[];
+  imageUrls: string[];
+  castMembers: CastMember[];
 }
 
 @Component({

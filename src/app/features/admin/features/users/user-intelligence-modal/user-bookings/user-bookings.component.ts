@@ -2,7 +2,22 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, output, si
 import { CommonModule } from '@angular/common';
 import type { UserIntelligenceSelectedUser } from '../user-intelligence.types';
 import { PaginationComponent } from '../../users-managemen/componants/pagination/pagination.component';
-import { MOCK_BOOKINGS, type UserBookingRow } from './user-bookings.mock';
+
+export interface UserBookingRow {
+  id: string;
+  bookingId: string;
+  movieTitle: string;
+  movieSub: string;
+  showtime: string;
+  expires: string;
+  seatLabels: string[];
+  seatMore?: number;
+  ticketsCount: number;
+  amount: number;
+  status: 'confirmed' | 'pending' | 'cancelled' | 'expired';
+  createdAt: string;
+  createdIso: string;
+}
 
 @Component({
   selector: 'app-user-bookings',
@@ -19,7 +34,7 @@ export class UserBookingsComponent {
   readonly closeRequested = output<void>();
   readonly exportCsvRequested = output<void>();
 
-  readonly allItems = computed(() => this.itemsOverride() ?? MOCK_BOOKINGS);
+  readonly allItems = computed(() => this.itemsOverride() ?? []);
 
   readonly searchPlaceholder = 'Search by Booking ID or Movie...';
   readonly itemLabel = 'bookings';

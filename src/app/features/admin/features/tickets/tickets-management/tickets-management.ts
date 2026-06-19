@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { TicketsTableRow, QrTicketResult, TicketsFilter } from '../models/ticket.models';
 import { TicketsApiService } from '../services/tickets-api.service';
-import { AdminTicketListItemDto } from '../../../admin-api.models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TicketsTableComponent } from './components/tickets-table/tickets-table.component';
@@ -12,141 +11,7 @@ import {
   TicketViewData,
 } from './components/ticket-view-modal/ticket-view-modal.component';
 import { TicketCheckInModalComponent } from './components/ticket-check-in-modal/ticket-check-in-modal.component';
-
-const MOCK_TICKETS: TicketsTableRow[] = [
-  {
-    id: '#T-1042',
-    ticketNumber: 'CV-TK-88291',
-    movie: 'Dune: Part Two',
-    showtime: 'Apr 12, 2026 • 7:30 PM',
-    price: '$18.50',
-    branch: 'Downtown Plaza',
-    customerInitials: 'MK',
-    customerName: 'Marcus Kane',
-    status: 'ACTIVE',
-  },
-  {
-    id: '#T-1043',
-    ticketNumber: 'CV-TK-99102',
-    movie: 'Civil War',
-    showtime: 'Apr 13, 2026 • 9:15 PM',
-    price: '$15.00',
-    branch: 'Westside Mall',
-    customerInitials: 'SJ',
-    customerName: 'Sarah Jenkins',
-    status: 'USED',
-  },
-  {
-    id: '#T-1044',
-    ticketNumber: 'CV-TK-77213',
-    movie: 'The Batman',
-    showtime: 'Apr 12, 2026 • 10:45 PM',
-    price: '$22.00',
-    branch: 'IMAX Theater',
-    customerInitials: 'DR',
-    customerName: 'David Ross',
-    status: 'CANCELLED',
-  },
-  {
-    id: '#T-1045',
-    ticketNumber: 'CV-TK-66129',
-    movie: 'Challengers',
-    showtime: 'Apr 14, 2026 • 6:00 PM',
-    price: '$16.50',
-    branch: 'Downtown Plaza',
-    customerInitials: 'EL',
-    customerName: 'Emily Long',
-    status: 'ACTIVE',
-  },
-  {
-    id: '#T-1046',
-    ticketNumber: 'CV-TK-33441',
-    movie: 'Kingdom of the Planet of the Apes',
-    showtime: 'Apr 15, 2026 • 8:45 PM',
-    price: '$19.00',
-    branch: 'Eastwood Center',
-    customerInitials: 'TA',
-    customerName: 'Tom Atkins',
-    status: 'ACTIVE',
-  },
-  {
-    id: '#T-1047',
-    ticketNumber: 'CV-TK-55019',
-    movie: 'Oppenheimer',
-    showtime: 'Apr 16, 2026 • 5:00 PM',
-    price: '$24.00',
-    branch: 'IMAX Theater',
-    customerInitials: 'LW',
-    customerName: 'Laura White',
-    status: 'USED',
-  },
-  {
-    id: '#T-1048',
-    ticketNumber: 'CV-TK-44382',
-    movie: 'Barbie',
-    showtime: 'Apr 17, 2026 • 3:30 PM',
-    price: '$14.00',
-    branch: 'Westside Mall',
-    customerInitials: 'HB',
-    customerName: 'Hannah Brown',
-    status: 'ACTIVE',
-  },
-  {
-    id: '#T-1049',
-    ticketNumber: 'CV-TK-22174',
-    movie: 'Poor Things',
-    showtime: 'Apr 18, 2026 • 8:00 PM',
-    price: '$17.50',
-    branch: 'Downtown Plaza',
-    customerInitials: 'RN',
-    customerName: 'Ryan Nash',
-    status: 'CANCELLED',
-  },
-  {
-    id: '#T-1050',
-    ticketNumber: 'CV-TK-11920',
-    movie: 'Dune: Part Two',
-    showtime: 'Apr 19, 2026 • 7:00 PM',
-    price: '$18.50',
-    branch: 'Eastwood Center',
-    customerInitials: 'AM',
-    customerName: 'Ava Mitchell',
-    status: 'ACTIVE',
-  },
-  {
-    id: '#T-1051',
-    ticketNumber: 'CV-TK-10833',
-    movie: 'Godzilla x Kong',
-    showtime: 'Apr 20, 2026 • 9:00 PM',
-    price: '$21.00',
-    branch: 'IMAX Theater',
-    customerInitials: 'JC',
-    customerName: 'James Carter',
-    status: 'USED',
-  },
-  {
-    id: '#T-1052',
-    ticketNumber: 'CV-TK-09761',
-    movie: 'Civil War',
-    showtime: 'Apr 21, 2026 • 4:15 PM',
-    price: '$15.00',
-    branch: 'Westside Mall',
-    customerInitials: 'NO',
-    customerName: 'Nadia Omar',
-    status: 'ACTIVE',
-  },
-  {
-    id: '#T-1053',
-    ticketNumber: 'CV-TK-08540',
-    movie: 'The Beekeeper',
-    showtime: 'Apr 22, 2026 • 6:45 PM',
-    price: '$13.50',
-    branch: 'Downtown Plaza',
-    customerInitials: 'KP',
-    customerName: 'Karim Patel',
-    status: 'CANCELLED',
-  },
-];
+import { AdminTicketListItemDto } from '../../../admin-api.models';
 
 @Component({
   selector: 'app-tickets-management',
@@ -169,7 +34,7 @@ export class TicketsManagementComponent {
   readonly pageSize = signal(10);
   readonly currentPage = signal(1);
   readonly activeFilters = signal<TicketsFilter>({});
-  readonly allTickets = signal<TicketsTableRow[]>(MOCK_TICKETS);
+  readonly allTickets = signal<TicketsTableRow[]>([]);
   readonly selectedTicket = signal<TicketViewData | null>(null);
   readonly isFilterOpen = signal(false);
   readonly searchQuery = signal('');
@@ -177,7 +42,6 @@ export class TicketsManagementComponent {
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
 
-  // ── KPI computeds ─────────────────────────────────
   readonly kpiTotalTickets = computed(() => this.allTickets().length.toLocaleString());
   readonly kpiActiveTickets = computed(() =>
     this.allTickets()
@@ -203,7 +67,6 @@ export class TicketsManagementComponent {
     const filters = this.activeFilters();
     const query = this.searchQuery().toLowerCase().trim();
     return this.allTickets().filter((ticket) => {
-      // Global search
       if (query) {
         const haystack = [
           ticket.id,
@@ -217,18 +80,20 @@ export class TicketsManagementComponent {
           .toLowerCase();
         if (!haystack.includes(query)) return false;
       }
-      // Panel filters
+
       if (filters.status && ticket.status !== filters.status) return false;
       if (
         filters.bookingId &&
         !ticket.ticketNumber.toLowerCase().includes(filters.bookingId.toLowerCase())
-      )
+      ) {
         return false;
+      }
       if (
         filters.ticketNo &&
         !ticket.ticketNumber.toLowerCase().includes(filters.ticketNo.toLowerCase())
-      )
+      ) {
         return false;
+      }
       return true;
     });
   });
@@ -309,22 +174,16 @@ export class TicketsManagementComponent {
   }
 
   onDeleteTicket(id: string): void {
-    const applyLocalDelete = () => {
-      this.allTickets.update((items) => items.filter((t) => t.id !== id));
-      if (this.currentPage() > this.totalPages()) {
-        this.currentPage.set(this.totalPages());
-      }
-    };
-
     const numericId = this.extractNumericId(id);
     if (!numericId) {
-      applyLocalDelete();
       return;
     }
 
     this.ticketsApi.deleteTicket(numericId).subscribe({
-      next: () => applyLocalDelete(),
-      error: () => applyLocalDelete(),
+      next: () => this.loadTicketsFromApi(),
+      error: (err) => {
+        console.error('Delete ticket API failed', err);
+      },
     });
   }
 
@@ -332,35 +191,17 @@ export class TicketsManagementComponent {
     console.log('Export CSV');
   }
 
-  /**
-   * Open the Quick Check-In modal
-   * Allows staff to check in tickets without navigating away from the management page
-   */
   onQuickCheckIn(): void {
     this.isCheckInModalOpen.set(true);
   }
 
-  /**
-   * Handle check-in modal close
-   */
   onCheckInModalClose(): void {
     this.isCheckInModalOpen.set(false);
   }
 
-  /**
-   * Handle successful check-in
-   * Update the ticket in the table to reflect USED status
-   */
-  onCheckInConfirmed(updatedTicket: QrTicketResult): void {
-    // Update the ticket in our local data
-    // The modal will only emit with status 'USED' on successful check-in
-    this.allTickets.update((tickets) =>
-      tickets.map((t) =>
-        t.ticketNumber === updatedTicket.ticketNumber ? { ...t, status: 'USED' as const } : t,
-      ),
-    );
-    // Close modal
+  onCheckInConfirmed(_: QrTicketResult): void {
     this.isCheckInModalOpen.set(false);
+    this.loadTicketsFromApi();
   }
 
   private loadTicketsFromApi(): void {
@@ -373,15 +214,13 @@ export class TicketsManagementComponent {
           (item, index) => this.mapApiTicket(item, index),
         );
 
-        if (items.length > 0) {
-          this.allTickets.set(items);
-        }
-
+        this.allTickets.set(items);
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.loadError.set('Failed to load tickets from API. Showing local fallback data.');
+        this.loadError.set('Failed to load tickets from API.');
+        console.error('Failed to load tickets from API', err);
       },
     });
   }
@@ -397,7 +236,7 @@ export class TicketsManagementComponent {
       movie: item.movieName ?? 'Unknown movie',
       showtime: this.formatShowtime(item.showStartTime),
       price: `$${Number(item.price ?? 0).toFixed(2)}`,
-      branch: item.branchName ?? '—',
+      branch: item.branchName ?? 'â€”',
       customerInitials,
       customerName,
       status: this.mapStatus(item.status),
@@ -406,12 +245,12 @@ export class TicketsManagementComponent {
 
   private formatShowtime(value?: string): string {
     if (!value) {
-      return '—';
+      return 'â€”';
     }
 
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
-      return '—';
+      return 'â€”';
     }
 
     return date.toLocaleString([], {

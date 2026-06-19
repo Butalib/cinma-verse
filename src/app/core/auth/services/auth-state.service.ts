@@ -1,25 +1,34 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { AuthUser } from '../models/auth-response';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStateService {
-  private readonly isAuthenticatedSignal = signal(false);
-  private readonly currentUserSignal = signal<AuthUser | null>(null);
+  private readonly isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private readonly currentUserSubject = new BehaviorSubject<AuthUser | null>(null);
 
-  readonly isAuthenticated = this.isAuthenticatedSignal.asReadonly();
-  readonly currentUser = this.currentUserSignal.asReadonly();
+  readonly isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  readonly currentUser$ = this.currentUserSubject.asObservable();
+
+  get isAuthenticatedValue(): boolean {
+    return this.isAuthenticatedSubject.value;
+  }
+
+  get currentUserValue(): AuthUser | null {
+    return this.currentUserSubject.value;
+  }
 
   setAuthenticated(isAuthenticated: boolean): void {
-    this.isAuthenticatedSignal.set(isAuthenticated);
+    this.isAuthenticatedSubject.next(isAuthenticated);
   }
 
   setCurrentUser(user: AuthUser | null): void {
-    this.currentUserSignal.set(user);
-    this.isAuthenticatedSignal.set(!!user || this.isAuthenticatedSignal());
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(!!user || this.isAuthenticatedSubject.value);
   }
 
   clear(): void {
-    this.currentUserSignal.set(null);
-    this.isAuthenticatedSignal.set(false);
+    this.currentUserSubject.next(null);
+    this.isAuthenticatedSubject.next(false);
   }
 }

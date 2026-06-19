@@ -1,35 +1,37 @@
-@let data = overview();
+@if (overview(); as data) {
+  <div class="user-overview">
+    <app-user-overview-header
+      [overview]="data"
+      [activeDetail]="activeDetail()"
+      (cardClick)="onStatCardClick($event)"
+    />
 
-<div class="user-overview">
-  <app-user-overview-header
-    [overview]="data"
-    [activeDetail]="activeDetail()"
-    (cardClick)="onStatCardClick($event)"
-  />
+    @if (activeDetail() !== 'none') {
+      <div class="user-overview__detail">
+        @switch (activeDetail()) {
+          @case ('userId') {
+            <app-user-id-detail [data]="data" />
+          }
+          @case ('accountStatus') {
+            <app-account-status-detail [data]="data" />
+          }
+          @case ('role') {
+            <app-role-detail [data]="data" />
+          }
+          @case ('emailConfirmed') {
+            <app-email-confirmed-detail [data]="data" />
+          }
+        }
+      </div>
+    }
 
-  @if (activeDetail() !== 'none') {
-    <div class="user-overview__detail">
-      @switch (activeDetail()) {
-        @case ('userId') {
-          <app-user-id-detail [data]="data" />
-        }
-        @case ('accountStatus') {
-          <app-account-status-detail [data]="data" />
-        }
-        @case ('role') {
-          <app-role-detail [data]="data" />
-        }
-        @case ('emailConfirmed') {
-          <app-email-confirmed-detail [data]="data" />
-        }
-      }
+    <div class="user-overview__info-row">
+      <app-user-basic-info [data]="data.basicInfo" />
+      <app-user-personal-info [data]="data.personalInfo" />
     </div>
-  }
 
-  <div class="user-overview__info-row">
-    <app-user-basic-info [data]="data.basicInfo" />
-    <app-user-personal-info [data]="data.personalInfo" />
+    <app-user-account-info [data]="data.accountInfo" />
   </div>
-
-  <app-user-account-info [data]="data.accountInfo" />
-</div>
+} @else {
+  <div class="user-overview user-overview--empty">No user overview available.</div>
+}

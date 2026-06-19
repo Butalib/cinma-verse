@@ -26,179 +26,9 @@ import {
   UpdateShowtimePayload,
 } from '../services/showtimes.service';
 
-const MOCK_SHOWTIMES: ShowtimesTableRow[] = [
-  {
-    id: 'SHW-2001',
-    movieTitle: 'The Dark Knight Rises',
-    branchName: 'Downtown Cinema',
-    hallName: 'Hall A',
-    date: '2026-04-28',
-    startTime: '14:00',
-    endTime: '16:45',
-    price: 15.0,
-    availableSeats: 45,
-    totalSeats: 120,
-    status: 'SCHEDULED',
-    createdAt: '2026-04-20',
-  },
-  {
-    id: 'SHW-2002',
-    movieTitle: 'Inception',
-    branchName: 'Westside Plex',
-    hallName: 'IMAX 1',
-    date: '2026-04-27',
-    startTime: '19:30',
-    endTime: '22:00',
-    price: 22.5,
-    availableSeats: 12,
-    totalSeats: 200,
-    status: 'NOW_SHOWING',
-    createdAt: '2026-04-18',
-  },
-  {
-    id: 'SHW-2003',
-    movieTitle: 'Interstellar',
-    branchName: 'Downtown Cinema',
-    hallName: 'Hall B',
-    date: '2026-04-26',
-    startTime: '10:00',
-    endTime: '12:50',
-    price: 12.0,
-    availableSeats: 0,
-    totalSeats: 80,
-    status: 'COMPLETED',
-    createdAt: '2026-04-15',
-  },
-  {
-    id: 'SHW-2004',
-    movieTitle: 'Dune: Part Two',
-    branchName: 'Eastgate Mall Cinema',
-    hallName: 'Screen 3',
-    date: '2026-04-29',
-    startTime: '16:00',
-    endTime: '18:45',
-    price: 18.0,
-    availableSeats: 90,
-    totalSeats: 150,
-    status: 'SCHEDULED',
-    createdAt: '2026-04-22',
-  },
-  {
-    id: 'SHW-2005',
-    movieTitle: 'Oppenheimer',
-    branchName: 'Westside Plex',
-    hallName: 'Hall C',
-    date: '2026-04-25',
-    startTime: '20:00',
-    endTime: '23:00',
-    price: 20.0,
-    availableSeats: 0,
-    totalSeats: 100,
-    status: 'COMPLETED',
-    createdAt: '2026-04-14',
-  },
-  {
-    id: 'SHW-2006',
-    movieTitle: 'Spider-Man: Across the Spider-Verse',
-    branchName: 'Downtown Cinema',
-    hallName: 'Hall A',
-    date: '2026-04-27',
-    startTime: '11:00',
-    endTime: '13:20',
-    price: 14.0,
-    availableSeats: 30,
-    totalSeats: 120,
-    status: 'NOW_SHOWING',
-    createdAt: '2026-04-19',
-  },
-  {
-    id: 'SHW-2007',
-    movieTitle: 'The Batman',
-    branchName: 'Eastgate Mall Cinema',
-    hallName: 'Screen 1',
-    date: '2026-04-30',
-    startTime: '21:00',
-    endTime: '23:55',
-    price: 16.5,
-    availableSeats: 110,
-    totalSeats: 140,
-    status: 'SCHEDULED',
-    createdAt: '2026-04-23',
-  },
-  {
-    id: 'SHW-2008',
-    movieTitle: 'Everything Everywhere All at Once',
-    branchName: 'Westside Plex',
-    hallName: 'IMAX 1',
-    date: '2026-04-24',
-    startTime: '15:30',
-    endTime: '17:50',
-    price: 22.5,
-    availableSeats: 0,
-    totalSeats: 200,
-    status: 'CANCELLED',
-    createdAt: '2026-04-12',
-  },
-  {
-    id: 'SHW-2009',
-    movieTitle: 'Guardians of the Galaxy Vol. 3',
-    branchName: 'Downtown Cinema',
-    hallName: 'Hall B',
-    date: '2026-04-28',
-    startTime: '18:00',
-    endTime: '20:30',
-    price: 14.0,
-    availableSeats: 55,
-    totalSeats: 80,
-    status: 'SCHEDULED',
-    createdAt: '2026-04-21',
-  },
-  {
-    id: 'SHW-2010',
-    movieTitle: 'Barbie',
-    branchName: 'Eastgate Mall Cinema',
-    hallName: 'Screen 2',
-    date: '2026-04-27',
-    startTime: '13:00',
-    endTime: '15:00',
-    price: 13.5,
-    availableSeats: 8,
-    totalSeats: 100,
-    status: 'NOW_SHOWING',
-    createdAt: '2026-04-20',
-  },
-  {
-    id: 'SHW-2011',
-    movieTitle: 'John Wick: Chapter 4',
-    branchName: 'Westside Plex',
-    hallName: 'Hall C',
-    date: '2026-04-29',
-    startTime: '22:00',
-    endTime: '00:50',
-    price: 17.0,
-    availableSeats: 75,
-    totalSeats: 100,
-    status: 'SCHEDULED',
-    createdAt: '2026-04-24',
-  },
-  {
-    id: 'SHW-2012',
-    movieTitle: 'Avatar: The Way of Water',
-    branchName: 'Downtown Cinema',
-    hallName: 'IMAX 1',
-    date: '2026-04-26',
-    startTime: '09:30',
-    endTime: '12:45',
-    price: 25.0,
-    availableSeats: 0,
-    totalSeats: 200,
-    status: 'COMPLETED',
-    createdAt: '2026-04-13',
-  },
-];
-
 @Component({
   selector: 'app-showtimes-layout',
+  standalone: true,
   imports: [
     ShowtimeKpiComponent,
     ShowtimesSearchToolbarComponent,
@@ -227,7 +57,7 @@ export class ShowtimesLayoutComponent {
   private readonly showtimesApi = inject(ShowtimesApiService);
   private readonly showtimesService = inject(ShowtimesService);
 
-  readonly allShowtimes = signal<ShowtimesTableRow[]>(MOCK_SHOWTIMES);
+  readonly allShowtimes = signal<ShowtimesTableRow[]>([]);
   readonly loading = signal(false);
   readonly loadError = signal<string | null>(null);
   readonly searchTerm = signal('');
@@ -320,34 +150,13 @@ export class ShowtimesLayoutComponent {
 
   onCreateShowtime(payload: CreateShowtimePayload): void {
     this.showtimesApi.createShowtime(payload).subscribe({
-      next: (created) => {
-        this.allShowtimes.update((items) => [created, ...items]);
+      next: () => {
+        this.loadShowtimesFromApi();
         this.currentPage.set(1);
         this.isCreateModalOpen.set(false);
       },
       error: (err) => {
-        console.error('Create showtime API failed, falling back to local add', err);
-        const now = new Date();
-        const today = now.toISOString().slice(0, 10);
-
-        const newShowtime: ShowtimesTableRow = {
-          id: this.generateNextId(),
-          movieTitle: payload.movieTitle,
-          branchName: payload.branchName,
-          hallName: payload.hallName,
-          date: payload.date,
-          startTime: payload.startTime,
-          endTime: payload.endTime,
-          price: payload.price,
-          availableSeats: payload.totalSeats,
-          totalSeats: payload.totalSeats,
-          status: 'SCHEDULED',
-          createdAt: today,
-        };
-
-        this.allShowtimes.update((items) => [newShowtime, ...items]);
-        this.currentPage.set(1);
-        this.isCreateModalOpen.set(false);
+        console.error('Create showtime API failed', err);
       },
     });
   }
@@ -387,11 +196,10 @@ export class ShowtimesLayoutComponent {
   }
 
   onViewShowtimeUpdated(event: { id: string; payload: UpdateShowtimePayload }): void {
-    this.allShowtimes.update((items) =>
-      items.map((item) =>
-        item.id === event.id ? this.applyEditResult(item, event.payload) : item,
-      ),
-    );
+    this.showtimesService.updateShowtime(event.id, event.payload).subscribe({
+      next: () => this.loadShowtimesFromApi(),
+      error: (err) => console.error('Update showtime from view failed', err),
+    });
   }
 
   onEditShowtime(showtime: ShowtimesTableRow): void {
@@ -403,7 +211,7 @@ export class ShowtimesLayoutComponent {
         this.isEditModalOpen.set(true);
       },
       error: (err) => {
-        console.error('Get showtime details failed, opening with table data', err);
+        console.error('Get showtime details failed', err);
         this.selectedShowtimeDetails.set(this.mapEditDetailsFromRow(showtime));
         this.isEditModalOpen.set(true);
       },
@@ -428,48 +236,29 @@ export class ShowtimesLayoutComponent {
     this.isEditSaving.set(true);
 
     this.showtimesService.updateShowtime(selected.id, payload).subscribe({
-      next: (updated) => {
-        this.allShowtimes.update((items) =>
-          items.map((item) =>
-            item.id === selected.id ? this.applyEditResult(item, payload, updated) : item,
-          ),
-        );
-
+      next: () => {
         this.isEditSaving.set(false);
         this.isEditModalOpen.set(false);
         this.selectedShowtimeDetails.set(null);
+        this.loadShowtimesFromApi();
       },
       error: (err) => {
-        console.error('Update showtime failed, applying local update', err);
-        this.allShowtimes.update((items) =>
-          items.map((item) =>
-            item.id === selected.id ? this.applyEditResult(item, payload) : item,
-          ),
-        );
-
+        console.error('Update showtime failed', err);
         this.isEditSaving.set(false);
-        this.isEditModalOpen.set(false);
-        this.selectedShowtimeDetails.set(null);
       },
     });
   }
 
   onDeleteShowtime(showtimeId: string): void {
-    const applyLocalDelete = () => {
-      this.allShowtimes.update((items) => items.filter((item) => item.id !== showtimeId));
-
-      if (this.selectedViewShowtimeId() === showtimeId) {
-        this.closeViewModal();
-      }
-
-      if (this.currentPage() > this.totalPages()) {
-        this.currentPage.set(this.totalPages());
-      }
-    };
-
     this.showtimesService.deleteShowtime(showtimeId).subscribe({
-      next: () => applyLocalDelete(),
-      error: () => applyLocalDelete(),
+      next: () => {
+        if (this.selectedViewShowtimeId() === showtimeId) {
+          this.closeViewModal();
+        }
+
+        this.loadShowtimesFromApi();
+      },
+      error: (err) => console.error('Delete showtime failed', err),
     });
   }
 
@@ -479,14 +268,13 @@ export class ShowtimesLayoutComponent {
 
     this.showtimesApi.getShowtimes({ page: 1, pageSize: 100 }).subscribe({
       next: (items) => {
-        if (items.length > 0) {
-          this.allShowtimes.set(items);
-        }
+        this.allShowtimes.set(items);
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
         this.loadError.set('Failed to load showtimes from API.');
+        console.error('Load showtimes API failed', err);
       },
     });
   }
@@ -499,15 +287,6 @@ export class ShowtimesLayoutComponent {
     const normalized = value.replace(/\s+\d{2}:\d{2}$/, '').trim();
     const parsed = new Date(normalized);
     return Number.isNaN(parsed.getTime()) ? null : parsed;
-  }
-
-  private generateNextId(): string {
-    const maxId = this.allShowtimes().reduce((max, item) => {
-      const value = Number(item.id.replace('SHW-', ''));
-      return Number.isNaN(value) ? max : Math.max(max, value);
-    }, 2000);
-
-    return `SHW-${String(maxId + 1)}`;
   }
 
   private mapEditDetailsFromRow(showtime: ShowtimesTableRow): EditShowtimeDetails {
@@ -542,22 +321,6 @@ export class ShowtimesLayoutComponent {
       price: details.price ?? fallback.price,
       totalSeats: details.totalSeats ?? fallback.totalSeats,
       status: details.status ?? fallback.status,
-    };
-  }
-
-  private applyEditResult(
-    showtime: ShowtimesTableRow,
-    payload: UpdateShowtimePayload,
-    updated?: ShowtimeDetailsResponse,
-  ): ShowtimesTableRow {
-    return {
-      ...showtime,
-      date: updated?.date ?? payload.date,
-      startTime: updated?.startTime ?? payload.startTime,
-      endTime: updated?.endTime ?? payload.endTime,
-      price: updated?.price ?? payload.price,
-      totalSeats: updated?.totalSeats ?? payload.totalSeats,
-      status: (updated?.status ?? payload.status) as ShowtimesTableRow['status'],
     };
   }
 }

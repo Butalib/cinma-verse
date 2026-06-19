@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable, map, of, tap } from 'rxjs';
 import { API_BASE_URL } from '../../config/api.config';
 import { CurrentUser } from '../auth.models';
@@ -19,9 +18,8 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenService = inject(TokenService);
   private readonly authState = inject(AuthStateService);
-  private readonly isAuthenticatedObservable = toObservable(this.authState.isAuthenticated);
 
-  readonly currentUser$ = toObservable(this.authState.currentUser).pipe(
+  readonly currentUser$ = this.authState.currentUser$.pipe(
     map((user) => this.toCurrentUser(user)),
   );
 
@@ -59,19 +57,19 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return this.authState.isAuthenticated() || this.tokenService.isLoggedIn();
+    return this.authState.isAuthenticatedValue || this.tokenService.isLoggedIn();
   }
 
   isAuthenticated$(): Observable<boolean> {
-    return this.isAuthenticatedObservable;
+    return this.authState.isAuthenticated$;
   }
 
   loadMe(): Observable<CurrentUser | null> {
-    return of(this.toCurrentUser(this.authState.currentUser()));
+    return of(this.toCurrentUser(this.authState.currentUserValue));
   }
 
   getCurrentRole(): string | null {
-    const stateRole = this.authState.currentUser()?.role;
+    const stateRole = this.authState.currentUserValue?.role;
     if (stateRole) {
       return stateRole;
     }

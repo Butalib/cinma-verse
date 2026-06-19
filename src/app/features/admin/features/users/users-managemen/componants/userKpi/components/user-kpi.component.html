@@ -1,5 +1,5 @@
 <section class="user-kpi-grid" aria-label="Users KPIs">
-    @for (item of kpiItems; track item.title) {
+    @for (item of kpiItems(); track item.title) {
     <article class="user-kpi-card">
         <div class="user-kpi-card__top">
             <div class="user-kpi-card__icon-box" aria-hidden="true">

@@ -7,10 +7,10 @@ import { UserOverviewComponent } from './user-overview/user-overview.component';
 import { UserBookingsComponent } from './user-bookings/user-bookings.component';
 import { UserTicketsComponent } from './user-tickets/user-tickets.component';
 import { UserPaymentsComponent } from './user-payments/user-payments.component';
-import { MOCK_USER_OVERVIEW, type UserOverview } from './user-overview/user-overview.model';
-import type { UserBookingRow } from './user-bookings/user-bookings.mock';
-import type { UserTicketRow } from './user-tickets/user-tickets.mock';
-import type { UserPaymentRow } from './user-payments/user-payments.mock';
+import type { UserOverview } from './user-overview/user-overview.model';
+import type { UserBookingRow } from './user-bookings/user-bookings.component';
+import type { UserTicketRow } from './user-tickets/user-tickets.component';
+import type { UserPaymentRow } from './user-payments/user-payments.component';
 
 export type { UserIntelligenceTab, UserIntelligenceSelectedUser } from './user-intelligence.types';
 
@@ -38,13 +38,12 @@ export class UserIntelligenceModalComponent {
 
   readonly selectedUser = input<UserIntelligenceSelectedUser | null>(null);
 
-  /** When set (e.g. from users table), overview tab reflects this row; otherwise mock Jane Doe. */
   readonly overviewOverride = input<UserOverview | null>(null);
   readonly bookingsOverride = input<UserBookingRow[] | null>(null);
   readonly ticketsOverride = input<UserTicketRow[] | null>(null);
   readonly paymentsOverride = input<UserPaymentRow[] | null>(null);
 
-  readonly resolvedOverview = computed(() => this.overviewOverride() ?? MOCK_USER_OVERVIEW);
+  readonly resolvedOverview = computed(() => this.overviewOverride());
 
   readonly isWideTab = computed(() => ['bookings', 'tickets', 'payments'].includes(this.activeTab()));
 

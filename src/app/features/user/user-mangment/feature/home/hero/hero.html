@@ -1,38 +1,43 @@
 @if (movie$ | async; as movie) {
-  <section class="hero-section d-flex align-items-center justify-content-between">
-    <div class="hero-content">
-      <span class="exclusive">
-        {{ movie.language }}
-      </span>
+  <section
+    class="hero"
+    [ngStyle]="getHeroStyle(movie.moviePosterImageUrl)">
 
-      <h1 class="collection fw-bold my-3">
-        {{ movie.movieName }}
-      </h1>
+    <div class="hero__overlay"></div>
+    <div class="hero__fade"></div>
 
-      <p>
-        Duration: {{ movie.movieDuration }}
+    <div class="hero__content">
+      <div class="hero__badges">
+        @if (movie.language) {
+          <span class="hero__badge">{{ movie.language }}</span>
+        }
+        @if (movie.genres?.length) {
+          @for (genre of movie.genres; track genre) {
+            <span class="hero__badge">{{ genre }}</span>
+          }
+        }
+      </div>
+
+      <h1 class="hero__title">{{ movie.movieName }}</h1>
+
+      <p class="hero__desc">
+        An immersive cinematic experience. {{ movie.movieDuration }} of breathtaking storytelling
+        that pushes the boundaries of modern cinema.
       </p>
 
-      <div class="d-flex gap-3">
-        <button class="btn btn-info">
+      <div class="hero__actions">
+        <button class="hero__btn hero__btn--primary" type="button">
           Get Tickets
         </button>
-
-        <button class="btn btn-outline-light">
+        <button class="hero__btn hero__btn--secondary" type="button">
           Watch Trailer
         </button>
       </div>
     </div>
-
-    <div class="hero-image">
-      <img
-        [src]="movie.moviePosterImageUrl"
-        [alt]="movie.movieName"
-      />
-    </div>
   </section>
 } @else {
-  <section class="hero-section d-flex align-items-center justify-content-center">
-    <p class="hero-empty mb-0">No hero movie available right now.</p>
+  <section class="hero hero--empty">
+    <div class="hero__overlay"></div>
+    <p class="hero__empty-text">No featured movie available right now.</p>
   </section>
 }

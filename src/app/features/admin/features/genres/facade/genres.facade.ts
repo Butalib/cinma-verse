@@ -9,21 +9,6 @@ import {
 } from '../models/genre.model';
 import { GenreApiDto, GenresApiResponse, GenresService } from '../services/genres.service';
 
-const MOCK_GENRES: Genre[] = [
-  { id: 'GEN-001', name: 'Action', moviesCount: 42, createdAt: '2026-01-10' },
-  { id: 'GEN-002', name: 'Drama', moviesCount: 37, createdAt: '2026-01-12' },
-  { id: 'GEN-003', name: 'Comedy', moviesCount: 29, createdAt: '2026-01-15' },
-  { id: 'GEN-004', name: 'Sci-Fi', moviesCount: 24, createdAt: '2026-01-18' },
-  { id: 'GEN-005', name: 'Thriller', moviesCount: 18, createdAt: '2026-01-22' },
-  { id: 'GEN-006', name: 'Animation', moviesCount: 16, createdAt: '2026-01-25' },
-  { id: 'GEN-007', name: 'Family', moviesCount: 14, createdAt: '2026-01-27' },
-  { id: 'GEN-008', name: 'Horror', moviesCount: 12, createdAt: '2026-01-30' },
-  { id: 'GEN-009', name: 'Adventure', moviesCount: 20, createdAt: '2026-02-02' },
-  { id: 'GEN-010', name: 'Romance', moviesCount: 15, createdAt: '2026-02-05' },
-  { id: 'GEN-011', name: 'Fantasy', moviesCount: 13, createdAt: '2026-02-08' },
-  { id: 'GEN-012', name: 'Documentary', moviesCount: 8, createdAt: '2026-02-11' },
-];
-
 @Injectable({ providedIn: 'root' })
 export class GenresFacade {
   private readonly genresService = inject(GenresService);
@@ -177,8 +162,8 @@ export class GenresFacade {
   }
 
   openViewModal(id: string): void {
-    const found = this._state().list.find((item) => item.id === id) ?? this.findInMock(id);
-    this._selectedGenre.set(found);
+    const found = this._state().list.find((item) => item.id === id);
+    this._selectedGenre.set(found ?? null);
     this._isViewModalOpen.set(!!found);
   }
 
@@ -187,8 +172,8 @@ export class GenresFacade {
   }
 
   openEditModal(id: string): void {
-    const found = this._state().list.find((item) => item.id === id) ?? this.findInMock(id);
-    this._selectedGenre.set(found);
+    const found = this._state().list.find((item) => item.id === id);
+    this._selectedGenre.set(found ?? null);
     this._isEditModalOpen.set(!!found);
   }
 
@@ -210,21 +195,10 @@ export class GenresFacade {
         this._isCreateModalOpen.set(false);
         this.requestGenres();
       },
-      error: () => {
+      error: (err) => {
         this._createLoading.set(false);
-
-        const now = new Date().toISOString().slice(0, 10);
-        const fallback: Genre = {
-          id: this.generateNextId(),
-          name: payload.name.trim(),
-          moviesCount: 0,
-          createdAt: now,
-        };
-
-        const all = [fallback, ...MOCK_GENRES];
-        this.applyFallbackResult(all);
-        this._createSuccessTick.update((value) => value + 1);
-        this._isCreateModalOpen.set(false);
+        this._state.update((state) => ({ ...state, error: 'Failed to create genre.' }));
+        console.error('Create genre API failed', err);
       },
     });
   }
@@ -258,34 +232,12 @@ export class GenresFacade {
 
         this._updateSuccessTick.update((value) => value + 1);
         this._isEditModalOpen.set(false);
-
         this.requestGenres();
       },
-      error: () => {
+      error: (err) => {
         this._updateLoading.set(false);
-
-        this._state.update((state) => ({
-          ...state,
-          list: state.list.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  name: payload.name,
-                }
-              : item,
-          ),
-        }));
-
-        const current = this._selectedGenre();
-        if (current && current.id === id) {
-          this._selectedGenre.set({
-            ...current,
-            name: payload.name,
-          });
-        }
-
-        this._updateSuccessTick.update((value) => value + 1);
-        this._isEditModalOpen.set(false);
+        this._state.update((state) => ({ ...state, error: 'Failed to update genre.' }));
+        console.error('Update genre API failed', err);
       },
     });
   }
@@ -308,17 +260,10 @@ export class GenresFacade {
         }
         this.requestGenres();
       },
-      error: () => {
+      error: (err) => {
         this._deleteLoading.set(false);
-
-        const all = MOCK_GENRES.filter((item) => item.id !== id);
-        this.applyFallbackResult(all);
-
-        if (this._selectedGenre()?.id === id) {
-          this._selectedGenre.set(null);
-          this._isViewModalOpen.set(false);
-          this._isEditModalOpen.set(false);
-        }
+        this._state.update((state) => ({ ...state, error: 'Failed to delete genre.' }));
+        console.error('Delete genre API failed', err);
       },
     });
   }
@@ -372,50 +317,24 @@ export class GenresFacade {
             },
           }));
         },
-        error: () => {
+        error: (err) => {
           if (requestId !== this.lastRequestId) {
             return;
           }
 
-          this.applyFallbackResult(MOCK_GENRES);
+          this._state.update((state) => ({
+            ...state,
+            list: [],
+            loading: false,
+            error: 'Failed to load genres.',
+            pagination: {
+              ...state.pagination,
+              total: 0,
+            },
+          }));
+          console.error('Load genres API failed', err);
         },
       });
-  }
-
-  private applyFallbackResult(source: Genre[]): void {
-    const snapshot = this._state();
-    const search = snapshot.filters.search.trim().toLowerCase();
-    const sort = snapshot.filters.sort;
-    const page = snapshot.pagination.page;
-    const pageSize = snapshot.pagination.pageSize;
-
-    let filtered = source;
-
-    if (search) {
-      filtered = filtered.filter(
-        (item) =>
-          item.name.toLowerCase().includes(search) || item.id.toLowerCase().includes(search),
-      );
-    }
-
-    filtered = [...filtered].sort((a, b) => {
-      const base = a.name.localeCompare(b.name);
-      return sort === 'name_asc' ? base : -base;
-    });
-
-    const start = (page - 1) * pageSize;
-    const pageItems = filtered.slice(start, start + pageSize);
-
-    this._state.update((state) => ({
-      ...state,
-      list: pageItems,
-      loading: false,
-      error: null,
-      pagination: {
-        ...state.pagination,
-        total: filtered.length,
-      },
-    }));
   }
 
   private extractItems(response: GenresApiResponse | GenreApiDto[]): GenreApiDto[] {
@@ -471,19 +390,6 @@ export class GenresFacade {
       moviesCount: dto.moviesCount ?? dto.movieCount ?? dto.totalMovies ?? 0,
       createdAt: dto.createdAt ?? dto.created_at ?? '',
     };
-  }
-
-  private generateNextId(): string {
-    const max = MOCK_GENRES.reduce((acc, item) => {
-      const num = Number(item.id.replace('GEN-', ''));
-      return Number.isNaN(num) ? acc : Math.max(acc, num);
-    }, 0);
-
-    return `GEN-${String(max + 1).padStart(3, '0')}`;
-  }
-
-  private findInMock(id: string): Genre | null {
-    return MOCK_GENRES.find((item) => item.id === id) ?? null;
   }
 
   private toMs(value: string): number {

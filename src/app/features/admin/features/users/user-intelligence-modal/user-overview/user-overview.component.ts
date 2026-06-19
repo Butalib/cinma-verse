@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  MOCK_USER_OVERVIEW,
   type UserOverview,
   type UserOverviewActiveDetail,
   type UserOverviewStatCardKind,
@@ -38,13 +37,13 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserOverviewComponent {
-  readonly overview = input<UserOverview>(MOCK_USER_OVERVIEW);
+  readonly overview = input<UserOverview | null>(null);
 
   readonly activeDetail = signal<UserOverviewActiveDetail>('none');
 
   constructor() {
     effect(() => {
-      this.overview().id;
+      this.overview();
       this.activeDetail.set('none');
     });
   }

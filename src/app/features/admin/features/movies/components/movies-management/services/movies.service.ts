@@ -6,7 +6,7 @@ import {
   AdminMovieSummaryDto,
   AdminPagedResponse,
 } from '../../../../../admin-api.models';
-import { MovieRow } from '../movies-table/movies-table.component';
+import { CastMember, MovieRow } from '../movies-table/movies-table.component';
 
 @Injectable({
   providedIn: 'root',
@@ -16,61 +16,7 @@ export class MoviesService {
   private readonly movies = signal<MovieRow[]>([]);
 
   constructor() {
-    this.loadMockData();
     this.loadFromApi();
-  }
-
-  private loadMockData(): void {
-    const mockMovies: MovieRow[] = [
-      {
-        id: 'MOV-1001',
-        title: 'Dune: Part Two',
-        genres: ['Sci-Fi', 'Adventure'],
-        ageRating: 'PG-13',
-        duration: 166,
-        language: 'English',
-        status: 'ACTIVE',
-        releaseDate: '2024-03-01',
-        internalRating: 8.8,
-        trailerUrl: 'https://youtube.com/watch?v=Way9Dexny3w',
-        posterUrl: '',
-        description:
-          'Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.',
-        cast: ['Timothée Chalamet', 'Zendaya', 'Rebecca Ferguson', 'Josh Brolin'],
-      },
-      {
-        id: 'MOV-1002',
-        title: 'Oppenheimer',
-        genres: ['Drama', 'History'],
-        ageRating: 'R',
-        duration: 180,
-        language: 'English',
-        status: 'ACTIVE',
-        releaseDate: '2023-07-21',
-        internalRating: 9.0,
-        trailerUrl: 'https://youtube.com/watch?v=uYPbbksJxIg',
-        posterUrl: '',
-        description: 'The story of J. Robert Oppenheimer and the development of the atomic bomb.',
-        cast: ['Cillian Murphy', 'Emily Blunt', 'Matt Damon', 'Robert Downey Jr.'],
-      },
-      {
-        id: 'MOV-1003',
-        title: 'Inside Out 2',
-        genres: ['Animation', 'Family'],
-        ageRating: 'PG',
-        duration: 100,
-        language: 'English',
-        status: 'ACTIVE',
-        releaseDate: '2024-06-14',
-        internalRating: 7.9,
-        trailerUrl: '',
-        posterUrl: '',
-        description:
-          "Riley's mind expands with new emotions as she faces the joys and challenges of teenage life.",
-        cast: ['Amy Poehler', 'Maya Hawke', 'Kensington Tallman'],
-      },
-    ];
-    this.movies.set(mockMovies);
   }
 
   private loadFromApi(): void {
@@ -88,9 +34,7 @@ export class MoviesService {
         catchError(() => of([])),
       )
       .subscribe((items) => {
-        if (items.length > 0) {
-          this.movies.set(items);
-        }
+        this.movies.set(items);
       });
   }
 
@@ -106,8 +50,23 @@ export class MoviesService {
     const localId = this.generateNextId();
     const newMovie: MovieRow = { ...movie, id: localId };
 
+    const payload = this.toCreatePayload(movie);
+
+    console.log('payload', payload);
+    console.log('json', JSON.stringify(payload, null, 2));
+
+    if (payload === null || payload === undefined) {
+      console.error('Aborting POST /api/admin/movies: payload is null or undefined');
+      return localId;
+    }
+
+    if (typeof payload !== 'object' || Array.isArray(payload)) {
+      console.error('Aborting POST /api/admin/movies: payload root is not a plain object', payload);
+      return localId;
+    }
+
     this.api
-      .post<unknown, Record<string, unknown>>('/api/admin/movies', this.toCreatePayload(movie))
+      .post<unknown, Record<string, unknown>>('/api/admin/movies', payload)
       .pipe(
         catchError((error) => {
           console.error('Create movie API failed', {
@@ -128,13 +87,24 @@ export class MoviesService {
     const numericId = this.extractNumericId(updatedMovie.id);
 
     if (numericId !== null) {
-      this.api
-        .put<void, Record<string, unknown>>(
-          `/api/admin/movies/${numericId}`,
-          this.toUpdatePayload(updatedMovie),
-        )
-        .pipe(catchError(() => of(null)))
-        .subscribe();
+      const payload = this.toUpdatePayload(updatedMovie);
+
+      console.log('payload', payload);
+      console.log('json', JSON.stringify(payload, null, 2));
+
+      if (payload === null || payload === undefined) {
+        console.error(`Aborting PUT /api/admin/movies/${numericId}: payload is null or undefined`);
+      } else if (typeof payload !== 'object' || Array.isArray(payload)) {
+        console.error(`Aborting PUT /api/admin/movies/${numericId}: payload root is not a plain object`, payload);
+      } else {
+        this.api
+          .put<void, Record<string, unknown>>(
+            `/api/admin/movies/${numericId}`,
+            payload,
+          )
+          .pipe(catchError(() => of(null)))
+          .subscribe();
+      }
     }
 
     this.movies.update((movies) =>
@@ -195,6 +165,15 @@ export class MoviesService {
       posterUrl: dto.moviePoster ?? '',
       description: dto.movieDescription ?? '',
       cast: (dto.castMembers ?? []).map((member) => member.personName ?? '').filter(Boolean),
+      imageUrls: (dto.images ?? []).map((img) => img.imageUrl ?? '').filter(Boolean),
+      castMembers: (dto.castMembers ?? []).map((member) => ({
+        personName: member.personName ?? '',
+        imageUrl: member.imageUrl ?? '',
+        roleType: member.roleType ?? 'Actor',
+        characterName: member.characterName ?? '',
+        displayOrder: member.displayOrder ?? 0,
+        isLead: member.isLead ?? false,
+      })),
     };
   }
 
@@ -245,53 +224,137 @@ export class MoviesService {
   }
 
   private toCreatePayload(movie: Omit<MovieRow, 'id'>): Record<string, unknown> {
-    return {
+    const castMembers = (movie.castMembers?.length ? movie.castMembers : movie.cast ?? []).map(
+      (member, index) => {
+        const isStringMember = typeof member === 'string';
+        const personName = isStringMember ? member : member.personName || '';
+        const imageUrl = isStringMember ? '' : member.imageUrl || '';
+        const validImageUrl = this.toAbsoluteUrl(imageUrl);
+        return {
+          personName,
+          imageUrl: validImageUrl,
+          roleType: isStringMember ? 'Actor' : member.roleType || 'Actor',
+          characterName: isStringMember ? '' : member.characterName || '',
+          displayOrder: isStringMember ? index : member.displayOrder ?? index,
+          isLead: isStringMember ? index === 0 : member.isLead ?? false,
+        };
+      },
+    );
+
+    const trailerUrl = this.toAbsoluteUrl(movie.trailerUrl);
+    const moviePoster = this.toAbsoluteUrl(movie.posterUrl);
+    const imageUrls = (movie.imageUrls ?? [])
+      .map((url) => this.toAbsoluteUrl(url))
+      .filter((url): url is string => url !== null);
+
+    this.logUrlValues('CreateMovie', {
+      trailerUrl,
+      moviePoster,
+      castImageUrls: castMembers.map((m) => m.imageUrl),
+      rawImageUrls: imageUrls,
+    });
+
+    const payload = {
       movieName: movie.title,
       movieDescription: movie.description || 'No description provided.',
       movieDuration: this.toTimeSpanString(movie.duration),
       releaseDate: movie.releaseDate,
-      castMembers: movie.cast.map((name, index) => ({
-        personName: name,
-        imageUrl: '',
-        roleType: 'Actor',
-        characterName: '',
-        displayOrder: index,
-        isLead: index === 0,
-      })),
+      castMembers,
       movieAgeRating: this.toApiAgeRating(movie.ageRating),
       movieRating: movie.internalRating,
-      trailerUrl: movie.trailerUrl || '',
-      moviePoster: movie.posterUrl || '',
+      trailerUrl,
+      moviePoster,
       genreIds: movie.genreIds ?? [],
-      imageUrls: [],
+      imageUrls,
       language: movie.language,
       status: this.toApiCreateStatus(movie.status),
     };
+
+    return payload;
   }
 
   private toUpdatePayload(movie: MovieRow): Record<string, unknown> {
-    return {
+    const castMembers = (movie.castMembers?.length ? movie.castMembers : movie.cast ?? []).map(
+      (member, index) => {
+        const isStringMember = typeof member === 'string';
+        const personName = isStringMember ? member : member.personName || '';
+        const imageUrl = isStringMember ? '' : member.imageUrl || '';
+        const validImageUrl = this.toAbsoluteUrl(imageUrl);
+        return {
+          personName,
+          imageUrl: validImageUrl,
+          roleType: isStringMember ? 'Actor' : member.roleType || 'Actor',
+          characterName: isStringMember ? '' : member.characterName || '',
+          displayOrder: isStringMember ? index : member.displayOrder ?? index,
+          isLead: isStringMember ? index === 0 : member.isLead ?? false,
+        };
+      },
+    );
+
+    const trailerUrl = this.toAbsoluteUrl(movie.trailerUrl);
+    const moviePoster = this.toAbsoluteUrl(movie.posterUrl);
+    const imageUrls = (movie.imageUrls ?? [])
+      .map((url) => this.toAbsoluteUrl(url))
+      .filter((url): url is string => url !== null);
+
+    this.logUrlValues('UpdateMovie', {
+      trailerUrl,
+      moviePoster,
+      castImageUrls: castMembers.map((m) => m.imageUrl),
+      rawImageUrls: imageUrls,
+    });
+
+    const payload = {
       movieName: movie.title,
       movieDescription: movie.description,
       movieDuration: this.toTimeSpanString(movie.duration),
       releaseDate: movie.releaseDate,
-      castMembers: movie.cast.map((name, index) => ({
-        personName: name,
-        imageUrl: '',
-        roleType: 'Actor',
-        characterName: '',
-        displayOrder: index,
-        isLead: index === 0,
-      })),
+      castMembers,
       movieAgeRating: this.toApiAgeRating(movie.ageRating),
       movieRating: movie.internalRating,
-      trailerUrl: movie.trailerUrl || '',
-      moviePoster: movie.posterUrl || '',
+      trailerUrl,
+      moviePoster,
       genreIds: movie.genreIds ?? [],
-      imageUrls: [],
+      imageUrls,
       language: movie.language,
       status: this.toApiStatus(movie.status),
     };
+
+    return payload;
+  }
+
+  private toAbsoluteUrl(value: string | null | undefined): string | null {
+    if (!value || typeof value !== 'string') {
+      return null;
+    }
+
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return null;
+    }
+
+    const lower = trimmed.toLowerCase();
+    if (lower.startsWith('http://') || lower.startsWith('https://')) {
+      return trimmed;
+    }
+
+    return null;
+  }
+
+  private logUrlValues(
+    context: string,
+    values: {
+      trailerUrl: string | null;
+      moviePoster: string | null;
+      castImageUrls: (string | null)[];
+      rawImageUrls: string[];
+    },
+  ): void {
+    console.log(`[${context}] URL values before POST/PUT:`);
+    console.log('  trailerUrl:', values.trailerUrl);
+    console.log('  moviePoster:', values.moviePoster);
+    console.log('  castMembers[].imageUrl:', values.castImageUrls);
+    console.log('  imageUrls:', values.rawImageUrls);
   }
 
   private toTimeSpanString(totalMinutes: number): string {
@@ -320,7 +383,6 @@ export class MoviesService {
       return 'ComingSoon';
     }
 
-    // Create as Draft to avoid backend validation failures for direct publish.
     return 'Draft';
   }
 
