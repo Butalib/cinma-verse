@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { catchError, of } from 'rxjs';
 import { MovieFiltersComponent } from '../movie-filters/movie-filters';
 import { MovieCardComponent } from '../movie-card/movie-card';
-import { MoviesService } from '../../../../user-core/user-services/user-movie/user-movie';
+import { MoviesService } from '../../../../../user-core/user-services/user-movie/user-movie';
 
 @Component({
   selector: 'app-now-showing',

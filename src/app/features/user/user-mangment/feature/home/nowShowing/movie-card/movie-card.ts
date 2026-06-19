@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { IMovie } from '../../../../user-core/user-services/user-movie/movie-interface';
-import { API_BASE_URL } from '../../../../../../core/config/api.config';
+import { IMovie } from '../../../../../user-core/user-services/user-movie/movie-interface';
+import { API_BASE_URL } from '../../../../../../../core/config/api.config';
 
 @Component({
   selector: 'app-movie-card',

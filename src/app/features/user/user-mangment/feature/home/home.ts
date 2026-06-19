@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HeroBannerComponent } from './hero/hero';
-import { NowShowingComponent } from './now-showing/now-showing';
+import { NowShowingComponent } from './nowShowing/now-showing/now-showing';
 
 @Component({
   selector: 'app-home',
