@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.now-showing {
+  background: var(--cinema-bg);
+}
+
+.now-showing__container {
+  width: min(92%, 90rem);
+  margin-inline: auto;
+  padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+.now-showing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}

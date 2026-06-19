@@ -81,6 +81,17 @@
   --transition: 0.2s ease;
   --transition-slow: 0.35s ease;
 
+  // ── Cinema Section Colors (hero, cards, navbar) ──
+  --cinema-bg: #020814;
+  --cinema-accent: #43e8ff;
+  --cinema-accent-dim: rgba(67, 232, 255, 0.1);
+  --cinema-accent-glow: rgba(67, 232, 255, 0.3);
+  --cinema-text: #ffffff;
+  --cinema-text-secondary: rgba(255, 255, 255, 0.6);
+  --cinema-glass-bg: rgba(255, 255, 255, 0.04);
+  --cinema-glass-border: rgba(255, 255, 255, 0.1);
+  --nav-height: clamp(3.5rem, 6vh, 4.5rem);
+
   // ── Legacy bridge (existing components) ──
   --accent-border: var(--ghost-border);
   --accent-border-strong: rgba(138, 235, 255, 0.45);

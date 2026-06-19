@@ -1,0 +1,17 @@
+<div class="filters">
+  <div class="filters__heading">
+    <h2 class="filters__title">Now Showing</h2>
+    <p class="filters__subtitle">Curated selections across our premium formats.</p>
+  </div>
+
+  <div class="filters__buttons">
+    @for (filter of filters; track filter) {
+      <button
+        type="button"
+        class="filters__btn"
+        [class.filters__btn--active]="filter === activeFilter">
+        {{ filter }}
+      </button>
+    }
+  </div>
+</div>

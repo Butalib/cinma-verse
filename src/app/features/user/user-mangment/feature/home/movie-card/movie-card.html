@@ -1,0 +1,29 @@
+<article class="card">
+  <div class="card__poster">
+    <img
+      [src]="resolvePosterUrl(movie.moviePosterImageUrl)"
+      [alt]="movie.movieName"
+      class="card__image"
+    />
+
+    <div class="card__badges">
+      @for (genre of movie.genres; track genre) {
+        <span class="card__badge">{{ genre }}</span>
+      }
+    </div>
+
+    <div class="card__overlay">
+      <h3 class="card__title">{{ movie.movieName }}</h3>
+
+      <p class="card__genres">{{ movie.genres.join(' · ') }}</p>
+
+      <div class="card__meta">
+        <span class="card__meta-item">{{ movie.language }}</span>
+        <span class="card__meta-dot"></span>
+        <span class="card__meta-item">{{ movie.movieDuration }}</span>
+        <span class="card__meta-dot"></span>
+        <span class="card__meta-item card__rating">★ {{ movie.movieRating }}</span>
+      </div>
+    </div>
+  </div>
+</article>

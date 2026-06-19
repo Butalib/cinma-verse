@@ -1,39 +1,37 @@
-<header class="cinema-nav">
-  <div class="cinema-nav__container">
+<header class="nav">
+  <div class="nav__inner">
 
-    <a routerLink="/movies" class="cinema-nav__logo">
+    <a routerLink="/movies" class="nav__logo">
       CINEMAVERSE
     </a>
 
-    <nav class="cinema-nav__menu">
+    <nav class="nav__links">
       <a
         routerLink="/movies"
-        routerLinkActive="cinema-nav__link--active"
-        class="cinema-nav__link">
+        routerLinkActive="nav__link--active"
+        class="nav__link">
         Movies
       </a>
 
       <a
         routerLink="/bookings"
-        routerLinkActive="cinema-nav__link--active"
-        class="cinema-nav__link">
+        routerLinkActive="nav__link--active"
+        class="nav__link">
         My Bookings
       </a>
 
       <a
         routerLink="/tickets"
-        routerLinkActive="cinema-nav__link--active"
-        class="cinema-nav__link">
+        routerLinkActive="nav__link--active"
+        class="nav__link">
         My Tickets
       </a>
     </nav>
 
-    <div class="cinema-nav__profile">
-      <button type="button" class="cinema-nav__profile-btn">
-        <i class="pi pi-user"></i>
-        <span>Profile</span>
-      </button>
-    </div>
+    <button type="button" class="nav__profile">
+      <i class="pi pi-user"></i>
+      <span>Profile</span>
+    </button>
 
   </div>
 </header>

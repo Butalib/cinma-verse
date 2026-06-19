@@ -1,0 +1,13 @@
+<section class="now-showing">
+  <div class="now-showing__container">
+    <app-movie-filters />
+
+    @if (movies$ | async; as movies) {
+      <div class="now-showing__grid">
+        @for (movie of movies; track movie.movieId) {
+          <app-movie-card [movie]="movie" />
+        }
+      </div>
+    }
+  </div>
+</section>
