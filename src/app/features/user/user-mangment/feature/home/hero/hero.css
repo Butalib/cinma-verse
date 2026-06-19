@@ -5,14 +5,14 @@
 .hero {
   position: relative;
   width: 100%;
-  height: clamp(85vh, 92vh, 100vh);
+  height: calc(100vh - 70px);
   background-color: #020814;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .hero--empty {
@@ -47,7 +47,6 @@
   z-index: 3;
   width: min(45%, 38rem);
   padding-inline: clamp(1.5rem, 5vw, 6rem);
-  padding-bottom: clamp(3rem, 8vh, 6rem);
   display: flex;
   flex-direction: column;
   gap: 2vh;
