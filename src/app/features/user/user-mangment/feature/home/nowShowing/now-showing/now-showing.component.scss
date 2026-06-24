@@ -1,0 +1,39 @@
+:host {
+  // Make the component a block-level wrapper so section backgrounds fill width.
+  display: block;
+}
+
+.now-showing {
+  // Cinema section background from the design system.
+  background: var(--cinema-bg);
+}
+
+.now-showing__container {
+  // Keeps the content centered and readable without touching the viewport edges.
+  width: min(92%, 90rem);
+  margin-inline: auto;
+  padding-block: clamp(3rem, 8vw, 6rem);
+}
+
+.now-showing__grid {
+  // CSS Grid lets the browser decide how many cards fit per row.
+  // The min value is clamped so cards shrink on tablets and become full-width on mobile,
+  // while the max value keeps desktop cards large enough for roughly three per row.
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, clamp(16rem, 28vw, 22rem)), 1fr));
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+  // Center the grid tracks when there are not enough cards to fill the whole row.
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .now-showing__container {
+    width: 94%;
+    padding-block: 2rem;
+  }
+
+  .now-showing__grid {
+    // Tighter spacing on small screens keeps the single-column layout compact.
+    gap: 0.75rem;
+  }
+}

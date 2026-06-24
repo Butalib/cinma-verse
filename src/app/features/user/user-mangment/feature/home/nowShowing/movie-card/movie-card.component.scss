@@ -1,27 +1,44 @@
 .card {
+  // Rounded corners and hidden overflow keep the poster inside the card shape.
   border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
   overflow: hidden;
+  // Smooth lift when the user hovers.
   transition: transform 0.3s ease;
 }
 
 .card:hover {
+  // Slight lift effect when the user hovers the card.
   transform: translateY(-0.5rem);
 }
 
+// .card__poster {
+//   position: relative;
+//   // Keeps all posters using the same 2:3 cinema-poster proportions regardless of screen size.
+//   aspect-ratio: 2.2 / 3;
+//   overflow: hidden;
+//   border-radius: inherit;
+//   // Visible placeholder color while the poster image loads.
+//   background: var(--surface-container);
+// }
+
 .card__poster {
   position: relative;
-  aspect-ratio: 2 / 2;
-  max-height: 27rem;
-
   overflow: hidden;
   border-radius: inherit;
-  background: hsl(215, 63%, 7%);
+  background: var(--surface-container);
+
+  // Responsive poster height that scales with screen size
+  height: clamp(18rem, 28vw, 28rem);
 }
+
+
 
 .card__image {
   width: 100%;
   height: 100%;
+  // Makes the poster fill its container while preserving aspect ratio; crops safely when sizes do not match.
   object-fit: cover;
+  // Subtle zoom on hover, paired with the card lift.
   transition: transform 0.4s ease;
 }
 
@@ -41,7 +58,8 @@
 
 .card__badge {
   padding: 0.25em 0.75em;
-  font-size: clamp(0.6rem, 0.8vw, 0.7rem);
+  // Uppercase badges read quickly and feel like cinema metadata tags.
+  font-size: clamp(0.65rem, 0.9vw, 0.75rem);
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -59,6 +77,7 @@
   left: 0;
   right: 0;
   padding: clamp(1rem, 2vw, 1.5rem);
+  // Gradient keeps text readable even when it overlaps a busy poster.
   background: linear-gradient(
     180deg,
     transparent 0%,
@@ -72,7 +91,7 @@
 }
 
 .card__title {
-  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-size: clamp(1rem, 1.5vw, 1.35rem);
   font-weight: 700;
   color: #ffffff;
   margin: 0;
@@ -80,7 +99,7 @@
 }
 
 .card__genres {
-  font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
   color: rgba(255, 255, 255, 0.55);
   margin: 0;
 }
@@ -93,7 +112,7 @@
 }
 
 .card__meta-item {
-  font-size: clamp(0.65rem, 0.85vw, 0.75rem);
+  font-size: clamp(0.7rem, 0.95vw, 0.8rem);
   color: rgba(255, 255, 255, 0.65);
 }
 
@@ -105,6 +124,7 @@
 }
 
 .card__rating {
+  // Teal accent from the Cinemaverse palette.
   color: #43e8ff;
   font-weight: 600;
 }
@@ -120,24 +140,23 @@
   }
 
   .card__title {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 
   .card__genres {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
   .card__meta-item {
-    font-size: 0.55rem;
+    font-size: 0.65rem;
   }
 
   .card__badge {
     padding: 0.2em 0.5em;
-    font-size: 0.5rem;
+    font-size: 0.55rem;
   }
 
   .card__badges {
@@ -149,11 +168,11 @@
 
 @media (min-width: 481px) and (max-width: 768px) {
   .card__title {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .card__genres {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 
   .card__overlay {

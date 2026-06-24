@@ -19,7 +19,7 @@ export class MoviesService {
 
   getMovies(): Observable<IMovie[]> {
     return this.http.get<IMoviesResponse>(this.apiUrl).pipe(
-      map(response => response.movies)
+      map((response: IMoviesResponse) => response.movies)
     );
   }
 

@@ -10,7 +10,7 @@ import { MoviesService } from '../../../../../user-core/user-services/user-movie
   standalone: true,
   imports: [MovieFiltersComponent, MovieCardComponent, AsyncPipe],
   templateUrl: './now-showing.html',
-  styleUrl: './now-showing.css'
+  styleUrl: './now-showing.component.scss'
 })
 export class NowShowingComponent {
   private readonly moviesService = inject(MoviesService);

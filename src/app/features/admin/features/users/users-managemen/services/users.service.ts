@@ -53,20 +53,20 @@ export class UsersService {
     return this.http
       .get<unknown>(this.baseUrl)
       .pipe(
-        map((response) => this.extractCollection(response).map((item) => this.mapTableRow(item))),
+        map((response: unknown) => this.extractCollection(response).map((item) => this.mapTableRow(item))),
       );
   }
 
   createUser(payload: CreateUserPayload): Observable<UsersTableRow> {
     return this.http
       .post<unknown>(this.baseUrl, this.mapCreateRequest(payload))
-      .pipe(map((response) => this.mapTableRow(response)));
+      .pipe(map((response: unknown) => this.mapTableRow(response)));
   }
 
   getUserById(id: string): Observable<UserDetailsResponse> {
     return this.http
       .get<unknown>(`${this.baseUrl}/${this.resolveApiId(id)}`)
-      .pipe(map((response) => this.mapUserDetailsResponse(response)));
+      .pipe(map((response: unknown) => this.mapUserDetailsResponse(response)));
   }
 
   updateUser(id: string, payload: UpdateUserPayload): Observable<void> {
@@ -88,19 +88,19 @@ export class UsersService {
   getUserBookings(id: string): Observable<UserRelatedCollectionItem[]> {
     return this.http
       .get<unknown>(`${this.baseUrl}/${this.resolveApiId(id)}/bookings`)
-      .pipe(map((response) => this.extractCollection(response)));
+      .pipe(map((response: unknown) => this.extractCollection(response)));
   }
 
   getUserTickets(id: string): Observable<UserRelatedCollectionItem[]> {
     return this.http
       .get<unknown>(`${this.baseUrl}/${this.resolveApiId(id)}/tickets`)
-      .pipe(map((response) => this.extractCollection(response)));
+      .pipe(map((response: unknown) => this.extractCollection(response)));
   }
 
   getUserPayments(id: string): Observable<UserRelatedCollectionItem[]> {
     return this.http
       .get<unknown>(`${this.baseUrl}/${this.resolveApiId(id)}/payments`)
-      .pipe(map((response) => this.extractCollection(response)));
+      .pipe(map((response: unknown) => this.extractCollection(response)));
   }
 
   exportUsers(): Observable<Blob> {

@@ -89,8 +89,9 @@ export class MoviesService {
     if (numericId !== null) {
       const payload = this.toUpdatePayload(updatedMovie);
 
-      console.log('payload', payload);
-      console.log('json', JSON.stringify(payload, null, 2));
+      console.log('PUT update payload:', payload);
+      console.log('PUT update payload JSON:', JSON.stringify(payload, null, 2));
+      console.log('PUT status mapping:', updatedMovie.status, '→', this.toApiStatus(updatedMovie.status));
 
       if (payload === null || payload === undefined) {
         console.error(`Aborting PUT /api/admin/movies/${numericId}: payload is null or undefined`);
@@ -333,12 +334,7 @@ export class MoviesService {
       return null;
     }
 
-    const lower = trimmed.toLowerCase();
-    if (lower.startsWith('http://') || lower.startsWith('https://')) {
-      return trimmed;
-    }
-
-    return null;
+    return trimmed;
   }
 
   private logUrlValues(

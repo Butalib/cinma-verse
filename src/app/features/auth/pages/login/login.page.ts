@@ -67,7 +67,7 @@ export class LoginPage {
       return fallback;
     }
 
-    const apiError: unknown = error.error;
+    const apiError: unknown = (error as HttpErrorResponse).error;
     if (typeof apiError === 'string') {
       return apiError;
     }
