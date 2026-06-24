@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular App
-        run: npx ng build --configuration production --base-href /cinma-verse/
+        run: npx ng build --configuration production --base-href ./ --deploy-url ./
 
       - name: SPA Fallback For GitHub Pages
         run: cp dist/cinmaverse-web/browser/index.html dist/cinmaverse-web/browser/404.html
